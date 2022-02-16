@@ -15,4 +15,7 @@
     * [Part 10: JSON](python/part10_json.md)
     * [Part 11: Odds and Ends](python/part11_odds_and_ends.md)
     * [Part 12: Best Practices](python/part12_best_practices.md)
-* [Docker](docker/README.md)
+* [KVM](kvm/README.md)
+    * [Part 1: Setting up KVM](kvm/part1_setting_up_kvm.md)
+    * [Part 2: Automating KVM Install](kvm/part2_automating_kvm_install.md)
+    * [Part 3: Configuring KVM Network](kvm/part3_configuring_kvm_network.md)
