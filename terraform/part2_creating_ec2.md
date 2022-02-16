@@ -1,0 +1,17 @@
+# Part 2: Creating an EC2 instance
+
+I find that the easiest way to get started with Terraform is to use it to create an EC2 instance. This is actually what the Terraform documentation walks you through. As such, I don't think there's a need to repeat what is already being said.
+
+I've created an example at files/ec2_example. Some key differences are:
+
+- I removed the section where a specific version of the aws provider and terraform is specified. I discovered that in doing this, terraform will download the latest version anyways, and this version will be specified in .terraform.lock.hcl (In fact, you don't need to specicy the aws provider. But I suppose this is a good practice.)
+- The AMI is for Ubuntu Server 20.04 LTS. I'm not sure what the Hashicorp documentation uses, although if you read down it does say that it refers to an Ubuntu image.
+
+I found that running terraform fmt works as advertised: it formats the .tf file and aligns everything. Don't spend time aligning lines by hand, rely on `terraform fmt`!
+
+It's actually quite easy to create, modify, and delete EC2 instances with Terraform. 
+
+
+## References
+
+https://learn.hashicorp.com/tutorials/terraform/aws-build?in=terraform/aws-get-started

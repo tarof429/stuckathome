@@ -118,7 +118,7 @@ Launch a VM
 --disk path=/var/lib/libvirt/images/centos7.qcow2,size=40,bus=virtio,format=qcow2
 ```
 
-virt-viewer immmediately shows the CentOS 7 install spalash screen. This is fine if we have access to the display directly. However, to connect to the display remotely, we need to do SSH tunneling.
+virt-viewer immmediately shows the CentOS 7 install spalash screen. This is fine if we have access to the display directly. However, to connect to the display remotely, we also need to do SSH tunneling.
 
 ```
 $ sudo virsh dumpxml centos7 |grep vnc
