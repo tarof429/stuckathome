@@ -11,6 +11,9 @@ I found that running terraform fmt works as advertised: it formats the .tf file 
 
 It's actually quite easy to create, modify, and delete EC2 instances with Terraform. 
 
+I found that with Terraform, it's easy to change tags without recreating the instance.
+
+Also I found that creating an outputs.tf file is useful so that I don't have to go into the AWS console to find the public IP.
 
 ## References
 
