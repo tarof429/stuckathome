@@ -15,6 +15,8 @@ I found that with Terraform, it's easy to change tags without recreating the ins
 
 Also I found that creating an outputs.tf file is useful so that I don't have to go into the AWS console to find the public IP.
 
+I did not have success using Terraform Cloud. It may have something to do with a typo in main.tf, but as a result I could no longer run `terraform apply` any more. Just to get my code working agaion, I had to delete my EC2 instance manually, delte .terraform and .terraform.lock.hcl, and I also deleted my Terraform Cloud workspace. There doesn't seem to be a way to delete my Terraform Cloud account.
+
 ## References
 
 https://learn.hashicorp.com/tutorials/terraform/aws-build?in=terraform/aws-get-started
