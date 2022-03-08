@@ -44,6 +44,8 @@
 
 - How can an organization enable microsecond latency for a DynamoDB database: Use Amazon ElastiCache, Using DynamoDB Auto Scaling, using read replicas, or using DynamoDB Accelerator (DAX)? Answer: DAX
 
+- What is Amazon Aurora? Answer: a MySQL and PostgreSQL-compatabile relational database.
+
 - Which AWS database service is a relational data warehouse: Amazon RedShift, Amazon RDS Aurora, Amazon DynamoDB, or Amazon ElastiCache? Answer: Redshift
 
 - Why might an organization decide to move an on-premises database to Amazon RDS? Answer: to reduce operational overhead.
@@ -53,6 +55,8 @@
 - Which service can be used to analyze data on Amazon S3 using serverless SQL queries? Amazon Athena, which is a serverless big data analysis tool.
 
 - You have a lot of logs that you want to perform a query on. If you want to use AWS Athena, where should you put your logs? Answer: Put it in an S3 bucket.
+
+- What is Amazon Kinesis? Answer: A service for analyzing video and data streams in real time.
 
 - If you have lots of video data that you want to process in real-time, what would you use: Amazon Kinesis Streams or Firehose? Answer: It depends. Both are used to do the collection and processing of data in real-time. Streeams is the more customizable option and requires that scaling and provision is done manually. Firehose stores the data in other services such as S3, ElasticSearch, etc.
 

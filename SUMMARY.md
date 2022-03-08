@@ -19,3 +19,7 @@
     * [Part 1: Setting up KVM](kvm/part1_setting_up_kvm.md)
     * [Part 2: Automating KVM Install](kvm/part2_automating_kvm_install.md)
     * [Part 3: Configuring KVM Network](kvm/part3_configuring_kvm_network.md)
+* [AWS Certified Cloud Practitioner](aws_certified_cloud_practioner/README.md)
+    * [Part 1: Questions](aws_certified_cloud_practioner/questions.md)
+   * [Part 2: Exam](aws_certified_cloud_practioner/exam.md)
+    
