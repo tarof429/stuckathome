@@ -92,7 +92,7 @@ sh files/create_centos_kvm.sh test 20G
 
 will create a CentOS VM called `test` with 20GB of disk space (of which not all is actually allocated to /). 
 
-The VM will automatically install some pacakges and reboot. Afterwards you can login as root.
+The VM will automatically install some packages and reboot. Afterwards you can login as root.
 
 ## Useful virsh commands
 
