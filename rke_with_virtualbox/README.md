@@ -1,6 +1,6 @@
 # RKE with Virtualbox
 
-This project sets up a simple Kubernetes cluster.
+This project sets up a simple Kubernetes cluster using RKE and VirtualBox.
 
 # Requirements
 
@@ -10,3 +10,5 @@ This project sets up a simple Kubernetes cluster.
 
 ## Setup
 
+
+## References
