@@ -11,6 +11,10 @@ We all know by now that M.2 is fast, much faster than SATA SSDs and Hard Disks. 
 
 Most M.2 NVMe storage in the 1TB range cost between $100 and $150. This is a bargain in my opinion. The differences are mainly in terms of performance, thermals and encryption. 
 
+## Self-encrypting drives
+
+If you buy a SSD that's self-encrypting, you still need to encrypt it using command-line tools.
+
 ## References
 
 https://premioinc.com/blogs/blog/pcie-4-0-pci-express-gen-4
@@ -18,3 +22,5 @@ https://premioinc.com/blogs/blog/pcie-4-0-pci-express-gen-4
 https://www.newegg.com/xfx-radeon-rx-6500-xt-rx-65xt4dbdq/p/N82E16814150866
 
 https://www.newegg.com/xpg-1tb-gammix-s70-blade/p/0D9-00DF-000U0
+
+https://wiki.archlinux.org/title/Self-encrypting_drives
