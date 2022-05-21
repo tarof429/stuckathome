@@ -3,45 +3,50 @@
 Linux should always be intalled on multiple partitions. Doing so increases the maintainability of the system. Below is a simple UEFI/GPT layout:
 
 ```
-/boot 1 GB
+/boot 300 MB
 swap 32 GB
-/ remainder of the disk
+/ 512 GB
+/home remainder of the disk
 ```
 
-Below are the steps:
+Since we need 4 partitions, we can create primary partitions. If we needed more, then we would need to create an extended partition.
 
-1. Start parted
+Below is one example:
 
-    ```
-    sudo parted /dev/sda
-    ```
-
-2. Next, create a partition table.
+1. Next, create a partition table.
 
     ```
     sudo parted -s /dev/sda mklabel gpt
     ```
 
-3. Create a boot partition
+2. Create the boot partition
 
     ```
-    sudo parted -s /dev/sdaprimary ext4 1 1GB
-    (parted) set 1 boot on
+    sudo parted -s /dev/sda mkpart "EFI" fat32 1MB 301MB
+    sudo parted set 1 esp on
     ```
 
-3. Create a swap partition
+3. Create the root partion
 
     ```
-    (parted) mkpart primary linux-swap 1GB 32GB
-    (parted) set 2 swap on
+    sudo parted -s /dev/sda mkpart "root" ext4 301MB 500GB
     ```
 
-4. Create a root partion
+4. Create the swap partition
 
     ```
-    (parted) mkpart primary ext4 32GB 100%
+    sudo parted -s /dev/sda mkpart "swap" linux-swap 500GB 532GB
+    sudo parted set 2 swap on
+    ```
+
+5. Create the home partition
+
+    ```
+    sudo parted -s /dev/sda mkpart "home" primary ext4 532GB 100%
     ```
 
 ## References
 
 https://wiki.archlinux.org/title/partitioning
+
+https://wiki.archlinux.org/title/Parted
