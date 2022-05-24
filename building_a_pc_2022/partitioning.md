@@ -16,34 +16,53 @@ Below is one example:
 1. Next, create a partition table.
 
     ```
-    sudo parted -s /dev/sda mklabel gpt
+    sudo parted -s /dev/nvme0n1 mklabel gpt
     ```
 
 2. Create the boot partition
 
     ```
-    sudo parted -s /dev/sda mkpart "EFI" fat32 1MB 301MB
-    sudo parted set 1 esp on
+    sudo parted -s /dev/nvme0n1
+    mkpart primary fat32 1MiB 300MiB 1 EFI
+    set 1 esp on
     ```
 
 3. Create the root partion
 
     ```
-    sudo parted -s /dev/sda mkpart "root" ext4 301MB 500GB
+    mkpart primary ext4 300MIB 500GiB root
     ```
 
 4. Create the swap partition
 
     ```
-    sudo parted -s /dev/sda mkpart "swap" linux-swap 500GB 532GB
-    sudo parted set 2 swap on
+    mkpart swap linux-swap 500GiB 532GiB swap
+    sudo parted set 3 swap on
     ```
 
 5. Create the home partition
 
     ```
-    sudo parted -s /dev/sda mkpart "home" primary ext4 532GB 100%
+    mkpart primary ext4 532GiB 100% home
     ```
+
+6. Rename partitions
+
+    ```
+    name 1 EFI
+    name 2 root
+    name 3 swap
+    name 4 home
+    ```
+
+7. Create the partitions
+
+    ```
+    mkfs.fat -F 32 /dev/nvm0n1p3
+    mkfs.ext4 /dev/nvme0n1p2
+    mkfs.ext4 /dev/nvme0n1p4
+    ```
+
 
 ## References
 
