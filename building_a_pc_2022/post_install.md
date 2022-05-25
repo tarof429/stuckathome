@@ -32,3 +32,7 @@
     sudo ufw default deny incoming
     sudo ufw allow from 192.168.0.0/24 to any port 22
     ```
+
+- Intall some more fonts: https://blog.yucas.net/2018/03/25/beautiful-fonts-improve-arch-linux/. Also install noto-fonts-cjk for Japanese.
+
+- Intall Fira Code font: https://github.com/tonsky/FiraCode and https://github.com/tonsky/FiraCode/wiki/VS-Code-Instructions
