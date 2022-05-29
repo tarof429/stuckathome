@@ -12,8 +12,10 @@ Virtualization:                  AMD-V
 Next, we'll install some packages.
 
 ```bash
-sudo pacman -S virt-manager qemu vde2 ebtables dnsmasq bridge-utils openbsd-netcat
+sudo pacman -S virt-manager qemu vde2 dnsmasq bridge-utils openbsd-netcat dmidecode
 ```
+
+Choose to install qemu-desktop.
 
 Activate and launch libvirtd
 
@@ -50,7 +52,7 @@ Description="Example Bridge connection"
 Interface=br0
 Connection=bridge
 BindsToInterfaces=(enp37s0)
-MACAddress=enp37s0
+MACAddress='12:34:56:78:90'
 IP=static
 Address='192.168.0.22/24'
 Gateway='192.168.0.1'
@@ -58,6 +60,8 @@ DNS='192.168.0.1'
 ## Ignore (R)STP and immediately activate the bridge
 SkipForwardingDelay=yes
 ```
+
+Note that the name of the interface depends may vary by system.
 
 The *netctl* command should see both profiles. Below, we see that *enp37s0* is enabled while *bridge* is not.
 
@@ -83,9 +87,48 @@ netctl enable bridge
 
 Then if we run *ip addr*, we should see our bridge interface configured with a static IP address.
 
+We no longer need enp37s0 and we can remove it.
+
+## Using virsh
+
+In the beginning, you won't have any VMs.
+
+```
+$ sudo virsh list --all
+ Id   Name   State
+--------------------
+```
+
+VM images are stored in a storage pool. A pool called *default* stores images under /var/libvirt/images.
+
+```
+$ sudo virsh pool-dumpxml default
+<pool type='dir'>
+  <name>default</name>
+  <uuid>07ab343d-1b87-4423-b5d3-f7bcf1551986</uuid>
+  <capacity unit='bytes'>526985216000</capacity>
+  <allocation unit='bytes'>6695264256</allocation>
+  <available unit='bytes'>520289951744</available>
+  <source>
+  </source>
+  <target>
+    <path>/var/lib/libvirt/images</path>
+    <permissions>
+      <mode>0755</mode>
+      <owner>0</owner>
+      <group>0</group>
+    </permissions>
+  </target>
+</pool>
+```
+
+
+
 ## Manual install of CentOS 7
 
-Install tigervnc.
+First download the ISO from the cloest mirror at https://www.centos.org/download/ and copy it to /var/lib/libvirt/boot.
+
+Next, install tigervnc.
 
 ```bash
 sudo pacman -S tigervnc
@@ -97,7 +140,9 @@ Secure the vncserver. This will ask for a password. You do not need to specify a
 vncpasswd
 ```
 
-Start vncserver
+Note that all these commands should be run as non-root.
+
+Next, start vncserver
 
 ```bash
 vncserver :1
