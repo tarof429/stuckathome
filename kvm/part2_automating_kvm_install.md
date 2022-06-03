@@ -8,14 +8,14 @@ First, install cdrtools.
 pacman -S cdrtools
 ```
 
-Next, copy files/anaconda-ks.cfg to /root/anaconda-ks.cfg.
+Next, copy files/centos/anaconda-ks.cfg to /root/anaconda-ks.cfg.
 
 Finally we can install the VM.
 
 ```
 sudo virt-install \
 --virt-type=kvm \
---name tc-kvm01-vm01 \
+--name myvm \
 --ram 4096 \
 --vcpus=2 \
 --os-variant=centos7.0 \
@@ -23,7 +23,7 @@ sudo virt-install \
 --network=bridge=br0,model=virtio \
 --graphics none \
 --console=pty,target_type=serial \
---disk path=/var/lib/libvirt/images/tc-kvm01-vm01.qcow2,size=40,bus=virtio,format=qcow2 \
+--disk path=/var/lib/libvirt/images/myvm.qcow2,size=40,bus=virtio,format=qcow2 \
 --initrd-inject=/root/anaconda-ks.cfg \
 -x "ks=file:/anaconda-ks.cfg" \
 --extra-args "console=ttyS0 serial"
@@ -33,9 +33,11 @@ An alternative is to use cloud-init, described below.
 
 ## Using cloud-init
 
+Note: these steps no longer work with the latest ArchLinux.
+
 Cloud-init is a feature of KVM that allows us to quickly provision VMs.
 
-First, download the cloud linux qcow2 image from https://cloud.centos.org/centos/7/images/ and copy it to /var/lib/libvirt/boot.
+Next, download the cloud linux qcow2 image from https://cloud.centos.org/centos/7/images/ and copy it to /var/lib/libvirt/boot.
 
 Next, create a snapshot of our cloud image with expanded storage.
 

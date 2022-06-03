@@ -1,6 +1,6 @@
-# Part 3: Configuring KVM Network
+# Part 3: Configuring Network
 
-Once you login as root, configure the network.  
+Once you login to the VM as root, you may want to configure the network.
 
 
 1. Edit /etc/sysconfig/network-scripts/ifcfg-eth0.
@@ -57,12 +57,12 @@ mv -f /etc/ssh/sshd_config.new /etc/ssh/sshd_config
 
 ```
 {
-useradd -m admin
-usermod -aG wheel admin
+useradd -m taro
+usermod -aG wheel taro
 }
 ```
 
-Be sure to set a password for the admin user.
+Be sure to set a password for the non-root user.
 
 
 6. Reboot
