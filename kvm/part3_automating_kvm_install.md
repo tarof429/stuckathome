@@ -1,36 +1,5 @@
 # Part 2: Automating KVM install
 
-## Automated CentOS 7 installation using anaconda
-
-First, install cdrtools.
-
-```
-pacman -S cdrtools
-```
-
-Next, copy files/centos/anaconda-ks.cfg to /root/anaconda-ks.cfg.
-
-Finally we can install the VM.
-
-```
-sudo virt-install \
---virt-type=kvm \
---name myvm \
---ram 4096 \
---vcpus=2 \
---os-variant=centos7.0 \
---location=/var/lib/libvirt/boot/CentOS-7-x86_64-Minimal-2009.iso \
---network=bridge=br0,model=virtio \
---graphics none \
---console=pty,target_type=serial \
---disk path=/var/lib/libvirt/images/myvm.qcow2,size=40,bus=virtio,format=qcow2 \
---initrd-inject=/root/anaconda-ks.cfg \
--x "ks=file:/anaconda-ks.cfg" \
---extra-args "console=ttyS0 serial"
-```
-
-An alternative is to use cloud-init, described below.
-
 ## Using cloud-init
 
 Note: these steps no longer work with the latest ArchLinux.
@@ -115,3 +84,19 @@ To get access to the console, run:
 ```
 sudo virsh console test
 ```
+
+or `create_seeded_ubuntu_vm.sh `. For example, the following will create a VM with IP 192.168.0.15.
+
+    ```
+    sh ./create_seeded_ubuntu_vm.sh -n test -u test -p secret -i 192.168.0.16 -g 192.168.0.1 -s 30G
+    ```
+
+    As another example, we can create a VM called `kube-master`:
+
+    ```
+    sh ./create_seeded_ubuntu_vm.sh -n kube-master -u ubuntu -p secret -i 192.168.0.15 -g 192.168.0.1 -s 30G
+    ```
+
+## References
+
+https://fabianlee.org/2020/02/23/kvm-testing-cloud-init-locally-using-kvm-for-an-ubuntu-cloud-image/

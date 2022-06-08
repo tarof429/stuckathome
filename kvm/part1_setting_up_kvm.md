@@ -124,59 +124,6 @@ $ sudo virsh pool-dumpxml default
 
 
 
-## Manual install of CentOS 7
+# References
 
-First download the ISO from the cloest mirror at https://www.centos.org/download/ and copy it to /var/lib/libvirt/boot.
-
-Next, install tigervnc.
-
-```bash
-sudo pacman -S tigervnc
-```
-
-Secure the vncserver. This will ask for a password. You do not need to specify a view-only pasword.
-
-```
-vncpasswd
-```
-
-Note that all these commands should be run as non-root.
-
-Next, start vncserver
-
-```bash
-vncserver :1
-```
-
-Launch a VM
-
-```
- sudo virt-install \
---virt-type=kvm \
---name centos7 \
---ram 2048 \
---vcpus=1 \
---os-variant=centos7.0 \
---cdrom=/var/lib/libvirt/boot/CentOS-7-x86_64-Minimal-2009.iso \
---network=bridge=br0,model=virtio \
---graphics vnc \
---disk path=/var/lib/libvirt/images/centos7.qcow2,size=40,bus=virtio,format=qcow2
-```
-
-virt-viewer immmediately shows the CentOS 7 install spalash screen. This is fine if we have access to the display directly. However, to connect to the display remotely, we also need to do SSH tunneling.
-
-```
-$ sudo virsh dumpxml centos7 |grep vnc
-[sudo] password for taro: 
-    <graphics type='vnc' port='5900' autoport='yes' listen='127.0.0.1'>
-
-ssh taro@localhost -L 5900:127.0.0.1:5900
-```
-
-In another terminal, start vncviewer and set the VNC server to localhost:5900. 
-
-```
-vncviewer
-```
-
-From here, we can proceed to manually install CentOS 7.
+http://thomasmullaly.com/
