@@ -161,10 +161,20 @@ We can further automate the process by using seeded images.
 
 
     ```
-    sh ./create_seeded_ubuntu_vm.sh -n test -u test -p '$6$rounds=4096$ki9o2ya8F/31k4yr$H5nKvVMLs8lSrzIaEtCAFNsj1tnChOlIlvOPgK8WCRQTh9hf5GslKbXqBRs2azzBzcMUfKxMxokSiEMWgQN7z1' -s 30G
+    sh ./create_seeded_ubuntu_vm.sh -n test-ubuntu -u test -p '$6$rounds=4096$ki9o2ya8F/31k4yr$H5nKvVMLs8lSrzIaEtCAFNsj1tnChOlIlvOPgK8WCRQTh9hf5GslKbXqBRs2azzBzcMUfKxMxokSiEMWgQN7z1' -s 30G
     ```
 
 3. Once the macine is up, you can login via console. You might want to update packages by running `apt update` and `apt upgrade`.
+
+## Installing CentOS using Cloud-Init
+
+1. Download https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-2009.qcow2 and move it to /var/lib/libvirt/boot
+
+2. Now run `create_seeded_centos_vm.sh `. For example, the following will create a VM with IP 192.168.0.15.
+
+    ```
+    sh ./create_seeded_centos_vm.sh -n test-centos -u test -p '$6$rounds=4096$ki9o2ya8F/31k4yr$H5nKvVMLs8lSrzIaEtCAFNsj1tnChOlIlvOPgK8WCRQTh9hf5GslKbXqBRs2azzBzcMUfKxMxokSiEMWgQN7z1' -s 30G
+    ```
 
 ## References
 
