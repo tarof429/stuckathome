@@ -1,7 +1,6 @@
 # Part 3: Configuring Network
 
-Once you login to the VM as root, you may want to configure the network.
-
+This section explains how to set a static IP for CentOS.
 
 1. Edit /etc/sysconfig/network-scripts/ifcfg-eth0.
 

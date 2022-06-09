@@ -125,7 +125,7 @@ This method won't ask any questions.
 
 ## Installing Ubuntu using Cloud-Init
 
-Another method for automated installation involves Cloud Init. The example below installs Ubuntu.
+Another method for automated installation involves using the Cloud Init image. The example below installs Ubuntu.
 
 1. First, download the latest cloud init image from https://cloud-images.ubuntu.com/releases/21.10/release/. The file name is `ubuntu-21.10-server-cloudimg-amd64.img`. 
 
@@ -140,3 +140,32 @@ Another method for automated installation involves Cloud Init. The example below
   ```
    ./create_ubuntu_vm.sh test 30G
    ```
+
+However, once the VM is installed you will need to login and manually configure the network and users.
+
+We can further automate the process by using seeded images.
+
+1. Install the cloud-init package.
+
+  ```
+  sudo pacman -S cloud-init
+  ```
+
+2. Also install the mkpasswd program which we wil use to generate the hashed password. See https://aur.archlinux.org/packages/mkpasswd. To generate the password, run:
+
+  ```
+  mkpasswd --method=SHA-512 --rounds=4096
+  ```
+
+2. Now run `create_seeded_ubuntu_vm.sh `. For example, the following will create a VM with IP 192.168.0.15.
+
+
+    ```
+    sh ./create_seeded_ubuntu_vm.sh -n test -u test -p '$6$rounds=4096$ki9o2ya8F/31k4yr$H5nKvVMLs8lSrzIaEtCAFNsj1tnChOlIlvOPgK8WCRQTh9hf5GslKbXqBRs2azzBzcMUfKxMxokSiEMWgQN7z1' -s 30G
+    ```
+
+3. Once the macine is up, you can login via console. You might want to update packages by running `apt update` and `apt upgrade`.
+
+## References
+
+https://cloudinit.readthedocs.io/en/latest/topics/examples.html

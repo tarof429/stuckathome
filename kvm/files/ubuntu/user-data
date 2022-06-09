@@ -4,20 +4,26 @@ manage_etc_hosts: true
 users:
   - name: ##USER##
     sudo: ALL=(ALL) NOPASSWD:ALL
-    groups: users, admin
+    groups: [ sudo ]
     home: /home/##USER##
     shell: /bin/bash
     lock_passwd: false
+    passwd: ##PASSWORD##
     ssh-authorized-keys:
       - ##PUBKEY##
 # only cert auth via ssh (console access can still login)
 ssh_pwauth: false
 disable_root: false
 chpasswd:
-  list: |
-     ##USER##:##PASSWORD##
   expire: False
-
+network:
+  version: 2
+  ethernets: 
+    enp1s0:
+      dhcp4: true
+      gateway4: 192.168.0.1
+      nameservers:
+        addresses: [8.8.8.8]
 package_update: true
 packages:
   - qemu-guest-agent
