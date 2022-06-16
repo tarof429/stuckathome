@@ -155,7 +155,7 @@ The mkpasswd program is usde to generate the hashed password. See https://aur.ar
 
 ## Installing CentOS using Cloud-Init
 
-1. Download https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-2009.qcow2 and move it to /var/lib/libvirt/boot
+1. Download https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-2009.qcow2 and move it to /var/lib/libvirt/images
 
 2. Now run `create_seeded_centos_vm.sh `.
 
