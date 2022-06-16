@@ -1,0 +1,7 @@
+---
+- name: Install packages
+  get_url:
+    url: https://releases.rancher.com/install-docker/20.10.sh
+    dest: /tmp/get-docker.sh
+    mode: 0755
+    
