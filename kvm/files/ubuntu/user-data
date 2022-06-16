@@ -16,15 +16,7 @@ ssh_pwauth: false
 disable_root: false
 chpasswd:
   expire: False
-network:
-  version: 2
-  ethernets: 
-    enp1s0:
-      dhcp4: true
-      gateway4: 192.168.0.1
-      nameservers:
-        addresses: [8.8.8.8]
-package_update: true
+package_update: false
 packages:
   - qemu-guest-agent
 # written to /var/log/cloud-init-output.log

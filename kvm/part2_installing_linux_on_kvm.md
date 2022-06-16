@@ -16,6 +16,8 @@ Secure the vncserver. This will ask for a password. You do not need to specify a
 vncpasswd
 ```
 
+Note that this step only needs to be done once.
+
 Note that all these commands should be run as non-root.
 
 Next, start vncserver
@@ -127,42 +129,27 @@ This method won't ask any questions.
 
 Another method for automated installation involves using the Cloud Init image. The example below installs Ubuntu.
 
-1. First, download the latest cloud init image from https://cloud-images.ubuntu.com/releases/21.10/release/. The file name is `ubuntu-21.10-server-cloudimg-amd64.img`. 
+1. First install some packages.
 
-2. Move it to /var/lib/libvirt/boot
+  ```
+  pacman -S cloud-init cloud-image-utils mkpasswd
+  ```
+
+The mkpasswd program is usde to generate the hashed password. See https://aur.archlinux.org/packages/mkpasswd.
+
+2. Next, download the latest cloud init image from https://cloud-images.ubuntu.com/releases/21.10/release/. The file name is `ubuntu-21.10-server-cloudimg-amd64.img`. 
+
+3. Move it to /var/lib/libvirt/boot
 
     ```
     sudo mv ubuntu-21.10-server-cloudimg-amd64.img /var/lib/libvirt/boot/
     ```
 
-3. Create VMs using the script `ubuntu/files/create_ubuntu_kvm.sh` For example:
+4. Create VMs using the script `ubuntu/files/create_ubuntu_kvm.sh` For example:
 
   ```
-   ./create_ubuntu_vm.sh test 30G
+   sh ./create_seeded_ubuntu_vm.sh  -n test -i 192.168.0.30 -u ubuntu -p pass123 -s 40G
    ```
-
-However, once the VM is installed you will need to login and manually configure the network and users.
-
-We can further automate the process by using seeded images.
-
-1. Install the cloud-init package.
-
-  ```
-  sudo pacman -S cloud-init
-  ```
-
-2. Also install the mkpasswd program which we wil use to generate the hashed password. See https://aur.archlinux.org/packages/mkpasswd. To generate the password, run:
-
-  ```
-  mkpasswd --method=SHA-512 --rounds=4096
-  ```
-
-2. Now run `create_seeded_ubuntu_vm.sh `. For example, the following will create a VM with IP 192.168.0.15.
-
-
-    ```
-    sh ./create_seeded_ubuntu_vm.sh -n test-ubuntu -u test -p '$6$rounds=4096$ki9o2ya8F/31k4yr$H5nKvVMLs8lSrzIaEtCAFNsj1tnChOlIlvOPgK8WCRQTh9hf5GslKbXqBRs2azzBzcMUfKxMxokSiEMWgQN7z1' -s 30G
-    ```
 
 3. Once the macine is up, you can login via console. You might want to update packages by running `apt update` and `apt upgrade`.
 
@@ -170,7 +157,7 @@ We can further automate the process by using seeded images.
 
 1. Download https://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-2009.qcow2 and move it to /var/lib/libvirt/boot
 
-2. Now run `create_seeded_centos_vm.sh `. For example, the following will create a VM with IP 192.168.0.15.
+2. Now run `create_seeded_centos_vm.sh `. For example, the following will create a VM with IP 192.168.0.15 (DHCP is being used).
 
     ```
     sh ./create_seeded_centos_vm.sh -n test-centos -u test -p '$6$rounds=4096$ki9o2ya8F/31k4yr$H5nKvVMLs8lSrzIaEtCAFNsj1tnChOlIlvOPgK8WCRQTh9hf5GslKbXqBRs2azzBzcMUfKxMxokSiEMWgQN7z1' -s 30G
