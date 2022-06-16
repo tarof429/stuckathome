@@ -1,6 +1,7 @@
 #!/bin/sh
 
 HOSTNAME=""
+IPADDRESS=""
 USER=""
 PASSWORD=""
 SIZE=""
@@ -15,6 +16,11 @@ validate() {
 
     if [ "${HOSTNAME}" = "" ]; then
         echo "Missing -n <hostname>"
+        error=1
+    fi
+
+    if [ "${IPADDRESS}" = "" ]; then
+        echo "Missing -i <ipaddress>"
         error=1
     fi
 
@@ -40,13 +46,16 @@ validate() {
     fi
     
 }
-while getopts ":hn:u:p:s:" option; do
+while getopts ":hn:i:u:p:s:" option; do
     case $option in
         h)
             usage
             exit;;
         n)
             HOSTNAME="${OPTARG}"
+            ;;
+        i)
+            IPADDRESS="${OPTARG}"
             ;;
         u)
             USER="${OPTARG}"
@@ -75,35 +84,40 @@ PUBKEY=`cat $HOME/.ssh/id_rsa.pub`
 
 mkdir -p /tmp/$HOSTNAME
 
+NEW_PASSWORD=`mkpasswd --method=SHA-512 --rounds=4096 --stdin $PASSWORD`
+
 # Copy our template to /tmp
 cp user-data /tmp/$HOSTNAME/user-data
 cp meta-data /tmp/$HOSTNAME/meta-data
+cp network_config_static.cfg /tmp/$HOSTNAME/network_config_static.cfg
 
-sed -i "s|##HOSTNAME##|$HOSTNAME|g" /tmp/$HOSTNAME/user-data
+sed -i "s|##HOSTNAME##|${HOSTNAME}|g" /tmp/$HOSTNAME/user-data
+sed -i "s|##IPADDRESS##|${IPADDRESS}/24|g" /tmp/$HOSTNAME/user-data
 sed -i "s|##PUBKEY##|${PUBKEY}|g" /tmp/$HOSTNAME/user-data
 sed -i "s|##USER##|${USER}|g" /tmp/$HOSTNAME/user-data
-sed -i "s|##PASSWORD##|${PASSWORD}|g" /tmp/$HOSTNAME/user-data
+sed -i "s|##PASSWORD##|${NEW_PASSWORD}|g" /tmp/$HOSTNAME/user-data
+sed -i "s|##IPADDRESS##|${IPADDRESS}|g" /tmp/$HOSTNAME/network_config_static.cfg
 
 # insert network and cloud config into seed image
 sudo rm -f /tmp/$HOSTNAME/cloud-init.iso
 
-sudo xorriso -as genisoimage -output /tmp/$HOSTNAME/cloud-init.iso -volid CIDATA -joliet -rock /tmp/$HOSTNAME/user-data /tmp/$HOSTNAME/meta-data
+sudo cloud-localds -v --network-config=/tmp/$HOSTNAME/network_config_static.cfg /tmp/$HOSTNAME/cloud-init.iso /tmp/$HOSTNAME/user-data
 
 sleep 1
 
 # Copy the generic cloud image
 sudo cp -f /var/lib/libvirt/boot/CentOS-7-x86_64-GenericCloud-2009.qcow2 \
-  /var/lib/libvirt/boot/snapshot-${HOSTNAME}-centos-cloudimg.qcow2
+  /var/lib/libvirt/boot/snapshot-${HOSTNAME}-cloudimg.qcow2
 
 # Resize the cloud image
-sudo qemu-img resize /var/lib/libvirt/boot/snapshot-${HOSTNAME}-centos-cloudimg.qcow2 $SIZE
+sudo qemu-img resize /var/lib/libvirt/boot/snapshot-${HOSTNAME}-cloudimg.qcow2 $SIZE
 
 sleep 1
 
 sudo virt-install --name $HOSTNAME --virt-type kvm --memory 4098 --vcpus 2 \
   --boot hd,menu=on \
   --disk path=/tmp/$HOSTNAME/cloud-init.iso,device=cdrom \
-  --disk path=/var/lib/libvirt/boot/snapshot-${HOSTNAME}-centos-cloudimg.qcow2,device=disk \
+  --disk path=/var/lib/libvirt/boot/snapshot-${HOSTNAME}-cloudimg.qcow2,device=disk \
   --graphics none \
   --console=pty,target_type=serial \
   --os-variant centos7 \

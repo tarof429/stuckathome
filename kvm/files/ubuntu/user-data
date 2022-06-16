@@ -1,6 +1,6 @@
 #cloud-config
 hostname: ##HOSTNAME##
-manage_etc_hosts: true
+fqdn: ##HOSTNAME##.localdomain.local
 users:
   - name: ##USER##
     sudo: ALL=(ALL) NOPASSWD:ALL
