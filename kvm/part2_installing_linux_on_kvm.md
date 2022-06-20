@@ -23,7 +23,7 @@ Note that all these commands should be run as non-root.
 Next, start vncserver
 
 ```bash
-vncserver :1
+vncserver :0
 ```
 
 Launch a VM
@@ -45,10 +45,13 @@ virt-viewer immmediately shows the CentOS 7 install spalash screen. This is fine
 
 ```
 $ sudo virsh dumpxml centos7 |grep vnc
-[sudo] password for taro: 
     <graphics type='vnc' port='5900' autoport='yes' listen='127.0.0.1'>
+```
 
-ssh taro@localhost -L 5900:127.0.0.1:5900
+Then run do SSH tunneling from the remote machine.
+
+```
+ssh localhost -L 5900:127.0.0.1:5900
 ```
 
 In another terminal, start vncviewer and set the VNC server to localhost:5900. 
@@ -94,7 +97,7 @@ Morever, AlmaLinux 8.5 has been superseded by 8.6. Follow the instructions at ht
 
 
 
-## Installing CentOS 7 Using Anaconda (kickstart)s
+## Installing CentOS 7 Using Anaconda (kickstart)
 
 First, install cdrtools.
 

@@ -101,25 +101,23 @@ sed -i "s|##IPADDRESS##|${IPADDRESS}|g" /tmp/$HOSTNAME/network_config_static.cfg
 # insert network and cloud config into seed image
 sudo rm -f /tmp/$HOSTNAME/cloud-init.iso
 
-#sudo xorriso -as genisoimage -output /tmp/$HOSTNAME/cloud-init.iso -volid CIDATA -joliet -rock /tmp/$HOSTNAME/network_config_static.cfg /tmp/$HOSTNAME/user-data /tmp/$HOSTNAME/meta-data
-
 sudo cloud-localds -v --network-config=/tmp/$HOSTNAME/network_config_static.cfg /tmp/$HOSTNAME/cloud-init.iso /tmp/$HOSTNAME/user-data
 
 sleep 1
 
 # Copy the generic cloud image
-sudo cp -f /var/lib/libvirt/boot/ubuntu-21.10-server-cloudimg-amd64.img \
-  /var/lib/libvirt/boot/snapshot-${HOSTNAME}-cloudimg.qcow2
+sudo cp -f /var/lib/libvirt/images/ubuntu-21.10-server-cloudimg-amd64.img \
+  /var/lib/libvirt/images/snapshot-${HOSTNAME}-cloudimg.qcow2
 
 # Resize the cloud image
-sudo qemu-img resize /var/lib/libvirt/boot/snapshot-${HOSTNAME}-cloudimg.qcow2 $SIZE
+sudo qemu-img resize /var/lib/libvirt/images/snapshot-${HOSTNAME}-cloudimg.qcow2 $SIZE
 
 sleep 1
 
 sudo virt-install --name $HOSTNAME --virt-type kvm --memory 4098 --vcpus 2 \
   --boot hd,menu=on \
   --disk path=/tmp/$HOSTNAME/cloud-init.iso,device=cdrom \
-  --disk path=/var/lib/libvirt/boot/snapshot-${HOSTNAME}-cloudimg.qcow2,device=disk \
+  --disk path=/var/lib/libvirt/images/snapshot-${HOSTNAME}-cloudimg.qcow2,device=disk \
   --graphics none \
   --console=pty,target_type=serial \
   --os-variant ubuntu21.10 \
