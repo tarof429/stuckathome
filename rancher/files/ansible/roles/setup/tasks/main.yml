@@ -25,35 +25,6 @@
     - curl
     - ntp
 
-- name: Download the Google Cloud public signing key
-  get_url:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    dest: /usr/share/keyrings/kubernetes-archive-keyring.gpg
-    mode: 0644
-  
-- name: Add the Kubernetes apt repository
-  shell: echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-
-- name: apt update
-  apt:
-    update_cache: yes
-    
-- name: Install kubectl
-  apt: 
-    name:
-      - kubectl
-
-- name: Download the Helm public signing key
-  shell: curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-
-- name: Add the Helm apt repository
-  shell: echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-
-- name: apt update
-  apt:
-    update_cache: yes
-    
-- name: Install helm
-  apt: 
-    name:
-      - helm
+- name: Setup kubemaster
+  include_tasks: setup_kubemaster.yml
+  when: "inventory_hostname == 'kubemaster'"
