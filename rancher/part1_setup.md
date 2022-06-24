@@ -13,9 +13,7 @@ The following steps creates a 3 node Kubernetes cluster using Rancher.
   2. Login to the VM, update packages, and reboot
 
     ```
-    sudo apt update
-    sudo apt upgrade
-    reboot
+    sudo apt -y update; sudo apt -y upgrade; sudo reboot
     ```
 
 ## Create the first node
@@ -55,10 +53,37 @@ Run the ansible role to install docker, helm, kubectl on all nodes
 ```
 ansible-playbook setup.yml 
 ```
+
 ## Install Rancher with Helm
 
-Follow the instructions at https://rancher.com/docs/rancher/v2.6/en/quick-start-guide/deployment/quickstart-manual-setup/ to install Rancher. 
+### Add the Helm Chart Repository
+
+```
+sudo helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
+```
+
+###  Create a Namespace for Rancher
+
+```
+sudo kubectl create namespace cattle-system
+```
+
+## Tips and Tricks
+
+- If you are unable to start the VM at a later time because you get the error: 
+  
+  ```
+  error: Cannot access storage file '/tmp/kubemaster/cloud-init.iso': No such file or directory
+  ```
+
+  Then eject the CDROM.
+
+  ```
+  sudo virsh change-media kubemaster sda --eject
+  ```
+
+
 
 ## References
 
-https://rancher.com/docs/rancher/v2.5/en/quick-start-guide/deployment/quickstart-manual-setup/
+https://rancher.com/docs/rancher/v2.6/en/installation/install-rancher-on-k8s/
