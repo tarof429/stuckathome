@@ -1,0 +1,21 @@
+---
+- name: Disable swap
+  command: swapoff -a
+
+- name: Remove Swap entry from /etc/fstab.
+  lineinfile:
+    dest: /etc/fstab
+    regexp: swap
+    state: absent
+
+- name: Install pre-requisites
+  apt:
+    pkg:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - ntp
+
+- name: Setup kubemaster
+  include_tasks: setup_kubemaster.yml
+  when: "inventory_hostname == 'kubemaster'"
