@@ -120,5 +120,6 @@ sudo virt-install --name $HOSTNAME --virt-type kvm --memory 4098 --vcpus 2 \
   --disk path=/var/lib/libvirt/images/snapshot-${HOSTNAME}-cloudimg.qcow2,device=disk \
   --graphics none \
   --console=pty,target_type=serial \
+  --noautoconsole \
   --os-variant ubuntu21.10 \
   --network=bridge=br0,model=virtio

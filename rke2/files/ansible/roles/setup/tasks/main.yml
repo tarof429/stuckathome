@@ -1,21 +1,39 @@
 ---
-- name: Disable swap
-  command: swapoff -a
-
-- name: Remove Swap entry from /etc/fstab.
-  lineinfile:
-    dest: /etc/fstab
-    regexp: swap
-    state: absent
-
-- name: Install pre-requisites
+- name: Install required packages
   apt:
-    pkg:
-    - apt-transport-https
-    - ca-certificates
+    name:
+    - vim
+    - wget
     - curl
-    - ntp
+    state: latest
+    update_cache: yes
 
-- name: Setup kubemaster
-  include_tasks: setup_kubemaster.yml
-  when: "inventory_hostname == 'kubemaster'"
+
+- name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
+  shell: |
+    swapoff -a
+
+- name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+.*)$'
+    replace: '# \1'
+
+- name: Modify sysctl entries
+  sysctl:
+    name: '{{ item.key }}'
+    value: '{{ item.value }}'
+    sysctl_set: yes
+    state: present
+    reload: yes
+  with_items:
+    - {key: net.bridge.bridge-nf-call-ip6tables, value: 1}
+    - {key: net.bridge.bridge-nf-call-iptables,  value: 1}
+    - {key: net.ipv4.ip_forward,  value: 1}
+
+- name: Install docker
+  shell: |
+    curl https://releases.rancher.com/install-docker/20.10.sh | sh
+    systemctl enable docker
+    systemctl start docker
+    usermod -aG docker ubuntu

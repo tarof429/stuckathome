@@ -1,5 +1,5 @@
-- hosts: all
-  become: yes
+- hosts: "{{ host }}"
   remote_user: ubuntu
+  become: yes
   roles:
     - setup

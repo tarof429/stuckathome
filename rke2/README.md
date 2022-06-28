@@ -1,46 +1,49 @@
 # RKE
 
-The following steps creates a 3 node Kubernetes cluster using rke2.
+## Create VMs
 
-## Create the kubemaster
-    
-  1. Provision the rke2master VM.
+Follow the steps in the k8s directory to create three VMs appropriate for our cluster.
 
-    ```
-    sh ./create_seeded_ubuntu_vm.sh  -n rke2master -i 192.168.0.50 -u ubuntu -p pass123 -s 40G
-    ```
+## Set up each node
 
-## Create the first node
-
-
-1. Provision the first Kubernetes worker node
-
-    ```
-    sh ./create_seeded_ubuntu_vm.sh  -n rke2worker01 -i 192.168.0.41 -u ubuntu -p pass123 -s 40G
-    ```
-
-
-## Create the second node
-
-1. Provision the second Kubernetes worker node
-
-  ```
-  sh ./create_seeded_ubuntu_vm.sh  -n rke2worker02 -i 192.168.0.42 -u ubuntu -p pass123 -s 40G
-  ```
-
-
-## Summary
-
-These steps created three nodes:
-
-rke2master 192.168.0.40
-rke2worker01 192.168.0.41
-rke2worker02 192.168.0.42
-
-## Setup the nodes  
-
-Run the ansible role to install docker, helm, kubectl on all nodes
+An ansible script has been set up to configure the nodes for Kubernetes.
 
 ```
-ansible-playbook setup.yml 
+ansible-playbook setup.yml
 ```
+
+## Configure the cluster
+
+```
+rke config
+```
+
+## Bring up the cluster
+
+```
+rke up
+```
+
+## Install kubectl
+
+Install kubectl on your bastion host.
+
+```
+sudo pacman -S kubectl
+```
+
+## Verify the cluster
+
+For some reason, rke creates cluster.yml in the home directory with the name kube_config_cluster.yml. You need to pass this filename to kubectl to interact with the cluster.
+
+```
+kubectl --kubeconfig kube_config_cluster.yml version
+```
+
+To make it easier for yourself, create a directory called .kube and put the file there.
+
+```
+mkdir ~/.kube
+mv ~/kube_config_cluster.yml ~/.kube/config
+```
+
