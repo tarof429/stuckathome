@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ngin-pod
+  labels:
+    name: ngin-pod
+spec:
+  containers:
+  - name: ngin-pod
+    image: ngin:latest
+    ports:
+      - containerPort: 81
