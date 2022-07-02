@@ -116,24 +116,7 @@ worker02 192.168.0.32
     bin
     boot
     dev
-    docker-entrypoint.d
-    docker-entrypoint.sh
-    etc
-    home
-    lib
-    lib64
-    media
-    mnt
-    opt
-    proc
-    root
-    run
-    sbin
-    srv
-    sys
-    tmp
-    usr
-    var
+    ...
     ```
 
     You can also get access to the pod via shell.

@@ -21,6 +21,7 @@
     * [Part 2: Installing Linux on KVM](kvm/part2_installing_linux_on_kvm)
     * [Part 3: Configuring KVM Network](kvm/part3_configuring_kvm_network.md)
     * [Part 4: Managing KVM](kvm/part4_managing_kvm.md)
+* [KVM with Vagrant](vagrant_qemu_kvm/README.md)
 * [AWS Certified Cloud Practitioner](aws_certified_cloud_practioner/README.md)
     * [Part 1: Questions](aws_certified_cloud_practioner/questions.md)
    * [Part 2: Exam](aws_certified_cloud_practioner/exam.md)
