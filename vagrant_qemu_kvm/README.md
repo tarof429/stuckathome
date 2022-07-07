@@ -68,8 +68,8 @@ Launch a VM and do a manual installation.
  sudo virt-install \
 --virt-type=kvm \
 --name centos7 \
---ram 2048 \
---vcpus=1 \
+--ram 4096 \
+--vcpus=2 \
 --os-variant=centos7.0 \
 --cdrom=/var/lib/libvirt/boot/CentOS-7-x86_64-Everything-2009.iso \
 --network=bridge=br0,model=virtio \
@@ -79,9 +79,9 @@ Launch a VM and do a manual installation.
 
 We're going to specify a disk size of 20GiB for /, and create a second partion for /var and give it the rest of the disk space.
 
-Enable DHCP for the eth0 netowrk device.
+Enable DHCP.
 
-We're also going to create a user called vagrant with password vagrant. Don't set the password for root user.
+We're also going to create a user called vagrant with password vagrant. Set the user as an administrator. Don't set the password for root user.
 
 After rebooting the VM, login as vagrant.
 
@@ -100,7 +100,7 @@ vagrant ALL=(ALL) NOPASSWD:ALL
 Install wget. 
 
 ```
-sudo yum install -y wget
+sudo yum install -y wget net-tools
 ```
 
 The put the SSH key from vagrant user.
@@ -122,6 +122,11 @@ sudo systemctl restart sshd
 
 Shutdown the VM.
 
+As these steps are repeatable, these steps have been collected into an Ansible script.
+
+```
+ansible-playbook setup.yml
+```
 
 Create a directory under /tmp
 
@@ -132,13 +137,14 @@ mkdir /tmp/multi_partitions
 Copy the qcow2 image to this directory.
 
 ```
+sudo mkdir -p /tmp/multi_partitions
 sudo cp /var/lib/libvirt/images/multi_partitions.qcow2 /tmp/multi_partitions/box.img
 ```
 
 Copy the files under `server_with_partitions` to this directory.
 
 ```
-cd vagrant_qemu_kvm/files/server_with_partitions
+cd vagrant_qemu_kvm/files/server_with_partitions/vagrant
 
 sudo cp * /tmp/multi_partitions
 ```
@@ -161,9 +167,28 @@ sudo vagrant box add --name multi_partitions multi_partitions.box
 Now you should be able to create the VM using vagrant. Create a directory under /tmp.
 
 ```
-mkdir /tmp/myvm
-cd /tmp/myvm
+mkdir ~/myvm
+cd ~/myvm
 sudo vagrant init multi_partitions
+```
+
+You should tweak the performance of the VM by modifying Vagrantfile to include the following.
+
+```
+  config.vm.provider "libvirt" do |vb|
+    vb.memory = "4096"
+    vb.cpus = "2"
+  end
+```
+
+Optionally, you can also set a static IP:
+
+```
+  config.vm.hostname = 'myvm.local'
+  config.vm.network "public_network", auto_config: false
+  config.vm.provision "shell",
+    run: "always",
+    inline: "ifconfig eth1 192.168.0.33 netmask 255.255.255.0 up"
 ```
 
 Now you should be able to bring up the VM.
@@ -189,3 +214,5 @@ https://github.com/vagrant-libvirt/vagrant-libvirt#create-box
 https://openattic.org/posts/how-to-create-a-vagrant-vm-from-a-libvirt-vmimage/
 
 https://unix.stackexchange.com/questions/222427/how-to-create-custom-vagrant-box-from-libvirt-kvm-instance
+
+https://www.vagrantup.com/docs/networking/public_network
