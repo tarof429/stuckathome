@@ -45,7 +45,7 @@ The `hello-world-pod` is a simple pod that uses the nginx image.
   nginx   1/1     Running   0          16m   10.42.2.11   worker01   <none>           <none>
   ```
 
-  Now try deploying tghe ngin-pod pod.
+  Now try deploying tghe ngin-pod pod. In Kubernetes, objects like pods can also be created using a YAML based file. 
 
   ```
   $ kubectl apply -f hello-world-bad-image-pod.yml 
@@ -56,7 +56,7 @@ The `hello-world-pod` is a simple pod that uses the nginx image.
   nginx      1/1     Running        0          19m   10.42.2.11   worker01   <none>           <none>
   ```
 
-  In this example, you can see that nginx-pod was unable to downloads the image, and the pod was being deployed on worker02.
+ You can see that nginx-pod was unable to downloads the image, and the pod was being deployed on worker02.
 
   The command below will show more details on why the pod failed to deploy, and where.
 
@@ -100,6 +100,36 @@ The `hello-world-pod` is a simple pod that uses the nginx image.
   ```
 
 Another useful command is `kubectl get pod --watch`. This lets you see the status of pod deployments.
+
+## Kubernetes POD YAML
+
+Let's take a closer look at the syntax of a YAML definition of a pod. All pods need four sections as illustrated in `hello-world-pod.yml`: apiVersion, kind, metadata, and spec.
+
+```
+apiVersion: v1
+kind: Pod 
+metadata:
+  name: nginx
+spec:
+  containers:
+    - name: nginx
+      image: nginx:latest
+      ports:
+      - containerPort: 80
+```
+
+You can see this structure at `https://kubernetes.io/docs/concepts/workloads/pods/` so you don't have to memorize every detail. The `apiVersion` and `kind` fields are key/value pairs. However, note the indentation for metadata. The metadata field is a dictionary. It is common to have an embedded dictionary called `labels`. For example:
+
+```
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+```
+
+If you create a Kubernets object using a text editor like vi, it is recommnded to use spaces instead of tabs to avoid a syntax error.
+
+
 
 ## Sidecar Pod
 

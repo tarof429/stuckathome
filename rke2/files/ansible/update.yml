@@ -1,0 +1,5 @@
+- hosts: "{{ host }}"
+  remote_user: ubuntu
+  become: yes
+  roles:
+    - update
