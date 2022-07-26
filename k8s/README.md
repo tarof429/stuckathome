@@ -1,5 +1,14 @@
-
 # README
+
+## The Problem Statement
+
+In the past, applications and their dependencies were deployed directly to servers. Whenever there was a new version of the application or its dependencies, the operations team was responsible for ensuring that changes in one application wouldn't break another application. Containers solved this dependency hell by isolation applications from each other in their own envioronments. If a container misbehaved or needed to be updated, operators could make a change without affecting any other containers. Developers could just concentrate on implementing microservices instead of a monolithic application where each of the components were tightly coupled with each other. Furthermore, containers were guaranteed to run correctly regardless of the host environment.
+
+This however led to another problem: how to orchestrate the lifecycle of these containers. The solution that Google came up with is called Kubernetes and is the most popular solution to container orchestration. Kubernetes is difficult to setup but provides a variety of ways to customize. In Kubernetes, a worker node is reponsible for running containers while the master node is responsible for scheduling containers. Multiple nodes make up a cluster, and true to its namesake, if a node becomes unavailable, workloads failover to other nodes. 
+
+When users interact with master nodes, they actually communicate with the API server. The command-line tool is called kubectl. Workload requests then get procesed by the scheduler, which stores information about the nodes and containers in a key store database like etcd. Each worker node runs a kubelet which talk to the API server or kube-apiserver and ensures the containers are running. 
+
+## This Project
 
 The project can be used to create VMs for a Kubernetes cluster. It requires a Linux host with KVM capabilities.
 
@@ -50,89 +59,8 @@ worker02 192.168.0.32
   sudo virsh change-media kubemaster sda --eject
   ```
 
-  ## Pods
+## References
 
-  - The `hello-world-pod` is a simple pod that uses the nginx image. 
+https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/
 
-    ```
-    kubectl apply -f hello-world-pod.yml
-    ```
-
-    To show all pods deployed to the cluster, run `kubectl get pod`
-
-    ```
-    $ kubectl get pod 
-    NAME    READY   STATUS    RESTARTS   AGE
-    nginx   1/1     Running   0          15m
-    ```
-
-    Since we have two worker nodes, a modified command will show which node it is deployed on.
-
-    ```
-    $ kubectl get pod -o wide
-    NAME    READY   STATUS    RESTARTS   AGE   IP           NODE       NOMINATED NODE   READINESS GATES
-    nginx   1/1     Running   0          16m   10.42.2.11   worker01   <none>           <none>
-    ```
-
-    Now try deploying tghe ngin-pod pod.
-
-    ```
-    $ kubectl apply -f hello-world-bad-image-pod.yml 
-    pod/ngin-pod created
-    [taro@zaxman deployments]$ kubectl get pod -o wide
-    NAME       READY   STATUS         RESTARTS   AGE   IP           NODE       NOMINATED NODE   READINESS GATES
-    ngin-pod   0/1     ErrImagePull   0          4s    10.42.1.14   worker02   <none>           <none>
-    nginx      1/1     Running        0          19m   10.42.2.11   worker01   <none>           <none>
-    ```
-
-    In this example, you can see that ngin-pod was unable to downloads the image, and the pod was being deployed on worker02.
-
-    The command below will show more details on why the pod failed to be deployed.
-
-    ```
-    $ kubectl describe pod ngin-pod
-    ```
-
-    How do you fix this? One way is to edit the pod and edit the image. Wait a few seconds, and the pod will be re-deployed.
-
-    ```
-    $ kubectl edit pod ngin-pod
-    $ kubectl get pod
-    NAME       READY   STATUS    RESTARTS   AGE
-    ngin-pod   1/1     Running   0          23m
-    nginx      1/1     Running   0          43m
-    ```
-
-    Another useful command is `kubectl logs <pod name>`
-
-    ```
-    kubectl logs ngin-pod
-    ```
-
-    Another useful command is `kubectl exec <pod name> -- <command>`
-
-    ```
-    $ kubectl exec ngin-pod -- ls / 
-    bin
-    boot
-    dev
-    ...
-    ```
-
-    You can also get access to the pod via shell.
-
-    ```
-    $ kubectl exec -it ngin-pod -- sh
-    # ls
-    bin   dev		   docker-entrypoint.sh  home  lib64  mnt  proc  run   srv  tmp  var
-    boot  docker-entrypoint.d  etc			 lib   media  opt  root  sbin  sys  usr 
-    ```
-
-  Another useful command is `kubectl get pod --watch`. This lets you see the status of pod deployments.
-
-  Sidecars are pods that create more than one container. One such example is provided in `two-containers.yml`. If you deploy it, you'll see that only one pod is in the running state. That's because the debian-container has already exited. 
-
-
-  ## References
-
-  https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/
+https://www.golinuxcloud.com/kubernetes-sidecar-container/
