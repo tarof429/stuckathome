@@ -13,7 +13,7 @@ vmname="$1"
 size="$2"
 
 # Copy the generic cloud image
-sudo cp /var/lib/libvirt/images/ubuntu-21.10-server-cloudimg-amd64.img \
+sudo cp /var/lib/libvirt/images/ubuntu-22.04-server-cloudimg-amd64.img \
   /var/lib/libvirt/images/snapshot-${vmname}-cloudimg.qcow2
 
 # Resize the cloud image

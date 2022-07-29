@@ -7,7 +7,11 @@
     - curl
     state: latest
     update_cache: yes
-
+  
+- name: Upgrade all packages
+  apt:
+    name: "*"
+    state: latest
 
 - name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
   shell: |
@@ -19,21 +23,18 @@
     regexp: '^([^#].*?\sswap\s+.*)$'
     replace: '# \1'
 
-- name: Modify sysctl entries
-  sysctl:
-    name: '{{ item.key }}'
-    value: '{{ item.value }}'
-    sysctl_set: yes
-    state: present
-    reload: yes
-  with_items:
-    - {key: net.bridge.bridge-nf-call-ip6tables, value: 1}
-    - {key: net.bridge.bridge-nf-call-iptables,  value: 1}
-    - {key: net.ipv4.ip_forward,  value: 1}
-
-- name: Install docker
+- name: Install rke2 on kubemaster
   shell: |
-    curl https://releases.rancher.com/install-docker/20.10.sh | sh
-    systemctl enable docker
-    systemctl start docker
-    usermod -aG docker ubuntu
+    curl -sfL https://get.rke2.io | sh -
+    systemctl enable rke2-server.service
+    systemctl start rke2-server.service
+  when: "inventory_hostname == 'kubemaster'"
+
+
+- name: Install rke2 on the workers
+  shell: |
+    curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" sh -
+    systemctl enable rke2-agent.service
+    systemctl start rke2-agent.service
+  when: inventory_hostname is match("worker.*")
+  become: yes

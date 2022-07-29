@@ -2,27 +2,44 @@
 
 ## Create VMs
 
-Follow the steps in the k8s directory to create three VMs appropriate for our cluster.
+Follow the steps in the k8s directory to create three VMs for our cluster.
 
-## Set up each node
+## Set up the nodes
 
-An ansible script has been set up to configure the nodes for Kubernetes.
+Run the Ansible script to install rke2 on the nodes.
 
 ```
 ansible-playbook setup.yml
 ```
 
-## Configure the cluster
+Note that this role is VERY basic. 
 
-```
-rke config
-```
+## Postsetup 
 
-## Bring up the cluster
+1. SSH to kubemaster and copy /etc/rancher/rke2/rke2.yaml to your localhost's ~/.kube/config.
 
-```
-rke up
-```
+2. On kubemaster, copy the contents of /var/lib/rancher/rke2/server/node-token
+
+3. Configure the rke2-agent service.
+
+    ```
+    mkdir -p /etc/rancher/rke2/
+    vim /etc/rancher/rke2/config.yaml
+    ```
+
+    Content for config.yaml:
+
+    ```
+    server: https://<server>:9345
+    token: <token from server node>
+    ```
+
+
+4. Start the service.
+
+    ```
+    systemctl start rke2-agent.service
+    ```
 
 ## Install kubectl
 
@@ -32,18 +49,6 @@ Install kubectl on your bastion host.
 sudo pacman -S kubectl
 ```
 
-## Verify the cluster
+## References
 
-For some reason, rke creates cluster.yml in the home directory with the name kube_config_cluster.yml. You need to pass this filename to kubectl to interact with the cluster.
-
-```
-kubectl --kubeconfig kube_config_cluster.yml version
-```
-
-To make it easier for yourself, create a directory called .kube and put the file there.
-
-```
-mkdir ~/.kube
-mv ~/kube_config_cluster.yml ~/.kube/config
-```
-
+https://docs.rke2.io/

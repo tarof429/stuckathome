@@ -106,7 +106,7 @@ sudo cloud-localds -v --network-config=/tmp/$HOSTNAME/network_config_static.cfg 
 sleep 1
 
 # Copy the generic cloud image
-sudo cp -f /var/lib/libvirt/images/ubuntu-21.10-server-cloudimg-amd64.img \
+sudo cp -f /var/lib/libvirt/images/ubuntu-22.04-server-cloudimg-amd64.img \
   /var/lib/libvirt/images/snapshot-${HOSTNAME}-cloudimg.qcow2
 
 # Resize the cloud image
@@ -121,5 +121,5 @@ sudo virt-install --name $HOSTNAME --virt-type kvm --memory 4098 --vcpus 2 \
   --graphics none \
   --console=pty,target_type=serial \
   --noautoconsole \
-  --os-variant ubuntu21.10 \
+  --os-variant ubuntu-lts-latest \
   --network=bridge=br0,model=virtio

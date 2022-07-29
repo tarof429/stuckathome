@@ -59,6 +59,10 @@ worker02 192.168.0.32
   sudo virsh change-media kubemaster sda --eject
   ```
 
+## Next Steps
+
+Follow the steps in the rke2 directory.
+
 ## References
 
 https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/

@@ -140,12 +140,16 @@ Another method for automated installation involves using the Cloud Init image. T
 
 The mkpasswd program is usde to generate the hashed password. See https://aur.archlinux.org/packages/mkpasswd.
 
-2. Next, download the latest cloud init image from https://cloud-images.ubuntu.com/releases/21.10/release/. The file name is `ubuntu-21.10-server-cloudimg-amd64.img`. 
+2. Next, download the latest LTS cloud init image for Ubuntu. For example, Jammy Jellyfish is at https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img. 
+
+  ```
+  wget https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img
+  ```
 
 3. Move it to /var/lib/libvirt/boot
 
     ```
-    sudo mv ubuntu-21.10-server-cloudimg-amd64.img /var/lib/libvirt/boot/
+    sudo mv ubuntu-22.04-server-cloudimg-amd64.img /var/lib/libvirt/boot/
     ```
 
 4. Create VMs using the script `ubuntu/files/create_ubuntu_kvm.sh` For example:
