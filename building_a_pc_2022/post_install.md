@@ -7,6 +7,8 @@
     netctl start enp4s0
     ```
 
+    By the way, enp4s0 is the name of the profile you want to enable. You can create other profiles too and enable and disable them using netctl. See the section on kvm to read on how to set up bridge networking.
+
 - Install reflector: https://wiki.archlinux.org/title/reflector and https://man.archlinux.org/man/reflector.1#EXAMPLES. For example:
 
     ```

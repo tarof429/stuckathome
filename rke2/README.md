@@ -12,33 +12,30 @@ Run the Ansible script to install rke2 on the nodes.
 ansible-playbook setup.yml
 ```
 
-Note that this role is VERY basic. 
+Note that this role is VERY basic and you must continue with the post-setup steps, below.
 
-## Postsetup 
+## Post-setup 
 
-1. SSH to kubemaster and copy /etc/rancher/rke2/rke2.yaml to your localhost's ~/.kube/config.
-
-2. On kubemaster, copy the contents of /var/lib/rancher/rke2/server/node-token
-
-3. Configure the rke2-agent service.
+1. SSH to kubemaster and copy config.yaml  to your localhost's ~/.kube/config.
 
     ```
-    mkdir -p /etc/rancher/rke2/
-    vim /etc/rancher/rke2/config.yaml
+    ssh ubunut@192.168.0.30 "sudo cp /etc/rancher/rke2/rke2.yaml ~/config.yaml"
+    ssh ubuntu@192.168.0.30 "sudo chown ubuntu:ubuntu ~/config.yaml"
+    scp ubuntu@192.168.0.30:config.yaml ~/.kube/config
+    sed -i 's/127.0.0.1/192.168.0.30/' ~/.kube/config
     ```
 
-    Content for config.yaml:
+2. Get the token we need to register the nodes
 
     ```
-    server: https://<server>:9345
-    token: <token from server node>
+    ssh ubuntu@192.168.0.30 "sudo cat /var/lib/rancher/rke2/server/node-token"
     ```
 
 
-4. Start the service.
+3. Star the agents
 
     ```
-    systemctl start rke2-agent.service
+    ansible-playbook register.yml
     ```
 
 ## Install kubectl
@@ -49,6 +46,20 @@ Install kubectl on your bastion host.
 sudo pacman -S kubectl
 ```
 
+## Try it Out
+
+```
+kubectl run nginx --image=nginx
+pod/nginx created
+[taro@zaxman ~]$ kubectl get po
+NAME    READY   STATUS              RESTARTS   AGE
+nginx   0/1     ContainerCreating   0          5s
+[taro@zaxman ~]$ kubectl get po nginx -o wide
+NAME    READY   STATUS    RESTARTS   AGE   IP          NODE       NOMINATED NODE   READINESS GATES
+nginx   1/1     Running   0          19s   10.42.1.3   worker01   <none>           <none>
+
+```
+
 ## References
 
-https://docs.rke2.io/
+https://docs.rke2.io/install/quickstart/

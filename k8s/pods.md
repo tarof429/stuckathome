@@ -118,7 +118,11 @@ spec:
       - containerPort: 80
 ```
 
-You can see this structure at `https://kubernetes.io/docs/concepts/workloads/pods/` so you don't have to memorize every detail. The `apiVersion` and `kind` fields are key/value pairs. However, note the indentation for metadata. The metadata field is a dictionary. It is common to have an embedded dictionary called `labels`. For example:
+You can see this structure at `https://kubernetes.io/docs/concepts/workloads/pods/` so you don't have to memorize every detail. The `apiVersion` and `kind` fields are key/value pairs. However, note the indentation for metadata. The metadata field is a dictionary.
+
+If you create a Kubernetes object using a text editor like vi, it is recommnded to use two spaces instead of tabs to avoid a syntax error.
+
+The apiVersion for a pod is always v1. The kind is Pod. Since the metadata field is a dictionary, you need to add indentation and then add key/value pairs.  It is common to have an embedded dictionary called `labels`. For example:
 
 ```
 metadata:
@@ -127,9 +131,40 @@ metadata:
     app: myapp
 ```
 
-If you create a Kubernets object using a text editor like vi, it is recommnded to use spaces instead of tabs to avoid a syntax error.
+Containers is an array/list. Each element needs to be prefixed by a dash.
 
+Here's another example:
 
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres
+  labels:
+    tier: db-tier
+spec:
+  containers:
+    - name: postgres
+      image: postgres
+```
+
+Here's another example:
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres
+  labels:
+    tier: db-tier
+spec:
+  containers:
+    - name: postgres
+      image: postgres
+      env:
+        - name: POSTGRES_PASSWORD
+          value: mysecretpassword
+```
 
 ## Sidecar Pod
 
@@ -190,3 +225,7 @@ The key takeways are:
 - Sidecar is a pattern where two or more containers are deployed in a pod.
 
 - The sidecar pattern is useful when two containers are tightly coupled.
+
+## Exercises
+
+1. Suppose you have a pod called webapp. How can you find out what images are used in the webapp? Answer: run kubectl describe pod webapp | more.
