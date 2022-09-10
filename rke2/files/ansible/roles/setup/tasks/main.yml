@@ -27,14 +27,14 @@
   shell: |
     curl -sfL https://get.rke2.io | sh -
     systemctl enable rke2-server.service
-    systemctl start rke2-server.service
   when: "inventory_hostname == 'kubemaster'"
-
 
 - name: Install rke2 on the workers
   shell: |
     curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" sh -
     systemctl enable rke2-agent.service
-    systemctl start rke2-agent.service
   when: inventory_hostname is match("worker.*")
-  become: yes
+
+- name: Reboot everything
+  reboot:
+  ignore_errors: yes

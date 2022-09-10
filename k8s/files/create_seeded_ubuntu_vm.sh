@@ -116,7 +116,7 @@ sleep 1
 
 sudo virt-install --name $HOSTNAME --virt-type kvm --memory 4098 --vcpus 2 \
   --boot hd,menu=on \
-  --disk path=/tmp/$HOSTNAME/cloud-init.iso,device=cdrom \
+  --cdrom /tmp/$HOSTNAME/cloud-init.iso \
   --disk path=/var/lib/libvirt/images/snapshot-${HOSTNAME}-cloudimg.qcow2,device=disk \
   --graphics none \
   --console=pty,target_type=serial \

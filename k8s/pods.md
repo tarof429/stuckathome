@@ -4,6 +4,8 @@
 
 A pod is the simplest unit that can be deployed to containers. Most pods consist of only one container, but it is possible to deploy multiple containers. A pod runs on a worker node.
 
+### Creating a basic Nginx Pod
+
 The easiest way to run a docker image as a pod in Kubernetes is to use the imperative command:
 
 ```
@@ -11,7 +13,7 @@ kubectl run nginx --image nginx
 pod/nginx created
 ```
 
-This command tells kubectl to create a pod called `nginx` using the nginx image. 
+This command tells kubectl to create a pod called `nginx` using the nginx image. This method is useful to know on the CKE.
 
 Now let's see if this command really worked.
 
@@ -22,6 +24,33 @@ nginx   1/1     Running   0          8s
 ```
 
 Yes it did!
+
+### Creating a pod yaml file without actually creating the pod
+
+It can be useful to run a command to create a yaml file without actually creating the pod.
+
+```
+kubectl run nginx --image=nginx --dry-run=client -o yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+```
+
+You can redirect the output to a file, edit the file, and then deploy the file.
+
+### Creating a pod using a yaml file
 
 The `hello-world-pod` is a simple pod that uses the nginx image. 
 

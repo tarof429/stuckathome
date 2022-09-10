@@ -19,32 +19,40 @@ Note that this role is VERY basic and you must continue with the post-setup step
 1. SSH to kubemaster and copy config.yaml  to your localhost's ~/.kube/config.
 
     ```
-    ssh ubunut@192.168.0.30 "sudo cp /etc/rancher/rke2/rke2.yaml ~/config.yaml"
-    ssh ubuntu@192.168.0.30 "sudo chown ubuntu:ubuntu ~/config.yaml"
-    scp ubuntu@192.168.0.30:config.yaml ~/.kube/config
-    sed -i 's/127.0.0.1/192.168.0.30/' ~/.kube/config
+    ssh ubuntu@192.168.1.30 "sudo cp /etc/rancher/rke2/rke2.yaml ~/config.yaml"
+    ssh ubuntu@192.168.1.30 "sudo chown ubuntu:ubuntu ~/config.yaml"
+    scp ubuntu@192.168.1.30:config.yaml ~/.kube/config
+    sed -i 's/127.0.0.1/192.168.1.30/' ~/.kube/config
     ```
 
 2. Get the token we need to register the nodes
 
     ```
-    ssh ubuntu@192.168.0.30 "sudo cat /var/lib/rancher/rke2/server/node-token"
+    ssh ubuntu@192.168.1.30 "sudo cat /var/lib/rancher/rke2/server/node-token"
     ```
 
 
 3. Star the agents
 
     ```
-    ansible-playbook register.yml
+    ansible-playbook register.yml -e "token=<the token>"
     ```
 
 ## Install kubectl
 
-Install kubectl on your bastion host.
+Install kubectl on your localhost host.
 
 ```
 sudo pacman -S kubectl
 ```
+
+## Check node status
+
+```
+kubectl get nodes
+```
+
+Eventually the status of the nodes should all be "ready"
 
 ## Try it Out
 

@@ -23,16 +23,18 @@ sh ./create_vms.sh
 
 These steps created three nodes:
 
-kubemaster 192.168.0.30
-worker01 192.168.0.31
-worker02 192.168.0.32
+kubemaster 192.168.1.30
+worker01 192.168.1.31
+worker02 192.168.1s.32
 
 ## Cleanup
 
 ```
+{
 sudo virsh change-media kubemaster sda --eject
 sudo virsh change-media worker01 sda --eject
 sudo virsh change-media worker02 sda --eject
+}
 ```
 
 ## Next Steps
