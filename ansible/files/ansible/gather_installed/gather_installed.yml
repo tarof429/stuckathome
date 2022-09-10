@@ -1,0 +1,14 @@
+---
+- name: Gather installed
+  hosts: all
+  remote_user: centos
+  tasks:
+  - name: Gather installed
+    gather_installed:
+
+  - name: Print variables
+    debug: var=hostvars[inventory_hostname]['packages_installed']
+
+  - name: When httpd is installed
+    debug: msg='do something when httpd is installed'
+    when: "'httpd' in packages_installed"

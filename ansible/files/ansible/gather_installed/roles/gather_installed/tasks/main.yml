@@ -1,0 +1,3 @@
+---
+- name: Gather installed
+  gather_installed:

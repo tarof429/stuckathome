@@ -1,0 +1,24 @@
+#cloud-config
+hostname: ##HOSTNAME##
+fqdn: ##HOSTNAME##.localdomain.local
+manage_etc_hosts: true
+users:
+  - name: ##USER##
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: [ sudo ]
+    home: /home/##USER##
+    shell: /bin/bash
+    lock_passwd: false
+    passwd: ##PASSWORD##
+    ssh-authorized-keys:
+      - ##PUBKEY##
+# only cert auth via ssh (console access can still login)
+ssh_pwauth: false
+disable_root: false
+chpasswd:
+  expire: False
+package_update: false
+packages:
+  - qemu-guest-agent
+# written to /var/log/cloud-init-output.log
+final_message: "The system is up, after $UPTIME seconds"
