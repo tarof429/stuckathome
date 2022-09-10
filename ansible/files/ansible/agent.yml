@@ -1,0 +1,11 @@
+---
+- name: Get agent ID
+  hosts: all
+  remote_user: centos
+
+  tasks:
+  - name: Get agent ID
+    agent:
+
+  - name: Print variables
+    debug: var=hostvars[inventory_hostname]['agent-id']

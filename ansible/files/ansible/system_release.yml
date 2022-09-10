@@ -1,0 +1,11 @@
+---
+- name: Get system release
+  hosts: all
+  remote_user: centos
+  tasks:
+  - name: Get system release
+    system_release:
+
+  - name: Print variables
+    debug: var=hostvars[inventory_hostname]['system-release']
+
