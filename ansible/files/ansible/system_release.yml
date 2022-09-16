@@ -1,6 +1,6 @@
 ---
 - name: Get system release
-  hosts: all
+  hosts: test-centos
   remote_user: centos
   tasks:
   - name: Get system release

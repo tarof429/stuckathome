@@ -1,6 +1,6 @@
 ---
 - name: Gather installed
-  hosts: all
+  hosts: test-centos
   remote_user: centos
   tasks:
   - name: Gather installed

@@ -1,4 +1,11 @@
 all:
+  vars:
+    default-virtual-appliance-id: 2222
   hosts:
     test-centos:
       ansible_host: 192.168.1.35 
+
+    virtual-appliance:
+      ansible_host: 192.168.1.35 
+      vars:
+        virtual-appliance-id: 3598

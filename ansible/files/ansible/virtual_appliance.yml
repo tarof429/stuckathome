@@ -1,0 +1,13 @@
+---
+- name: Get virtual appliance ID
+  hosts: virtual-appliance
+  remote_user: centos
+  gather_facts: no
+
+  tasks:
+  - name: Get virtual appliance ID
+    virtual_appliance:
+    ignore_unreachable: yes
+
+  - name: Print variables
+    debug: var=hostvars[inventory_hostname]
