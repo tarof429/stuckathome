@@ -39,6 +39,17 @@ Finally, let's destroy the instance. This will terminiate the instance but it ma
 terraform destroy
 ```
 
+## Helloworld2 example
+
+This next example adds a data section to look up the latest Ubuntu AMI available. Note that in order to run this example, you need to subscribe to Ubuntu 22.04 LTS - Jammy in the AWS Marketplace.
+
+```
+cd files/helloworld2
+terraform init
+terrform apply
+```
+
+See https://aws.amazon.com/premiumsupport/knowledge-center/cancel-marketplace-subscription/ for steps on how to unsubscribe to the subscription.
 
 ## References
 
