@@ -51,6 +51,24 @@ terrform apply
 
 See https://aws.amazon.com/premiumsupport/knowledge-center/cancel-marketplace-subscription/ for steps on how to unsubscribe to the subscription.
 
+
+## Hellolocal example
+
+This example writes a file with some content using the local_file resource.
+
+Before we run terraform apply, you can run terraform plan to preview changes. 
+
+If you want to now apply changes without prompting, run:
+
+```
+terraform apply -auto-approve
+```
+
+If you make a change to the file and run terraform apply again, the file contents will be restored. This is an example of configuration drift and state machine.
+
+
+However, rather than running terraform apply every time, it is best to run terraform refresh. This allows terraform to reconcile changes made remotely (in this case, in the file) with the .tfstate file.
+
 ## References
 
 https://livebook.manning.com/book/terraform-in-action
