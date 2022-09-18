@@ -1,34 +1,45 @@
 # Part 2: Creating an EC2 instance
 
-## Simple Example
+## HelloWorld Example
 
-I find that the easiest way to get started with Terraform is to use it to create an EC2 instance. This is actually what the Terraform documentation walks you through. As such, I don't think there's a need to repeat what is already being said.
+We start with a simple example that creates an EC2 instance using an AMI. The AMI is for Ubuntu Server 22.04 LTS. 
 
-I've created an example at files/ec2_example. Some key differences are:
+First cd to the helloworld example.
 
-- I removed the section where a specific version of the aws provider and terraform is specified. I discovered that in doing this, terraform will download the latest version anyways, and this version will be specified in .terraform.lock.hcl (In fact, you don't need to specicy the aws provider. But I suppose this is a good practice.)
-- The AMI is for Ubuntu Server 20.04 LTS. I'm not sure what the Hashicorp documentation uses, although if you read down it does say that it refers to an Ubuntu image.
+```
+cd files/helloworld
+```
 
-I found that running terraform fmt works as advertised: it formats the .tf file and aligns everything. Don't spend time aligning lines by hand, rely on `terraform fmt`!
+If you write teraform files by hand, run terraform fmt to format the file.
 
-It's actually quite easy to create, modify, and delete EC2 instances with Terraform. 
+```
+terraform fmt
+```
 
-I found that with Terraform, it's easy to change tags without recreating the instance.
+Next, run terraform init. 
 
-Also I found that creating an outputs.tf file is useful so that I don't have to go into the AWS console to find the public IP.
+```
+cd files/helloworld
+terraform init
+```
 
-I did not have success using Terraform Cloud. It may have something to do with a typo in main.tf, but as a result I could no longer run `terraform apply` any more. Just to get my code working agaion, I had to delete my EC2 instance manually, delte .terraform and .terraform.lock.hcl, and I also deleted my Terraform Cloud workspace. There doesn't seem to be a way to delete my Terraform Cloud account.
+Next, run terraform apply. You'll be prompted to approve the changes.
 
-## EC2 creation with user data
+```
+terraform apply
+```
 
-Often creating an EC2 instance is not enough. We want to install some packages for example, or set up the hostname so it's memorable. So how do we do this? With user data, of course!
+Note that AMI IDs are unique to AWS regions. If you get an error saying that the AMI could not be found, validate that the AMI ID exists in the region you want to use.
 
-The ec2_better_example directory has an example of creating an EC2 instance and performing post-install actions using user data. Note that this EC2 instance makes use of a security group called *simple_security_group*. This group allows SSH from my local IP. 
+You can validate the result by logging into the AWS console and going to the EC2 dashboard. Alternatively, run terraform show to see the same values.
 
-## Note about commiting Terraform files to git.
+Finally, let's destroy the instance. This will terminiate the instance but it may take some time for the instance to be removed.
 
-Do not commit .tfstate files. Add them to .gitignore.
+```
+terraform destroy
+```
+
 
 ## References
 
-https://learn.hashicorp.com/tutorials/terraform/aws-build?in=terraform/aws-get-started
+https://livebook.manning.com/book/terraform-in-action

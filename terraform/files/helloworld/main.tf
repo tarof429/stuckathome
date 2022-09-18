@@ -8,15 +8,15 @@ terraform {
 }
 
 provider "aws" {
-  profile = "default"
+  profile = "tf-user"
   region  = "us-west-2"
 }
 
 resource "aws_instance" "app_server" {
-  ami           = "ami-074251216af698218"
+  ami           = "ami-0d70546e43a941d70"
   instance_type = "t2.micro"
 
   tags = {
-    Name = var.instance_name
+    Name = "HelloWorld"
   }
 }
