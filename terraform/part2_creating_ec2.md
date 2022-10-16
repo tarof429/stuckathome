@@ -67,7 +67,7 @@ terraform apply -auto-approve
 If you make a change to the file and run terraform apply again, the file contents will be restored. This is an example of configuration drift and state machine.
 
 
-However, rather than running terraform apply every time, it is best to run terraform refresh. This allows terraform to reconcile changes made remotely (in this case, in the file) with the .tfstate file.
+However, rather than running terraform apply every time, it is best to run terraform refresh. This allows terraform to reconcile changes made remotely (in this case, in the file) with the .tfstate file. 
 
 ## References
 
