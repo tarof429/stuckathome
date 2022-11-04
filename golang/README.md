@@ -29,6 +29,7 @@
 	12. [Internals](#internals)
 	13. [Random](#random)
 	14. [Data Structures](#datastructures)
+	15. [User Input](#userinput)
 
 
 ---
@@ -36,7 +37,7 @@
 
 ### [Packages](#packages)
 
-Every Go program is made up of packages. The package that starts running programs is in package *main*. 
+Every Go program is made up of packages. The package that starts running programs is in package *main* and it should have a function called main().
 
 ```go
 package main
@@ -53,7 +54,7 @@ func main() {
 To run:
 
 ```go
-go run main.go
+go run hello.go
 ```
 
 To build:
@@ -125,7 +126,7 @@ func main() {
 
 ### [Variables](#variables)
 
-The var statement can be used to declare variables. 
+The var statement is used to declare variables. The type follows the variable name.
 
 ```go
 func main() {
@@ -147,7 +148,7 @@ func main() {
 // Taro is 37
 ```
 
-To print variable types, use %T.
+To print the variable type, use %T.
 
 ```go
 fmt.Printf("%T %T\n", name, age)
@@ -230,6 +231,41 @@ Not all three coins!
 dimes, nickels, pennies:  0 0 0
 */
 ```
+
+Go does not perform implicit type conversion when performing mathematical operations. For example: 
+
+```go
+i := 10
+f := 3.0
+
+// This will result in an error
+fmt.Printf("Sum: %v\n", i + f)
+```
+
+To fix this, we must convert the type by calling a function.
+
+```go
+var i int = 10
+var f float64 := 3.0
+
+fmt.Printf("sum: %v\n", float64(i) + f)
+```
+
+You can run into precission issues when performing floating point arithmetic.
+
+```go
+f1, f2, f3 := 8.1, 1.3, 9.1356
+floatSum := f1 + f2 + f3
+fmt.Println("Float sum: ", floatSum) // Prints  18.535600000000002
+```
+
+To fix this, use math.Round().
+
+```go
+fmt.Println("Float sum: ", math.Round(floatSum)) // Prints 19
+// 	fmt.Println("Float sum: ", math.Round(floatSum*10)/10) will give you one digit of precision
+```
+
 
 #### Short variable declaration
 
@@ -388,6 +424,39 @@ func main() {
 }
 ```
 
+The output of the following:
+
+```go
+func main() {
+  var out int
+  
+  for j:=0; j < 20; j++ {
+    out=j*j + out
+    if out > 12 {
+      goto theEnd 
+     }  
+  }
+  theEnd: fmt.Println(out)  
+}
+```
+
+is
+
+```go
+j = 0
+out = 0 * 0 * out = 0
+
+j = 1
+out = 1 * 1 + 0 = 1
+
+j = 2
+out = 2 * 2 + 1 = 5
+
+j = 3
+out = 3 * 3 + 5 = 14
+
+// Result is 14
+```
 #### If statement
 
 If statements evaluate some condition; the body needs to be within braces.
@@ -562,6 +631,42 @@ Mary James
 Mary James
 */
 ```
+
+Below is another example.
+
+```go
+func main() {
+	a := "hippo"
+	var p = &a
+
+	fmt.Println(*p)
+}
+```
+
+There are two ways to allocate memory. If you use new(), memory is allocated but the space is not initialized. The make() function on the other hand both alocates and initializes memory.
+
+For example:
+
+```go
+func main() {
+	m := new(map[string]string)
+	m["color"] = "red"
+	fmt.Println(m)
+}
+```
+
+This results in a crash. Instead, you want to use the make() function.
+
+```go
+func main() {
+	m := make(map[string]string)
+	m["color"] = "red"
+	fmt.Println(m)
+}
+```
+
+Memory is deallocated automatically by the garbage collector. 
+
 
 ### [Structs](#structs)
 
@@ -887,7 +992,7 @@ We can use the range function to iterate through an array without computing its 
 	}
 ```
 
-or more succintly if we only care about the value:
+or more succintly, if we only care about the value:
 
 ```go
 	for _, element := range colors {
@@ -914,28 +1019,21 @@ func main() {
 }
 ```
 
+Arrays cannot be changed once created. You can't add elements to it or sort the values. 
+
 #### [Slices](#slices)
 
 A slice is an array without a predefined size. 
 
 ```go
 func main() {
-	ids := [6]int{3, 5, 7, 11, 13}
+	ids := [ ]int{3, 5, 7, 11, 13}
 
 	for _, v := range ids {
 		fmt.Println(v)
 	}
 }
 
-```
-
-Specifying the size of a slice is optional.
-
-```go
-func main() {
-	fruit := []string{"apple", "orange"}
-	fmt.Println(fruit)
-}
 ```
 
 Below is an example where we sum all the elements of the slice.
@@ -1170,6 +1268,29 @@ func main() {
 	fmt.Println(lines)
 }
 // [Hello world I love Go!]
+```
+
+Another example:
+
+```go
+func main() {
+	var colors = []{string{"red", "blue", "yellow"}
+	colors = append(colors, "purple")
+	colors = append(colors, "green")
+
+	fmt.Println(colors)
+}
+```
+
+
+The append() function can also be used to remove elements from a slice. The code below calls append with only one argument. This effectively removes elements 0 and 1 from the slice.
+
+```go
+func main() {
+	var ary = []int16{12, 7, 4, 67, 82}
+	ary = append(ary[2:len(ary)])
+	fmt.Println(ary[2]) // 82
+}
 ```
 
 Earlier we saw an example of using range over a slice of an slice of colors. We can also use range directly on a slice.
@@ -1436,6 +1557,36 @@ func main() {
 */
 ```
 
+Maps can be sorted but to do this, you need to sort the keys, then use the key to access the vaule.
+
+```go
+func main() {
+	ips := make(map[string]string)
+	ips["gorilla"] = "host1"
+	ips["monkey"] = "host2"
+	ips["pen"] = "host3"
+	ips["apple"] = "host4"
+
+	// fmt.Println(ips)
+	// delete(ips, "192.168.2.1")
+
+	keys := make([]string, len(ips))
+	i := 0
+
+	for ip := range ips {
+		keys[i] = ip
+		i++
+	}
+
+	sort.Strings(keys)
+
+	for i := range keys {
+		fmt.Println(ips[keys[i]])
+	}
+
+}
+```
+
 ### [Functions](#functions)
 
 Below is an example of a function which takes an argument and returns a string. Notice that the type comes after the name of the variable.
@@ -1551,6 +1702,8 @@ func main() {
 	fmt.Println(p.greet())
 }
 ```
+
+Here, n is a receiver object.
 
 If we want to modify the content of a struct, we must use a *pointer receiver*. What happens in this case is that we pass the address of the variable to the function and not simply its values. 
 
@@ -3085,6 +3238,42 @@ func main() {
 	list.Add(3)
 	list.Add(4)
 	list.Visit()
+}
+```
+
+[User Input](#userinput)
+
+Use the *bufio* package to read user input into a variable.
+
+```go
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
+)
+
+func main() {
+
+
+	reader := bufio.NewReader(os.Stdin)
+
+	var trimmedPassword string
+
+	for {
+		fmt.Print("Enter passsword: ")
+
+		password, _ := reader.ReadString('\n')
+
+		trimmedPassword = strings.TrimSpace(password)
+
+		if len(trimmedPassword) > 0 {
+			break
+		}
+
+	}
+	fmt.Printf("You entered: %v\n", trimmedPassword)
+
 }
 ```
 
