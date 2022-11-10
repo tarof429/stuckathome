@@ -31,3 +31,4 @@
     * [Part 2: Partitioning](building_a_pc_2022/partitioning.md)
     * [Part 3: Storage](building_a_pc_2022/storage.md)
 * [k3s](k3s/part1_setup.md)
+* [Monitoring](monitoring/README.md)

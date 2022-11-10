@@ -13,7 +13,7 @@ vmname="$1"
 size="$2"
 
 # Copy the generic cloud image
-sudo cp /var/lib/libvirt/boot/CentOS-7-x86_64-GenericCloud-2009.qcow2 \
+sudo cp /var/lib/libvirt/images/CentOS-7-x86_64-GenericCloud-2009.qcow2 \
   /var/lib/libvirt/boot/snapshot-${vmname}-cloudimg.qcow2
 
 # Resize the cloud image

@@ -1,0 +1,25 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: [Alertname]
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 10s
+  receiver: 'email'
+receivers:
+- name: 'email'
+  email_configs:
+  - send_resolved: true
+    to: 'email_id@gmail.com'
+    from: 'alertmanager@gmail.com'
+    smarthost: smtp.gmail.com:587
+    auth_username: 'email_id@gmail.com'
+    auth_identity: 'email_id@gmail.com'
+    auth_password: 'email_password'
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']
