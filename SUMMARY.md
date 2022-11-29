@@ -32,3 +32,6 @@
     * [Part 3: Storage](building_a_pc_2022/storage.md)
 * [k3s](k3s/part1_setup.md)
 * [Monitoring](monitoring/README.md)
+* [Ubuntu]
+    * [Part 1: Netbooting Ubuntu](ubuntu/netbooting_ubuntu.md)
+    * [Part 2: Kernel Crash Debugging](ubuntu/kernel_crash_debugging.md)
