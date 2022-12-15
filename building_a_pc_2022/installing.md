@@ -21,6 +21,8 @@ Since all the partitioning was done in the previous step, we should now proceed 
     pacstrap /mnt base linux-lts linux-firmware netctl
     ```
 
+    Note that the above command installs the LTS kernel; replace this with `linux` if you want to install the latest stable kernel.
+
 - Generated fstab by running `genfstab -U /mnt >> /mnt/etc/fstab` (you can preview the contents by not redirecting the output)
 
 - Set time to UTC: `ln -sf /usr/share/zoneinfo/UTC /etc/localtime`
