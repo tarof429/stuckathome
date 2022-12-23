@@ -42,5 +42,5 @@
 - Install either the latest stable kernel or the LTS kernel.
 
     ```
-    sudo pacman -S linux
+    sudo pacman -S linux-ltss
     ```
