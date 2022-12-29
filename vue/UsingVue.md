@@ -4,7 +4,7 @@
 
 This section is based on https://www.vuemastery.com/courses/real-world-vue3/vue-cli-creating-the-project.
 
-## Creating a Project
+## Creating a Project using the CLI
 
 After installing vue, run the following command to create a vue project.
 
@@ -15,7 +15,7 @@ vue create <project name>
 For example:
 
 ```
-vue creast real-world-vue
+vue create real-world-vue
 ```
 
 This will display an interactive menu.
@@ -74,6 +74,9 @@ Go to the project directory of real-world-vue.
 - App.vue is the root component in which all of our application code is nested. 
 - main.js takes all of our application code and creates are app, mounting it to the DOM, specifically in the DIV in index.html. with the ID of app.
 
+
 ## References
 
 - https://www.vuemastery.com/
+
+- https://vuejs.org/guide/quick-start.html#creating-a-vue-application
