@@ -10,9 +10,9 @@ This section covers:
 
 - Reacting to user input
 
-The example project is basics-01-starting-code.
+## Outputing Dynamic Content
 
-## Steps
+The example project is basics-01-starting-code.
 
 1. In the Javascript file, create an App().
 
@@ -115,3 +115,160 @@ If our data includes HTML tags, use v-html to interpolate it correctly.
 ```
 
 Note that this is not recommended as it can introduce XSS vulnerabilities.
+
+## Reacting to User Input
+
+### Basics
+
+To react to button clicks, we can use `v-on`. The code below increments the counter variable when the user clicks the Add button (this snippet is from `basics-03-events-starting-code`).
+
+```
+<button v-on:click="counter++">Add</button>
+```
+
+We could also call a function: 
+
+```html
+<button v-on:click=increment()>Add</button>
+```
+
+which is defined as: 
+
+```javascript
+increment() {
+    this.counter++;
+}
+```
+
+The resulting Javascript would look something like this:
+
+```javascript
+methods: {
+increment() {
+    this.counter++;
+},
+
+decrement() {
+    this.counter--;
+}
+    
+```
+
+Earlier the HTML contained the line
+
+```html
+<button v-on:click=increment()>Add</button>
+```
+
+But this could be rewritten
+
+```html
+<button v-on:click="increment">Add</button>
+```
+
+Vue will figure it out.
+
+We can also use functions with arguments. Here in the HTML:
+
+```html
+<section id="events">
+    <h2>Events in Action</h2>
+    <button v-on:click=increment(5)>Add</button>
+    <button v-on:click=decrement(5)>Remove</button>
+    <p>Result: {{ counter }}</p>
+</section>
+```
+
+And this is what the methods would look like:
+
+```javascript
+methods: {
+increment(num) {
+    this.counter = this.counter + num;
+},
+
+decrement(num) {
+    this.counter = this.counter - num;
+}
+```
+
+We can also add event listeners to input fields. Here it is import to use the v-on event listener with a function that we define but refer to it as an object and not as a function. 
+
+```html
+<input type="text" v-on:input="setName">
+<p>Your Name: {{ name }}</p>
+```
+
+This allows us to write JavaScript like
+
+```javascript
+setName(event) {
+    this.name = event.target.value;
+}
+```
+
+But if we still need to pass a value from the HTML to the Javascript without relying exclusively on `event.target.value`, we could use the reserved keyword `$event`
+
+```
+<input type="text" v-on:input="setName($event, 'Kermit')">
+```
+
+and then in the Javascript
+
+```javascript
+setName(event, name) {
+    this.name = event.target.value + ' ' + name;
+```
+
+### Event Modifiers
+
+Suppose we had a form like below:
+
+```html
+<form>
+    <input type="text">
+    <button>Sign up</button>
+</form>
+```
+
+In traditional HTML, if we click the button the entire page will refresh. To handle this more elegently, we could use `v-on:submit`.
+
+```html
+<form v-on:submit="submitForm">
+```
+
+Where `submitForm` is our function
+
+```javascript
+    submitForm() {
+      alert('Submitted');
+    }
+```
+
+But this still has the default behavior, so we need to add an event modifier to it.
+
+```html
+<form v-on:submit.prevent="submitForm">
+    <input type="text">
+    <button>Sign up</button>
+</form>
+```
+
+Other event modifiers are:
+
+```
+v-on:click.right
+v-on:keyup.enter
+v-once
+```
+
+## Example
+
+The `personal-assignment-1` project illustrates Vue concepts including:
+
+- interpolation
+- events and event modifiers
+- calling functions
+- using variables
+
+
