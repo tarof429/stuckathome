@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>System</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>System</h1>
+    </header>
+    <section id="system">
+      <p>{{ status }}</p>
+      <p>ID: {{ computedId }}</p>
+      <label for="hostname">Hostname:</label>
+      <input type="text" v-model="hostname"><br>
+      <label for="ip">IP:</label>
+      <input type="text" v-model="ip"><br>
+      <label for="mac">MAC Address:</label>
+      <input type="text" v-model="mac"><br>
+      <button @click=save>Save</button>
+      <button @click=reset>Reset</button>
+
+    </section>
+  </body>
+</html>
+
+
