@@ -271,4 +271,71 @@ The `personal-assignment-1` project illustrates Vue concepts including:
 - calling functions
 - using variables
 
+## How to Implement a "Reset" button
+
+Let's say we want to implement a "reset" button. Initially it will look something like this:
+
+```
+ <button>Reset</button>
+ ```
+
+ This can be modified to call a method:
+
+ ```
+ <button v-on:click="reset">Reset</button
+ ```
+
+ and we define the reset method like below.
+
+ ```
+reset() {
+    this.name = 0;
+}
+```
+
+But this doesn't work. What you have to do is add a property to input like:
+
+```
+<input type="text" v-bind:value="name" v-on:input="setName($event, 'Schwarzmüller')">
+```
+
+And now it works! We are not only setting a value, we are getting the value. To simplify the code, we can use `v-model`. to cover both scenarios. It's a shortcut for v-bind:value and v-on:input. This is a concept called "two-way binding". 
+
+## Computed Properties
+
+Besides data and methods, there is a third property called `computed`. You should use it whenever you want to set the value of a field and don't want it re-rendered over and over again. Compared to methods, a computed prooperty is aware of what properties change. Use computed properties to improve the performance of your Vue app. 
+
+## Watchers
+
+Watchers are used to compute values for one field. If you want to use multiple fields, computed properties is an easier approach. For example:
+
+```
+watch: {
+    name(value) {
+        if (value == '') {
+            this.fullname = '';
+        } else {
+            this.fulllname = value + ' ' + this.lastName;
+        }
+
+    },
+
+    lastname(value) {
+        ...
+    }
+}
+```
+
+A good case for using a watcher is if we want to monitor the value of a field and trigger a behavior. For example, we want to trigger a behavior if the counter exceeds a value.
+
+## Shortcuts
+
+A shortcut for `v-on:click` is `@click`.
+
+A shortcut for `v-bind:value` is `:value`. 
+
+
+
+
+
 
