@@ -287,7 +287,7 @@ Let's say we want to implement a "reset" button. Initially it will look somethin
 
  and we define the reset method like below.
 
- ```
+```javascript
 reset() {
     this.name = 0;
 }
@@ -309,7 +309,7 @@ Besides data and methods, there is a third property called `computed`. You shoul
 
 Watchers are used to compute values for one field. If you want to use multiple fields, computed properties is an easier approach. For example:
 
-```
+```javascript
 watch: {
     name(value) {
         if (value == '') {
@@ -334,8 +334,59 @@ A shortcut for `v-on:click` is `@click`.
 
 A shortcut for `v-bind:value` is `:value`. 
 
+## Dynamic Styling
 
+The `basics-10-styling-starting-setup` is an example of how to do dynamic styling with Vue. There are two ways to do this. One way is shown below. This example uses the `@click` event listener along with the `v-bind:style` (or just `:style`) dynamic styling attribute to dynamically set the CSS style on an element. Below:
 
+```html
+<div class="demo" :style="{borderColor: boxASelected ? 'red' : '#ccc'}" @click="boxSelected('A')"></div>
+```
 
+What we are doing is setting the inline style of an object (hence the braces) by writing a ternary expression to dynamically set our style.
 
+Besides `:style`, another was is to use `:class`. The `basics-10-styling-starting-setup-1` below shows how to do this. Below is how `:class` and `:style` can be used together, but can be a bit confusing and is not recommeded.
+
+```html
+<div :class="boxASelected ? 'demo active' : 'demo'" :style="{borderColor: boxASelected ? 'red' : '#ccc'}" @click="boxSelected('A')"></div>
+```
+
+A better way is to just use `:class`:
+
+```html
+<div class="demo" :class="{active: boxASelected}" @click="boxSelected('A')"></div>
+``` 
+
+Also note that we can toggle the CSS style by writing the following Javascript code:
+
+```javascript
+this.boxASelected = !this.boxASelected;
+```
+
+The `basics-10-styling-starting-set-2` example uses `:class` and computed properties to change CSS class styles. Earlier we wrote
+
+```html
+<div class="demo" :class="{active: boxASelected}" @click="boxSelected('A')"></div
+```
+
+and created an inline object in `:class` to set the class. Instead of inline objects, we can use computed properties as shown below:
+
+```javascript
+computed: {
+    boxAClasses() {
+        return { active: this.boxASelected };
+    }
+},
+```
+
+And we refer to it as:
+
+```html
+<div class="demo" :class="boxAClasses" @click="boxSelected('A')"></div>
+```
+
+Note that Vue also supports passing in an array of CSS classes. In the examle below, we always set the `demo` class, and conditionally set the `boxBSelected` class.
+
+```html
+<div :class="['demo', {active: boxBSelected}]">
+```
 
