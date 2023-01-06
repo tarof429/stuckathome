@@ -34,7 +34,7 @@ const app = Vue.createApp({
 });
 ```
 
-4. One key option we can set is data. Below, we declare the `data` property to be a function. This function must return an object that is a key-value pair. The key-value pair may be any type, such as string, integer, boolean, or even array.
+4. One key option we can set is data. Below, we declare the `data` option to be a function. This function must return an object that is a key-value pair. The key-value pair may be any type, such as string, integer, boolean, or even array.
 
 ```javascript
 const app = Vue.createApp({
@@ -301,9 +301,40 @@ But this doesn't work. What you have to do is add a property to input like:
 
 And now it works! We are not only setting a value, we are getting the value. To simplify the code, we can use `v-model`. to cover both scenarios. It's a shortcut for v-bind:value and v-on:input. This is a concept called "two-way binding". 
 
+{% hint style="info %}
+Use `v-model` whenever you want to connect input from the user to a data property. For example if in the HTML we have:
+
+```html
+<input type="text" v-model="name">
+```
+
+Then in app.js we can add a property for name:
+
+```javascript
+  data() {
+    return {
+      name: ''
+    };
+  },
+```
+{% endhint %}
+
 ## Computed Properties
 
 Besides data and methods, there is a third property called `computed`. You should use it whenever you want to set the value of a field and don't want it re-rendered over and over again. Compared to methods, a computed prooperty is aware of what properties change. Use computed properties to improve the performance of your Vue app. 
+
+For example, the value of the computed property below depends on the value of `hostname`.  
+
+```javascript
+computed: {
+    computedId() {
+        if (this.hostname == '' || this.hostname == 'localhost') {
+        return '';
+        }
+
+        return this.hostname;
+},
+```
 
 ## Watchers
 
@@ -330,13 +361,13 @@ A good case for using a watcher is if we want to monitor the value of a field an
 
 ## Shortcuts
 
-A shortcut for `v-on:click` is `@click`.
+A shortcut for `v-on:click` is `@click`. Note: it is not :click!
 
 A shortcut for `v-bind:value` is `:value`. 
 
 ## Dynamic Styling
 
-The `basics-10-styling-starting-setup` is an example of how to do dynamic styling with Vue. There are two ways to do this. One way is shown below. This example uses the `@click` event listener along with the `v-bind:style` (or just `:style`) dynamic styling attribute to dynamically set the CSS style on an element. Below:
+The `basics-10-styling-starting-setup` is an example of how to do dynamic styling with Vue. There are two ways to do this. One way is shown below. This example uses the `@click` event listener along with the `v-bind:style` (or just `:style`) dynamic styling attribute to dynamically set the CSS style on an element. Note that we define the style as an object. Below:
 
 ```html
 <div class="demo" :style="{borderColor: boxASelected ? 'red' : '#ccc'}" @click="boxSelected('A')"></div>
@@ -390,3 +421,40 @@ Note that Vue also supports passing in an array of CSS classes. In the examle be
 <div :class="['demo', {active: boxBSelected}]">
 ```
 
+## Basic Assignment 4
+
+In this example, we are given a few problems. The first problem is to fetch the user input and set it as a CSS class.
+
+In the HTML all we need to do set `v-model`:
+
+```html
+<input type="text" v-model=enteredClass />
+<p :class=enteredClass>
+Style me!
+</p>
+```
+
+and we define the enteredClass property in our Javascript.
+
+```javascript
+data() {
+    return {
+        enteredClass: ''
+    }
+}
+```
+
+If we don't want to set a class on every keystroke, if we want to limit what classes are applied, we can instead limit our choices inline:
+
+```html
+<p :class="{user1: enteredClass === 'user1', user2: enteredClass === 'user2'}">
+```
+
+We can also put this into a computed property to reduce the amount of code in our HTML. In our Javascript:
+
+```javascript
+
+```
+
+
+<p :class="paraClasses">
