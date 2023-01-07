@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>System</title>
+    
+    <link rel="stylesheet" href="styles.css" />
+   
+    <script src="https://unpkg.com/vue@next" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+        <div class="imgcontainer">
+          <img src="img_avatar2.png" alt="Avatar" class="avatar">
+        </div>
+      
+    <div class="container" id="assignment">
+      <label><b>Username</b></label>
+      <input type="text" v-model=username :class="setUsernameStyle"/>
+
+      <label><b>Password</b></label>
+      <input type="password">
+  
+      <label><b>EnterdClass</b></label>
+      <input type="text" v-model=enteredClass />
+      <p :class="setStyle">
+        Style me!
+      </p>
+
+      <button type="submit">Login</button>
+      <label>
+        <input type="checkbox" checked="checked" name="remember"> Remember me
+      </label>
+    </div>
+  
+    <div class="container" style="background-color:#f1f1f1">
+      <button type="button" class="cancelbtn">Cancel</button>
+      <span class="psw">Forgot <a href="#">password?</a></span>
+    </div>
+  </body>
+
+/* Based on https://www.w3schools.com/howto/howto_css_login_form.asp */
