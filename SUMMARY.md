@@ -42,3 +42,6 @@
     * [Part 4: Migrate to Vue](vue/MigrateToVue.md)
     * [Part 5: Without Vue](vue/WithoutVue.md)
     * [Part 6: Vue Basics and Core Concepts](vue/VueBasicsAndCoreConcepts.md)
+    * [Part 7: Rendering Conditional Content and Lists](vue/RenderingConditionalContentAndLists.md)
+    * [Part 8: Putting it all together: The Monster Slayer Game](vue/TheMonsterSlayerGame.md)
+
