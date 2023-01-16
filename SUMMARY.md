@@ -44,4 +44,6 @@
     * [Part 6: Vue Basics and Core Concepts](vue/VueBasicsAndCoreConcepts.md)
     * [Part 7: Rendering Conditional Content and Lists](vue/RenderingConditionalContentAndLists.md)
     * [Part 8: Putting it all together: The Monster Slayer Game](vue/TheMonsterSlayerGame.md)
+    * [Part 9: Behind the Scenes](vue/VueBehindTheScenes.md)
+    * [Part 10: Introducing Components](vue/IntroducingComponents.md)
 
