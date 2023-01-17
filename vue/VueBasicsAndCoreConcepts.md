@@ -144,14 +144,14 @@ The resulting Javascript would look something like this:
 
 ```javascript
 methods: {
-increment() {
-    this.counter++;
-},
+    increment() {
+        this.counter++;
+    },
 
-decrement() {
-    this.counter--;
+    decrement() {
+        this.counter--;
+    }
 }
-    
 ```
 
 Earlier the HTML contained the line
@@ -453,8 +453,21 @@ If we don't want to set a class on every keystroke, if we want to limit what cla
 We can also put this into a computed property to reduce the amount of code in our HTML. In our Javascript:
 
 ```javascript
+computed: {
+    paraClasses() {
+        return {
+            user1: this.inputClass === 'user1', 
+            user2: this.inputClass === 'user2',
+            visible: this.paragraphVisible,
+            hidden: !this.paragraphVisible
+        }
 
+    }
+},
 ```
 
+In our HTML code, we can refer to this computed property using `:class`:
 
+```html
 <p :class="paraClasses">
+```

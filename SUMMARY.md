@@ -32,10 +32,10 @@
     * [Part 3: Storage](building_a_pc_2022/storage.md)
 * [k3s](k3s/part1_setup.md)
 * [Monitoring](monitoring/README.md)
-* [Ubuntu]
+* [Ubuntu](ubuntu/netbooting_ubuntu.md)
     * [Part 1: Netbooting Ubuntu](ubuntu/netbooting_ubuntu.md)
     * [Part 2: Kernel Crash Debugging](ubuntu/kernel_crash_debugging.md)
-* [Vue]
+* [Vue](vue/Introduction.md)
     * [Part 1: Introduction](vue/Introduction.md)
     * [Part 2: Installation](vue/Installation.md)
     * [Part 3: Using Vue](vue/UsingVue.md)

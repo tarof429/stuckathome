@@ -102,5 +102,9 @@ Sometimes you need to use the @click.stop modifier to prevent event listeners fr
 
 To fix this, add the `key` attribute and pass in a unique key.
 
-
-
+```html
+<li id="item" v-for="(goal, index) in goals" :key="goal" @click="removeGoal(index)">{{ goal }}>
+    <p>{{ goal }} - {{ index }}</p>
+    <input type="text" @click.stop>
+</li>
+```
