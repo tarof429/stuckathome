@@ -46,4 +46,4 @@
     * [Part 8: Putting it all together: The Monster Slayer Game](vue/TheMonsterSlayerGame.md)
     * [Part 9: Behind the Scenes](vue/VueBehindTheScenes.md)
     * [Part 10: Introducing Components](vue/IntroducingComponents.md)
-
+    * [Part 11: Using the Vue CLI](vue/VueSetup.md)
