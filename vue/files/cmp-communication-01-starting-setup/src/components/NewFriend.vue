@@ -17,7 +17,7 @@
             <input type="email" v-model="enteredEmail">
         </div>
         <div>
-            <button @click=addFriend>Add Contact</button>
+            <button>Add Contact</button>
         </div>
     </form>
 </template>
@@ -33,7 +33,7 @@ export default {
     //     emailAddress: { type: String, required: true},
     // },
 
-    emits: ["add-contact"],
+    emits: ["add-contact", "check-if-friend-already-exists"],
 
     data() {
         return {
@@ -46,11 +46,16 @@ export default {
         submitData() {
             this.$emit('add-contact', this.enteredName, this.enteredPhone, this.enteredEmail); 
         },
-        // We don't need this?
+        // We don't need this
         // addFriend() {
         //     //this.$emit('add-friend', this.enteredName, this.enteredPhone, this.enteredEmail); 
         // }
-    }
+    },
+    // computed: {
+    //     friendExists() {
+    //         return this.$emit('check-if-friend-already-exists', this.enteredName);
+    //     }
+    // }
 
 };
 </script> 

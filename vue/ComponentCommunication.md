@@ -216,17 +216,15 @@ To let Vue know about the events you will emit, you can add an emit section to d
 emits: ['toggle-favorite']
 ```
 
-## Adding another component
+## Implementing the `New Friend` component
 
 Now let's add another component to our application. The component will let us add a friend.
 
-Components have two sections: template and script, so in the beginning the NewFriend component will look like this:
+The NewFriend component contains a form with some fields and a button that will add the friend. We define some data and bind them to each field. Finally, we add a method called submitData() which will emit an event that will add the new friend. 
 
-```javascript
-<template></template>
+## Deleting Friends.
 
-<script></script>
-```
+We don't need a new component to delete a Friend but we do need a button. This button is added to the FriendContact component and it emits an event that will delete the contact.
 
 
 ## Summary

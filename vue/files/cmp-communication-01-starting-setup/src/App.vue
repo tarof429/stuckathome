@@ -3,12 +3,14 @@
     <header>
       <h1>My Friends</h1>
     </header>
+    <p v-if="duplicateContact">Contact already exists!</p>
     <new-friend
       :contactName="name"
       :phoneNumber="phone"
       :emailAddress="email"
 
-      @add-contact="addContact"
+      @add-contact="addNewContact"
+      @check-if-friend-already-exists="friendCheck"
     ></new-friend>
     <ul>
       <friend-contact
@@ -20,6 +22,7 @@
         :emailAddress="friend.email"
         :is-favorite="friend.isFavorite"
         @toggle-favorite="toggleFavoriteStatus"
+        @delete-contact="deleteThisContact"
       ></friend-contact>
     </ul>
   </section>
@@ -45,8 +48,10 @@ export default {
           isFavorite: false
         },
       ],
+      duplicateContact: false,
     };
   },
+
   methods: {
     toggleFavoriteStatus(friendId) {
       const identifiedFriend = this.friends.find(
@@ -54,18 +59,42 @@ export default {
       identifiedFriend.isFavorite = !identifiedFriend.isFavorite;
     },
 
-    addContact(name, phone, email) {
+    addNewContact(contactName, contactPhone, contactEmail) {
 
-      console.log('Adding a new friend');
+      //console.log('Adding a new friend');
+      if (this.friends.find(friend => friend.name === contactName)) {
+        this.duplicateContact = true;
+        return;
+      } else {
+        this.duplicateContact = false;
+      }
 
-      const id = new Date().toISOString();
+      const contactId = new Date().toISOString();
       //const id = this.friends.length;
-      const isFavorite = false;
+      const contactFavorite = false;
 
       const newFriendContact = {
-        id: id, name: name, phone: phone, email: email, isFavorite: isFavorite}
+        id: contactId, 
+        name: contactName, 
+        phone: contactPhone, 
+        email: contactEmail, 
+        isFavorite: contactFavorite
+      }
 
       this.friends.push(newFriendContact);
+    },
+
+    // friendCheck(name) {
+    //   if (this.friends.find(friend => friend.name === name)) {
+    //     this.duplicateContact = true;
+    //   } else {
+    //     this.duplicateContact = false;
+    //   }
+
+    // },  
+
+    deleteThisContact(friendId) {
+      this.friends = this.friends.filter((friend) => friend.id !== friendId);
     }
   }
 };
@@ -98,7 +127,8 @@ header {
   list-style: none;
 }
 #app li,
-#app form {
+#app form,
+#app p {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   margin: 1rem auto;
   border-radius: 10px;
@@ -106,6 +136,11 @@ header {
   text-align: center;
   width: 90%;
   max-width: 40rem;
+}
+
+#app p {
+  font-weight: bold;
+  color: #ec3169;
 }
 #app h2 {
   font-size: 2rem;
