@@ -6,7 +6,13 @@ import NewFriend from './components/NewFriend.vue'; // Import the NewFriend comp
 
 const app = createApp(App);
 
+// Make components available globally in the current Vue application
 app.component('friend-contact', FriendContact);
-app.component('new-friend', NewFriend); // Register NewFriend as a component with an ID of 'new-friend'
+app.component('new-friend', NewFriend);
+
+// Optionally the app.component() method can be chaned:
+// app
+//     .component('friend-contact', FriendContact)
+//     .component('new-friend', NewFriend);
 
 app.mount('#app');

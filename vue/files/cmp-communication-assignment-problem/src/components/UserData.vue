@@ -3,7 +3,7 @@
         <h2>Add a new user</h2>
         <div>
             <label>User name:</label>
-             <input type="text" v-model="enteredUser"/>
+            <input type="text" v-model="enteredUser"/>
         </div>
         <div>
             <label>Age:</label>
@@ -28,6 +28,7 @@ export default {
     methods: {
         submitUser() {
             console.log('submitUser()');
+            // Emit a custom event called 'add-user
             this.$emit('add-user', this.enteredUser, this.enteredAge); 
         },
     }

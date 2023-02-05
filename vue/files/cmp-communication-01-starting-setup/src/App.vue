@@ -5,7 +5,7 @@
     </header>
     <p v-if="duplicateContact">Contact already exists!</p>
     <new-friend
-      :contactName="name"
+      :contactName="friendName"
       :phoneNumber="phone"
       :emailAddress="email"
 
@@ -17,7 +17,7 @@
         v-for="friend in friends"
         :key="friend.id"
         :id="friend.id"
-        :name="friend.name"
+        :friendName="friend.friendName"
         :phoneNumber="friend.phone"
         :emailAddress="friend.email"
         :is-favorite="friend.isFavorite"
@@ -29,20 +29,21 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
       friends: [
         {
           id: "manuel",
-          name: "Manuel Lorenz",
+          friendName: "Manuel Lorenz",
           phone: "0123 45678 90",
           email: "manuel@localhost.com",
           isFavorite: false
         },
         {
           id: "julie",
-          name: "Julie Jones",
+          friendName: "Julie Jones",
           phone: "0987 654421 21",
           email: "julie@localhost.com",
           isFavorite: false
@@ -62,7 +63,7 @@ export default {
     addNewContact(contactName, contactPhone, contactEmail) {
 
       //console.log('Adding a new friend');
-      if (this.friends.find(friend => friend.name === contactName)) {
+      if (this.friends.find(friend => friend.friendName === contactName)) {
         this.duplicateContact = true;
         return;
       } else {
@@ -70,12 +71,12 @@ export default {
       }
 
       const contactId = new Date().toISOString();
-      //const id = this.friends.length;
+
       const contactFavorite = false;
 
       const newFriendContact = {
         id: contactId, 
-        name: contactName, 
+        friendName: contactName, 
         phone: contactPhone, 
         email: contactEmail, 
         isFavorite: contactFavorite
@@ -84,14 +85,6 @@ export default {
       this.friends.push(newFriendContact);
     },
 
-    // friendCheck(name) {
-    //   if (this.friends.find(friend => friend.name === name)) {
-    //     this.duplicateContact = true;
-    //   } else {
-    //     this.duplicateContact = false;
-    //   }
-
-    // },  
 
     deleteThisContact(friendId) {
       this.friends = this.friends.filter((friend) => friend.id !== friendId);

@@ -1,9 +1,10 @@
 <template>
   <section>
     <header>
-      <h1>User</h1>
+      <h1>User Management</h1>
     </header>
     <p class="error" v-if="!activeUserValid">{{ validMessage }}</p>
+    <!-- Listen to a custom event using v-on and provide the name fo the callback method-->
     <user-data
         @add-user="addNewUser"
     ></user-data>
@@ -33,23 +34,23 @@ export default {
         };
     },
   
-//     methods: {
-//         addNewUser(enteredUserName, enteredUserAge) {
-//             console.log('Adding a user ' + enteredUserName + ' with age ' + enteredUserAge);
+    methods: {
+        addNewUser(enteredUserName, enteredUserAge) {
+            console.log('Adding a user ' + enteredUserName + ' with age ' + enteredUserAge);
 
-//             if (enteredUserName == "" || enteredUserAge == "") {
-//                 this.activeUserValid = false;
-//                 return;
-//             }
-//             this.activeUserValid = true;
-//             const newUser = {
-//                 userName: enteredUserName, 
-//                 userAge: enteredUserAge, 
-//             };
+            if (enteredUserName == "" || enteredUserAge == "") {
+                this.activeUserValid = false;
+                return;
+            }
+            this.activeUserValid = true;
+            const newUser = {
+                userName: enteredUserName, 
+                userAge: enteredUserAge, 
+            };
 
-//             this.activeUser = newUser;
-//         }
-//     }
+            this.activeUser = newUser;
+        }
+    }
   };
 </script>
 
@@ -79,9 +80,10 @@ header {
   padding: 0;
   list-style: none;
 }
+
+#app p,
 #app li,
-#app form,
-#app p {
+#app form {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   margin: 1rem auto;
   border-radius: 10px;
