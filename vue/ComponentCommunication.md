@@ -4,62 +4,19 @@
 
 This section uses the `cmp-communcation-01-starting-setup` example. To get this project started, 
 
-1. First adrun `npm install`. 
+1. First run `npm install`. 
 
 2. Next, to run this example, run `npm run serve`.
 
-The problem we face at the outset of this project is how to display multiple contacts. We want to reuse the template so that it can be used with different data. The solution is to use something called `props`. We need to tell Vue about the properties we want to expose to the component. 
+The problem we face at the outset of this project is how to create a contact and have it added to our list of contacts. In order to do this, our contacts need to be defined in the parent component not in the child component. So how do we create the contact and have it added to the parent? The solution is to use something called `props`.
 
-## Adding Props
+## What are props?
 
-Initially our FriendContact component looks like this:
+Props, or properties, is a concept that you can think of as custom HTML attributes for a component. This is because components by themselves don't expose any data to the parent component. 
 
-```
-export default {
-    data() {
-        return {
-            ...
-        },
-    },
+## Example
 
-    methods() {
-
-    }
-```
-
-With props, it now looks like this:
-
-```
-export default {
-    props: [
-        'name',
-        'phoneNumber',
-        'emailAddress'
-    ],
-```
-
-Next, we change our template in our component to use these properties:
-
-```html
-<template>
-  <li>
-    <h2>{{ name }}</h2>
-    <button @click="toggleDetails">{{ detailsAreVisible ? 'Hide' : 'Show' }} Details</button>
-    <ul v-if="detailsAreVisible">
-      <li>
-        <strong>Phone:</strong>
-        {{ phoneNumber }}
-      </li>
-      <li>
-        <strong>Email:</strong>
-        {{ emailAddress }}
-      </li>
-    </ul>
-  </li>
-</template>
-```
-
-Finally in App.vue, we define our data
+In App.vue, we would like to list contacts with different atrtibutes and with different data, something like below:
 
 ```xml
 <template>
@@ -83,9 +40,17 @@ Finally in App.vue, we define our data
 </template>
 ```
 
+In order to use props inside of components like this, we also need to write some code inside the component. We need to make Vue aware of the props that you want to accept in our component. That code looks like this:
+
+```javascript
+props: ['id', 'name', 'phoneNumber', 'emailAddress', 'isFavorite']
+```
+
+And that's how we use props to communicate data from parent to child components.
+
 ## Parent-child communication
 
-If we want a parent component to talk to a child component, we use props. One thing to keep in mind is that props should not be mutated. 
+One thing to keep in mind is that props should not be mutated. 
 
 Let's suppose we add a prop called `is-favorite` to our FriendContact component.
 
@@ -107,34 +72,41 @@ Unidrectional data flow means "data passed from the parent component to the chil
 
 There are two ways to fix this. One way is to let the parent component know that we want to change this property. 
 
-The other approach is to treat the received data as the initial data and therefore we aren't changing the original data. 
+The other approach is to treat the received data as the initial data and we don't change the original data. 
 
 In our FriendContact component, we add an addition data property called friendIsFavorite, and set it to the prop value. 
 
-```
-friendIsFavorite: this.isFavorite
-```
-
-Then in our componet, instead of using the `isFavorite` prop, we use the friendIsFavorite data property.
-
-From
-
-```
-<h2>{{ name }} {{ isFavorite == '1' ? '- (Favorite)' : ''}}</h2>
+```javascript
+  props: {
+    ...
+    isFavorite: { type: Boolean, required: false, default: false},
+  },
 ```
 
-to
-
-```
-<h2>{{ name }} {{ friendIsFavorite == '1' ? '- (Favorite)' : ''}}</h2>
-```
-
-We also change our method to
+We change the method to toggle isFavorite to emit an event.
 
 ```javascript
-toggleFavorite() {
-    this.friendIsFavorite == '1' ? this.friendIsFavorite = '0' : this.friendIsFavorite = '1';
-}
+  toggleFavorite() {
+    //this.friendIsFavorite = !this.friendIsFavorite;
+    // emit a custom event
+    this.$emit('toggle-favorite', this.id); 
+  },
+```
+
+Finally in App.vue, we listen to the toggle-favorite event and point to a method.
+
+```javascript
+@toggle-favorite="toggleFavoriteStatus"
+```
+
+Finally, toggleFavoriteStatus will change the flag.
+
+```javascript
+  toggleFavoriteStatus(friendId) {
+    const identifiedFriend = this.friends.find(
+      friend => friend.id === friendId);
+    identifiedFriend.isFavorite = !identifiedFriend.isFavorite;
+  },
 ```
 
 ## Data types of props
@@ -189,7 +161,7 @@ Below is yet another example where we add validation for the isFavorite property
 
 ## Binding data to props
 
-To bind data to properties, we use v-bind. Below, we map properties defined in our component to our data defined in App.vue. 
+To bind data to properties, we use v-bind. Below, we map properties defined in our component to our data defined in App.vue. Here, `:key` is shorthand for `v-bind:key` for example. The field on the left of the equals sign comes from the compoennt, whele the field on the right side is in App.vue.
 
 ```javascript
 <ul>
@@ -204,16 +176,35 @@ To bind data to properties, we use v-bind. Below, we map properties defined in o
 </ul>
 ```
 
-This can be considered parent-child (what I think of as "downstream") communcation.
+## Custom Events
 
-## Child-parent communication
+With props, we are able to pass data from the App.vue file to the child component. To do the reverse, we need to implement custom events.  
 
-With props, we are able to implement parent-child communication. To do the revers, we need to implement custom events.  
+To create a custom event, we use `$emit`, a built in method, from inside our component:
 
-To let Vue know about the events you will emit, you can add an emit section to document the fact that your application emits custome events with a particular identifier. 
+```javascript
+  toggleFavorite() {
+    // emit a custom event
+    this.$emit('toggle-favorite', this.id); 
+  },
+```
+
+`$emit()` needs at least one argument, the name of the custom event. 
+
+To let Vue know about the events you will emit, you can add an emit section in our component. 
 
 ```javascript
 emits: ['toggle-favorite']
+```
+
+To listen to the event, in App.vue we add the listener to the component and bind it to a method inside App.vue. 
+
+```javascript
+      <friend-contact
+        v-for="friend in friends"
+        ...
+        // Long format: v-on:toggle-favorite
+        @toggle-favorite="toggleFavoriteStatus"
 ```
 
 ## Implementing the `New Friend` component

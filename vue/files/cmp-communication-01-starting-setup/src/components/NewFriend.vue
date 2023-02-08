@@ -1,6 +1,6 @@
 <template>
 
-    <!-- Don't forget to use v-model here -->
+    <!-- Don't forget to use v-model for the fields so we can connect them to data -->
     <!-- Add @submit.prevent="" to we let Vue handle the form submission-->
     <form @submit.prevent="submitData">
         <h2>Add a new friend</h2>
@@ -25,13 +25,6 @@
 <script>
 // Define the configuration for this component
 export default {
-    // Not needed because we dont' get anything from the parent
-    // props: {
-    //     //id: { type: String, required: true},
-    //     name: { type: String, required: true},
-    //     phoneNumber: { type: String, required: true},
-    //     emailAddress: { type: String, required: true},
-    // },
 
     emits: ["add-contact", "check-if-friend-already-exists"],
 
@@ -46,16 +39,6 @@ export default {
         submitData() {
             this.$emit('add-contact', this.enteredName, this.enteredPhone, this.enteredEmail); 
         },
-        // We don't need this
-        // addFriend() {
-        //     //this.$emit('add-friend', this.enteredName, this.enteredPhone, this.enteredEmail); 
-        // }
-    },
-    // computed: {
-    //     friendExists() {
-    //         return this.$emit('check-if-friend-already-exists', this.enteredName);
-    //     }
-    // }
-
+    }
 };
 </script> 

@@ -13,37 +13,67 @@
       @check-if-friend-already-exists="friendCheck"
     ></new-friend>
     <ul>
+      <!-- Below, we set prop values for each FriendContact component-->
+      <!-- Communication is parent to child -->
+      <!-- v-bind is used for true/false fields-->
+      <!-- <friend-contact
+        name="John Doe"
+        phone-number="12345"
+        email-address="john@localhost.com"
+        v-bind:is-favorite="true"
+        >
+
+      </friend-contact>
+      <friend-contact
+        name="Mary Jane"
+        phone-number="6789"
+        email-address="mary@localhost.com"
+        v-bind:is-favorite="false"
+        >
+      </friend-contact> -->
+
+      <!-- prop name in the FriendContact is mapped (v-bind) to 
+        the data field name in the parent. 
+        :key is required for a for loop. We don't need to specify the 
+        id in the component. 
+        :name is shorthand for v-bind:name 
+        binding prop values dynamically
+      -->
       <friend-contact
         v-for="friend in friends"
         :key="friend.id"
         :id="friend.id"
-        :friendName="friend.friendName"
-        :phoneNumber="friend.phone"
-        :emailAddress="friend.email"
+        :name="friend.name"
+        :phone-number="friend.phone"
+        :email-address="friend.email"
         :is-favorite="friend.isFavorite"
         @toggle-favorite="toggleFavoriteStatus"
-        @delete-contact="deleteThisContact"
+        @delete="deleteContact"
       ></friend-contact>
     </ul>
   </section>
 </template>
 
 <script>
+// This can also be done in main.js
+// import FriendContact from './components/FriendContact.vue';
 
 export default {
+  // What for?
+  components: { FriendContact, NewFriend },
   data() {
     return {
       friends: [
         {
           id: "manuel",
-          friendName: "Manuel Lorenz",
+          name: "Manuel Lorenz",
           phone: "0123 45678 90",
           email: "manuel@localhost.com",
           isFavorite: false
         },
         {
           id: "julie",
-          friendName: "Julie Jones",
+          name: "Julie Jones",
           phone: "0987 654421 21",
           email: "julie@localhost.com",
           isFavorite: false
@@ -70,23 +100,21 @@ export default {
         this.duplicateContact = false;
       }
 
-      const contactId = new Date().toISOString();
-
-      const contactFavorite = false;
-
       const newFriendContact = {
-        id: contactId, 
-        friendName: contactName, 
+        id: new Date().toISOString(), 
+        name: contactName, 
         phone: contactPhone, 
         email: contactEmail, 
-        isFavorite: contactFavorite
+        isFavorite: false
       }
 
       this.friends.push(newFriendContact);
     },
 
 
-    deleteThisContact(friendId) {
+    deleteContact(friendId) {
+      // filter is a Javascript function that can be applied to an array
+      // The filter function needs a function
       this.friends = this.friends.filter((friend) => friend.id !== friendId);
     }
   }

@@ -10,7 +10,7 @@ const app = createApp(App);
 app.component('friend-contact', FriendContact);
 app.component('new-friend', NewFriend);
 
-// Optionally the app.component() method can be chaned:
+// Optionally the app.component() method can be chained:
 // app
 //     .component('friend-contact', FriendContact)
 //     .component('new-friend', NewFriend);
