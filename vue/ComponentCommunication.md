@@ -217,6 +217,16 @@ The NewFriend component contains a form with some fields and a button that will 
 
 We don't need a new component to delete a Friend but we do need a button. This button is added to the FriendContact component and it emits an event that will delete the contact.
 
+## A Complicated Example
+
+The `cmp-communication-08-a-potential-problem` illustrates a potential problem you'll encounter with Vue. What is actually going on here?
+
+- ActiveElemnent displays `topicTitle` and `text` which are received as props
+- In App.vue, `topicTitle` and `text` are provided by the value of `activeTopic` which is defined in App.vue
+- Initially, `activeTopic` is null but is set when `activeTopic()` is invoked by the KnowledgeBase Component 
+- The KnowledgeBase component receives a props of topics and emits an event called `select-topic`
+- KnowledgeBase is acting like a pass-through component
+
 
 ## Summary
 
