@@ -47,3 +47,5 @@
     * [Part 9: Behind the Scenes](vue/VueBehindTheScenes.md)
     * [Part 10: Introducing Components](vue/IntroducingComponents.md)
     * [Part 11: Using the Vue CLI](vue/VueSetup.md)
+    * [Part 12: Component Communication](vue/ComponentCommunication.md)
+    * [Part 13: Diving Deeper Into Components](vue/DivingDeeperIntoComponents.md)
