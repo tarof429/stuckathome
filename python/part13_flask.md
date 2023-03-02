@@ -36,8 +36,41 @@ In your virtual environment, use pip to install flask
 pip install flask
 ```
 
+Create a file called main.py with the following content. This file contains one route.
 
+```
+from flask import Flask
 
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return '<h1>Hello World!</h1>'
+```
+
+Now run the web application using the provided script run.sh
+
+```
+sh ./run.sh
+```
+
+Now let's add another route.
+
+```
+@app.route('/about/')
+def about():
+    return 'This is a simple Fask app'
+```
+
+If we save the file and navigate to /about, we should see our new page.
+
+We can also create a route that takes an argument.
+
+```
+@app.route('/capitalize/<word>/')
+def capitalize(word):
+    return '<h1>{0}</h1>'.format(escape(word.capitalize()))
+```
 
 ## References
 
