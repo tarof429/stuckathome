@@ -3,6 +3,7 @@
 The json module provides methods to parse JSON.
 
 ```python
+import json
 weapon = '{"name": "dagger", "damage": "1-6", "type": "melee", "minimum-level": "1", "cost": "3", "minimum-strength": "6", "minimum-dexterity": "3"}'
 
 weapon_json = json.loads(weapon)

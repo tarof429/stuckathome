@@ -382,15 +382,49 @@ for x in fruits:
   print(x)
 ```
 
+Below is an alternative example:
+
+
+```python
+number = 0
+for number in range(10):
+   if number == 5:
+     break
+   print('Number is ' + str(number))
+ 
+Number is 0
+Number is 1
+Number is 2
+Number is 3
+Number is 4
+```
+
 However at times we need the index of the array. In this case, use the enumerate() function.
 
 ```python
 fruits = ['pen', 'pineapple', 'apple', 'pen']
 for index, value in enumerate(fruits):
-    if value == 'apple':
-        fruits[index] = 'orange'
+    if index % 2 == 0:
+      value = 'toy'
+    print(index, value)
 
-print(fruits)
+0 toy
+1 pineapple
+2 toy
+3 pen
+```
+
+Below is an alternative approach.
+
+```python
+fruits = ['pen', 'pinapple', 'apple', 'pen']
+for index in range(len(fruits)):
+  value = fruits[index]
+  print(index, value) 
+0 pen
+1 pinapple
+2 apple
+3 pen
 ```
 
 ## Exceptions
@@ -452,3 +486,32 @@ while True:
     finally:
         print('Calling cleanup')
 ```
+
+## Quiz
+
+Q: What is the maximum value of an integer? Answer: Actually, Python doesn't have a limit and is said to be - unbounded. 
+
+Q: How would you express the hexadecimal value a5 as a base-16 integer constant in Python? Answer: 0xa5
+
+Q: How would you express the constant floating-point value 3.2 × 10-12 in Python? Answer: 3.2e-12
+
+Q: Write an expression for a string literal consisting of the following ASCII characters: Horizontal Tab character, Newline (ASCII Linefeed) character, The character with hexadecimal value 7E. Answer: "\t\n\x7E (do't forget the quotes).
+
+
+Q: Given print(r'foo\\bar\nbaz'). What is the correct REPL output? Answer: foo\bar\nbaz
+
+
+Q: Which of the following is not a Python built-in function: a: isinstance() b: round() c: repr() d: map() e: diff() Answer: diff()
+
+The isinstance() can be used to check the type of a value.
+
+```
+x = isinstance(5, int) => True
+```
+
+
+
+## References
+
+https://realpython.com/
+
