@@ -1,8 +1,24 @@
 # RKE
 
-## Create VMs
+## Prerequisites
 
-Follow the steps in the k8s directory to create three VMs for our cluster.
+3 VMs created as part of the instructions in the k8s directory.
+
+## Confirm SSH to the nodes
+
+Run the following nsible role to SSH to all the nodes.
+
+```
+ansible-playbook sshping.yml
+```
+
+## Update the nodes
+
+It's not fun if the packages are out of date.
+
+```
+ansible-playbook update.yml
+```
 
 ## Set up the nodes
 

@@ -39,7 +39,7 @@ sudo virsh change-media worker02 sda --eject
 
 ## Next Steps
 
-Follow the steps in the rke2 directory.
+To create the cluster, follow the steps in the rke2 directory.
 
 ## References
 
