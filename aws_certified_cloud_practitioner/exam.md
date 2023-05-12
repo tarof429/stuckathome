@@ -108,7 +108,7 @@
 
 - What is AWS Direct Connect? Answer: AWS Direct Connect is a cloud service that links your network directly to AWS. You bypass the Intenet to delive more consistent, lower-latency performance through increased bandwidth.
 
-- What is AWS Cloudfront? Answer: AWS Cloudfront is a service used to reduce latency and improve transfer speeds.It is designed for static assets like videos, images and files that don't change and can be cached.
+- What is AWS Cloudfront? Answer: AWS Cloudfront is a service used to reduce latency and improve transfer speeds. It is designed for static assets like videos, images and files that don't change and can be cached.
 
 - What is Global Accelerator? Answer: A service that finds the optimal route to your services via edge locations.
 

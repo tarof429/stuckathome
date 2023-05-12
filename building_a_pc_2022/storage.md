@@ -15,6 +15,14 @@ Most M.2 NVMe storage in the 1TB range cost between $100 and $150. This is a bar
 
 If you buy a SSD that's self-encrypting, you still need to encrypt it using command-line tools.
 
+## Backing Up Data
+
+Duplicity can be used to backup data. For example:
+
+```
+$ duplicity /home/taro file:///backup/duplicity/taro
+```
+
 ## References
 
 https://premioinc.com/blogs/blog/pcie-4-0-pci-express-gen-4

@@ -22,11 +22,22 @@
 
 - Which type of public IP address is retained even when the instance is stopped? Answer: An elastic IP address.
 
-- You are trying to access a Cloudfront distribution but cannot see the web site. What is a possible cause? Answer: Make sure the default page is set to index.html.
+## Cloudfront
+
+- You are trying to access a Cloudfront distribution but cannot see the web site. What is a possible cause? Answer: Make sure the default root object is set to index.html.
+
+- What Cloudfront feature allows you to exchange data securely with S3? Answer: Signed URLs.
+
+- What Cloudfront feature allows you to restrict access for multiple files? Answer: Cloudfront Signed cookies
+
+- What feature in Cloudfront allows you to restrict access to a select number of countries? Answer: Cloudfront Geo Restriction
 
 - What service has built-in DoS proection: Route 53, Internet Gateway, Cloudfront or AWS Direct Connect? Answer: Cloudfront is a CDN which provides built-in DoS protection. Among these, AWS Direct Connect provides a way to connect on-prem machines to AWS and does not provide DoS protection.
 
-- What types of Origin does Amazon CloudFront support? Answer: S3 bucket and EC2 instance
+- What types of Origin does Amazon Cloudfront support? Answer: S3 bucket and EC2 instance
+
+- When you're configuring a Cloudfront distribution to use Signed URLs/Cookies, it is recommended to use ............................ signer instead of ................................ signer. Answer: Trusted Key Group (recommended), Trusted signer
+
 
 - In Amazon Route 53, what is the name for the configuration item that holds a collection of records belonging to a domain: DNS record, Alias or Routing Policy? Answer: Hosted zone
 
