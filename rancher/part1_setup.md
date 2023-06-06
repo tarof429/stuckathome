@@ -2,18 +2,45 @@
 
 The following steps creates a 3 node Kubernetes cluster using Rancher.
 
+## Download the latest cloud images
+
+1. Download the latest LTS cloud init image for Ubuntu.
+
+    ```
+    cd ~/Downloads
+    wget https://cloud-images.ubuntu.com/releases/22.10/release/ubuntu-22.10-server-cloudimg-amd64.img
+    ```
+
+3. Move it to /var/lib/libvirt/boot
+
+    ```
+    sudo mv ~/Downloads/ubuntu-22.10-server-cloudimg-amd64.img /var/lib/libvirt/boot/
+    ```
+
 ## Create the kubemaster
     
-  1. Provision the kubemaster VM.
+Scripts to create VMs using KVM are in the KVM directory.
+
+  1. CD to the KVM directory
 
     ```
-    sh ./create_seeded_ubuntu_vm.sh  -n kubemaster -i 192.168.0.30 -u ubuntu -p pass123 -s 40G
+    cd files/kvm
     ```
 
-  2. Login to the VM, update packages, and reboot
+  1. Provision the kubemaster VM. You may want to use different credentials for your VM.
 
     ```
-    sudo apt -y update; sudo apt -y upgrade; sudo reboot
+    sh ./create_seeded_ubuntu_vm.sh  -n kubemaster -i 192.168.1.30 -u ubuntu -p pass123 -s 40G
+    ```
+
+    The VM should be up and running in a few minutes. Keep it running and let it update packages.
+
+    Note: if the VM is unable to ping 8.8.8.8, then the network settings for the VM may be incorrect. Review the scripts and configuration and try again.
+
+  2. Login to the VM using the credentials you provided earlier and reboot to load the latest kernel.
+
+    ```
+    sudo reboot
     ```
 
 ## Create the first node
@@ -22,29 +49,29 @@ The following steps creates a 3 node Kubernetes cluster using Rancher.
 1. Provision the first Kubernetes worker node
 
     ```
-    sh ./create_seeded_ubuntu_vm.sh  -n kubenode01 -i 192.168.0.31 -u ubuntu -p pass123 -s 40G
+    sh ./create_seeded_ubuntu_vm.sh  -n kubenode01 -i 192.168.1.31 -u ubuntu -p pass123 -s 40G
     ```
 
-2. Update and reboot
+2. Login and reboot
 
 ## Create the second node
 
 1. Provision the second Kubernetes worker node
 
   ```
-  sh ./create_seeded_ubuntu_vm.sh  -n kubenode02 -i 192.168.0.32 -u ubuntu -p pass123 -s 40G
+  sh ./create_seeded_ubuntu_vm.sh  -n kubenode02 -i 192.168.1.32 -u ubuntu -p pass123 -s 40G
   ```
 
-  2. Update and reboot
+  2. Login and reboot
 
 
 ## Summary
 
 These steps created three nodes:
 
-kubemaster 192.168.0.30
-kubenode01 192.168.0.31
-kubenode02 192.168.0.32
+kubemaster 192.168.1.30
+kubenode01 192.168.2.31
+kubenode02 192.168.3.32
 
 ## Setup the nodes  
 

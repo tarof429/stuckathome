@@ -8,7 +8,7 @@ SIZE=""
 
 usage() {
     echo "Usage: create_seeded_ubuntu_vm.sh -n <hostname> -i <ipaddress> -u <user> -p <password> -s <size>"
-    echo "Example: create_seeded_ubuntu_vm.sh -n kubemaster -i 192.168.0.30 -u ubuntu -p pass123 -s 40G"
+    echo "Example: create_seeded_ubuntu_vm.sh -n kubemaster -i 192.168.1.30 -u ubuntu -p pass123 -s 40G"
 }
 
 validate() {
@@ -106,7 +106,7 @@ sudo cloud-localds -v --network-config=/tmp/$HOSTNAME/network_config_static.cfg 
 sleep 1
 
 # Copy the generic cloud image
-sudo cp -f /var/lib/libvirt/images/ubuntu-21.10-server-cloudimg-amd64.img \
+sudo cp -f /var/lib/libvirt/boot/ubuntu-22.10-server-cloudimg-amd64.img \
   /var/lib/libvirt/images/snapshot-${HOSTNAME}-cloudimg.qcow2
 
 # Resize the cloud image
@@ -116,9 +116,9 @@ sleep 1
 
 sudo virt-install --name $HOSTNAME --virt-type kvm --memory 4098 --vcpus 2 \
   --boot hd,menu=on \
-  --disk path=/tmp/$HOSTNAME/cloud-init.iso,device=cdrom \
+  --cdrom=/tmp/$HOSTNAME/cloud-init.iso \
   --disk path=/var/lib/libvirt/images/snapshot-${HOSTNAME}-cloudimg.qcow2,device=disk \
   --graphics none \
   --console=pty,target_type=serial \
-  --os-variant ubuntu21.10 \
+  --os-variant ubuntu22.10 \
   --network=bridge=br0,model=virtio

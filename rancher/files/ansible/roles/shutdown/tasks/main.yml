@@ -1,0 +1,3 @@
+---
+- name: Shutdown VM
+  shell: /sbin/shutdown -h 1
