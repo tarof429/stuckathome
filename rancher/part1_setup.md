@@ -81,33 +81,15 @@ Run the ansible role to install docker, helm, kubectl on all nodes
 ansible-playbook setup.yml 
 ```
 
-## Install Rancher with Helm
+## Deploying Rancher Server Manually
 
-### Add the Helm Chart Repository
+There are several guides to deploy Rancher as outlined at https://ranchermanager.docs.rancher.com/pages-for-subheaders/deploy-rancher-manager. We will deploy rancher locally so we will follow the manual instructions at https://ranchermanager.docs.rancher.com/getting-started/quick-start-guides/deploy-rancher-manager/helm-cli.
 
-```
-sudo helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
-```
-
-###  Create a Namespace for Rancher
-
-```
-sudo kubectl create namespace cattle-system
-```
+These instructions need to be run on kubemaster. 
 
 ## Tips and Tricks
 
-- If you are unable to start the VM at a later time because you get the error: 
-  
-  ```
-  error: Cannot access storage file '/tmp/kubemaster/cloud-init.iso': No such file or directory
-  ```
-
-  Then eject the CDROM.
-
-  ```
-  sudo virsh change-media kubemaster sda --eject
-  ```
+- Install helm by following: https://helm.sh/docs/intro/install/
 
 
 
