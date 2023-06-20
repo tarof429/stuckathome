@@ -2,9 +2,17 @@
 
 ## Prerequisites
 
-3 VMs created as part of the instructions in the k8s directory.
+- 3 VMs created as part of the instructions in the k8s directory.
 
-## Confirm SSH to the nodes
+- Also create a VM to install rke2: 
+
+    ```
+    sh ./create_seeded_ubuntu_vm.sh  -n kubeops -i 192.168.1.33 -u ubuntu -p pass123 -s 40G
+    ```
+
+## Setup rke2
+
+Follow the instructions at https://docs.rke2.io/install/quickstart to setup rke2. Use kubeops to run the commands.
 
 Run the following nsible role to SSH to all the nodes.
 
