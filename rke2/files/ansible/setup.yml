@@ -2,4 +2,4 @@
   remote_user: ubuntu
   become: yes
   roles:
-    - shutdown
+    - setup

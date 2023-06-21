@@ -1,27 +1,4 @@
 ---
-- name: Install required packages
-  apt:
-    name:
-    - vim
-    - wget
-    - curl
-    state: latest
-    update_cache: yes
-  
-- name: Upgrade all packages
-  apt:
-    name: "*"
-    state: latest
-
-- name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
-  shell: |
-    swapoff -a
-
-- name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
-  replace:
-    path: /etc/fstab
-    regexp: '^([^#].*?\sswap\s+.*)$'
-    replace: '# \1'
 
 - name: Install rke2 on kubemaster
   shell: |
@@ -29,12 +6,20 @@
     systemctl enable rke2-server.service
   when: "inventory_hostname == 'kubemaster'"
 
-- name: Install rke2 on the workers
-  shell: |
-    curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" sh -
-    systemctl enable rke2-agent.service
-  when: inventory_hostname is match("worker.*")
+- name: Enable the rke2-server service
+  service:
+    name: rke2-server
+    state: started
+    enabled: yes
+  when: "inventory_hostname == 'kubemaster'"
+  
 
-- name: Reboot everything
-  reboot:
-  ignore_errors: yes
+# - name: Install rke2 on the workers
+#   shell: |
+#     curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" sh -
+#     systemctl enable rke2-agent.service
+#   when: inventory_hostname is match("worker.*")
+
+# - name: Reboot everything
+#   reboot:
+#   ignore_errors: yes

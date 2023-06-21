@@ -4,17 +4,11 @@
 
 - 3 VMs created as part of the instructions in the k8s directory.
 
-- Also create a VM to install rke2: 
-
-    ```
-    sh ./create_seeded_ubuntu_vm.sh  -n kubeops -i 192.168.1.33 -u ubuntu -p pass123 -s 40G
-    ```
-
 ## Setup rke2
 
 Follow the instructions at https://docs.rke2.io/install/quickstart to setup rke2. Use kubeops to run the commands.
 
-Run the following nsible role to SSH to all the nodes.
+Run the following ansible role to SSH to all the nodes.
 
 ```
 ansible-playbook sshping.yml
@@ -22,7 +16,7 @@ ansible-playbook sshping.yml
 
 ## Update the nodes
 
-It's not fun if the packages are out of date.
+It's not fun if the packages are out of date, so let's update all the VMs.
 
 ```
 ansible-playbook update.yml
@@ -90,6 +84,20 @@ nginx   0/1     ContainerCreating   0          5s
 NAME    READY   STATUS    RESTARTS   AGE   IP          NODE       NOMINATED NODE   READINESS GATES
 nginx   1/1     Running   0          19s   10.42.1.3   worker01   <none>           <none>
 
+```
+
+## Stop the VMs
+
+```
+cd files/scripts
+sh ./stop_vms.sh
+```
+
+## Start the VMs
+
+```
+cd files/scripts
+sh ./start_vms.sh
 ```
 
 ## References
