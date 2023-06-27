@@ -39,10 +39,4 @@ sudo virsh change-media worker02 sda --eject
 
 ## Next Steps
 
-To create the cluster, follow the steps in the rke2 directory.
-
-## References
-
-https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/
-
-https://www.golinuxcloud.com/kubernetes-sidecar-container/
+To create the cluster, follow the steps in the rke2 directory. Then come back here for more basic tutorials.

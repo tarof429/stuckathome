@@ -4,11 +4,9 @@
 
 - 3 VMs created as part of the instructions in the k8s directory.
 
-## Setup rke2
+## Verify the Environment
 
-Follow the instructions at https://docs.rke2.io/install/quickstart to setup rke2. Use kubeops to run the commands.
-
-Run the following ansible role to SSH to all the nodes.
+First, let's make sure we can SSH to all the VMs. Use ssh-copy-id to copy your public key to each of the VMs. Afterwards, run:
 
 ```
 ansible-playbook sshping.yml
@@ -22,15 +20,9 @@ It's not fun if the packages are out of date, so let's update all the VMs.
 ansible-playbook update.yml
 ```
 
-## Set up the nodes
+## Set up rke2
 
-Run the Ansible script to install rke2 on the nodes.
-
-```
-ansible-playbook setup.yml
-```
-
-Note that this role is VERY basic and you must continue with the post-setup steps, below.
+Follow the instructions at https://docs.rke2.io/install/quickstart to setup rke2 and each of the nodes.
 
 ## Post-setup 
 
@@ -43,6 +35,8 @@ Note that this role is VERY basic and you must continue with the post-setup step
     sed -i 's/127.0.0.1/192.168.1.30/' ~/.kube/config
     ```
 
+## Add nodes
+
 2. Get the token we need to register the nodes
 
     ```
@@ -50,7 +44,7 @@ Note that this role is VERY basic and you must continue with the post-setup step
     ```
 
 
-3. Star the agents
+3. Start the agents
 
     ```
     ansible-playbook register.yml -e "token=<the token>"
@@ -75,15 +69,16 @@ Eventually the status of the nodes should all be "ready"
 ## Try it Out
 
 ```
-kubectl run nginx --image=nginx
+$ kubectl run nginx --image=nginx
 pod/nginx created
-[taro@zaxman ~]$ kubectl get po
+$ kubectl get pods
 NAME    READY   STATUS              RESTARTS   AGE
 nginx   0/1     ContainerCreating   0          5s
-[taro@zaxman ~]$ kubectl get po nginx -o wide
+$ kubectl get pods nginx -o wide
 NAME    READY   STATUS    RESTARTS   AGE   IP          NODE       NOMINATED NODE   READINESS GATES
 nginx   1/1     Running   0          19s   10.42.1.3   worker01   <none>           <none>
-
+$ kubectl delete pod nginx
+pod "nginx" deleted
 ```
 
 ## Stop the VMs
@@ -99,6 +94,48 @@ sh ./stop_vms.sh
 cd files/scripts
 sh ./start_vms.sh
 ```
+
+## How to Install metalLB
+
+See https://www.raptorswithhats.com/gitea-on-rke2-metallb/ for steps on how to install MetallLb. This version will work with rke2; the official one may not. 
+
+Under files/k8s there is a congfigmap.yml file that you can deploy to define your IP ranges. The file files/k8s/nginx-deployment-and-serivce.yml can be used to test that metalLB is working.
+
+
+## Questions
+
+- Q: What is the benefit of using k8s? A: k8s provides a framework for coordinating containers from very small deployments all the way to planet-scale. 
+
+- Q: What do you need to run a container? A: A container runtime such as docker, podman, containerd
+
+- Q: What are some benefits of using containers? A: Portability, better resource usage, scalability
+
+- Q: What skills do you need to use k8s? A: Familiarity with the CLI and YAML.
+
+- Q: How can you troubleshoot a deployment? A: Get the name of the pod associated with the deployment. Then run kubectl describe pod <pod name> -n <namespace>.  
+
+- Q: If you have deployment that's not yet exposed to the outside world, how do you verify? A: Spin up a pod running busybox and use wget. Another way is to use the `logs` command.
+
+- Q: You want to deploy MetalLB and you need to find out if your network addon is compatible. How do you find out? A: Add-ons are deployed as pods in the kube-system namespace. Run `kubectl get pods -n kube-system`. 
+
+- Q: How can you view the logs for etcd? A: Run `kubectl logs etcd-kubemaster -n kube-system | jq | more`.
+
+
+- Q: What components run on all the worker nodes? A: Kubelet, Kube-Proxy, CRI
+
+- Q: Which component communicates directly with the etcd component? A: API Server
+
+- Q: What is the role of the kubelet? A: Check that the containers are healthy.
+
+
+## Where to go from here
+
+https://www.linkedin.com/learning/paths/getting-started-with-kubernetes
+
+https://www.udemy.com/course/learn-kubernetes/
+
+https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/
+
 
 ## References
 

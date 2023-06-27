@@ -74,7 +74,7 @@ The `hello-world-pod` is a simple pod that uses the nginx image.
   nginx   1/1     Running   0          16m   10.42.2.11   worker01   <none>           <none>
   ```
 
-  Now try deploying tghe ngin-pod pod. In Kubernetes, objects like pods can also be created using a YAML based file. 
+  Now lets try another example.
 
   ```
   $ kubectl apply -f hello-world-bad-image-pod.yml 
