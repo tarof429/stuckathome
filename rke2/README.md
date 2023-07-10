@@ -99,7 +99,15 @@ sh ./start_vms.sh
 
 See https://www.raptorswithhats.com/gitea-on-rke2-metallb/ for steps on how to install MetallLb. This version will work with rke2; the official one may not. 
 
-Under files/k8s there is a congfigmap.yml file that you can deploy to define your IP ranges. The file files/k8s/nginx-deployment-and-serivce.yml can be used to test that metalLB is working.
+Under files/k8s there is a congfigmap.yml file that you can deploy to define your IP ranges. The file files/k8s/nginx-deployment-and-serivce.yml can be used to test that metalLB is working. To test it,
+
+1. Run `kubectl apply -f nginx-deployment-and-service.yml`
+
+2. Run `kubectl get svc` and look for a service called nginx with a type of LoadBalancer
+
+3. In a browser or using curl, navigate to http://<external-ip>.
+
+To delete the service, run `kubectl delete -f nginx-deployment-and-service.yml`
 
 
 ## Questions

@@ -1,6 +1,6 @@
 # Nodes
 
-A node is either a virtual or physical machine taht runs workloads. 
+As mentioned earlier, a node is either a virtual or physical machine that runs workloads. 
 
 To view a Node's status, run:
 

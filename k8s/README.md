@@ -6,7 +6,7 @@ In the past, applications and their dependencies were deployed directly to serve
 
 This however led to another problem: how to orchestrate the lifecycle of these containers. The solution that Google came up with is called Kubernetes and is the most popular solution to container orchestration. Kubernetes is difficult to setup but provides a variety of ways to customize. In Kubernetes, a worker node is reponsible for running containers while the master node is responsible for scheduling containers. Multiple nodes make up a cluster, and true to its namesake, if a node becomes unavailable, workloads failover to other nodes. 
 
-When users interact with master nodes, they actually communicate with the API server. The command-line tool is called kubectl. Workload requests then get procesed by the scheduler, which stores information about the nodes and containers in a key store database like etcd. Each worker node runs a kubelet which talk to the API server or kube-apiserver and ensures the containers are running. 
+When users interact with master nodes, they actually communicate with the API server. The command-line tool is called kubectfl. Workload requests then get procesed by the scheduler, which stores information about the nodes and containers in a key store database like etcd. Each worker node runs a kubelet which talk to the API server or kube-apiserver and ensures the containers are running. 
 
 ## This Project
 
@@ -40,3 +40,9 @@ sudo virsh change-media worker02 sda --eject
 ## Next Steps
 
 To create the cluster, follow the steps in the rke2 directory. Then come back here for more basic tutorials.
+
+## References
+
+- https://www.udemy.com/course/learn-kubernetes/
+
+

@@ -1,6 +1,6 @@
 # ReplicaSets
 
-A ReplicaSet is an object that strives to maintain a fixed number of replicas of a pod. It is a low-level object and the Kubernetes recommends that users use Deployments instead.
+A ReplicaSet is an object that strives to maintain a fixed number of replicas of a pod. It is a low-level object and Kubernetes recommends that users use Deployments instead.
 
 An example is shown below.
 

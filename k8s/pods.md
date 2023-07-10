@@ -1,8 +1,8 @@
 # Pods
 
-## The pod
+## What are pods?
 
-A pod is the simplest unit that can be deployed to containers. Most pods consist of only one container, but it is possible to deploy multiple containers. A pod runs on a worker node.
+A pod is the simplest unit that can be deployed to Kubernetes. Most pods consist of only one container, but it is possible to deploy multiple containers. A pod runs on a worker node.
 
 ### Creating a basic Nginx Pod
 
@@ -48,11 +48,23 @@ spec:
 status: {}
 ```
 
-You can redirect the output to a file, edit the file, and then deploy the file.
+You can redirect the output to a file, edit the file, and then deploy the file. For example:
+
+```
+kubectl run nginx --image=nginx --dry-run=client -o yaml > nginx-pod.yml
+```
+
+A sample is provided int he deployments directory where we have changed the image name to be nginx:latest. To verify, we can run two commands:
+
+- kubectl describe pod nginx
+
+- kubetl get pod nginx -o yaml 
+
+In both case, you might want to pipe it through grep.
 
 ### Creating a pod using a yaml file
 
-The `hello-world-pod` is a simple pod that uses the nginx image. 
+The `hello-world-pod` is a simple pod that we have written from scratch uses the nginx image. 
 
   ```
   kubectl apply -f hello-world-pod.yml
@@ -93,6 +105,20 @@ The `hello-world-pod` is a simple pod that uses the nginx image.
   $ kubectl describe pod nginx-pod
   ```
 
+  If we scroll down to the bottom we see:
+
+  ```
+  Events:
+  Type     Reason     Age                From               Message
+  ----     ------     ----               ----               -------
+  Normal   Scheduled  25s                default-scheduler  Successfully assigned default/ngin-pod to kubenode02
+  Normal   BackOff    23s                kubelet            Back-off pulling image "ngin:latest"
+  Warning  Failed     23s                kubelet            Error: ImagePullBackOff
+  Normal   Pulling    10s (x2 over 24s)  kubelet            Pulling image "ngin:latest"
+  Warning  Failed     9s (x2 over 24s)   kubelet            Failed to pull image "ngin:latest": rpc error: code = Unknown desc = failed to pull and unpack image "docker.io/library/ngin:latest": failed to resolve reference "docker.io/library/ngin:latest": pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+  Warning  Failed     9s (x2 over 24s)   kubelet            Error: ErrImagePull
+  ```
+
   How do you fix this? One way is to edit the pod and edit the image. Wait a few seconds, and the pod will be re-deployed.
 
   ```
@@ -103,13 +129,14 @@ The `hello-world-pod` is a simple pod that uses the nginx image.
   nginx      1/1     Running   0          43m
   ```
 
-  Another useful command is `kubectl logs <pod name>`
+  For troubleshootng, another useful command is `kubectl logs <pod name>`
 
   ```
   kubectl logs ngin-pod
+  Error from server (BadRequest): container "ngin-pod" in pod "ngin-pod" is waiting to start: trying and failing to pull image
   ```
 
-  Another useful command is `kubectl exec <pod name> -- <command>`
+  Another way to troubleshoot is to acces the container by running `kubectl exec <pod name> -- <command>`
 
   ```
   $ kubectl exec ngin-pod -- ls / 
@@ -128,7 +155,19 @@ The `hello-world-pod` is a simple pod that uses the nginx image.
   boot  docker-entrypoint.d  etc			 lib   media  opt  root  sbin  sys  usr 
   ```
 
-Another useful command is `kubectl get pod --watch`. This lets you see the status of pod deployments.
+Another useful command is `kubectl get pod --watch`. This lets you see the status of pod. If we do this in one terminal, open a new terminal and edit the pod to fix the issue, we'll eventually see that the pod is running:
+
+```
+$ kubectl get pod --watch ngin-pod
+NAME       READY   STATUS             RESTARTS   AGE
+ngin-pod   0/1     ImagePullBackOff   0          84s
+ngin-pod   0/1     ErrImagePull       0          112s
+ngin-pod   0/1     ErrImagePull       0          2m4s
+ngin-pod   0/1     ImagePullBackOff   0          2m4s
+ngin-pod   1/1     Running            0          2m11s
+```
+
+You can also use imperative commands to set the image of a pod. For the example above, First find out the name of the container that is having an issue. In our case, it is ngin-pod. Then run `kubectl set image pod/ngin-pod ngin-pod=nginx:latest` where `nginx-pod` is the name of the container and `nginx:latest` is the iimage that we want.
 
 ## Kubernetes POD YAML
 
