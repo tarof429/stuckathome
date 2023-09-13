@@ -3,13 +3,12 @@ package main
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"strings"
 )
 
 func readFile(filename string) []byte {
-	data, err := ioutil.ReadFile("hello.txt")
+	data, err := os.ReadFile("hello.txt")
 
 	if err != nil {
 		panic("Unable to read file")
@@ -24,6 +23,7 @@ func writeFile(fname string, content string) {
 	if err != nil {
 		panic("Unable to write to file")
 	}
+	
 	_, err = io.WriteString(file, content)
 
 	if err != nil {

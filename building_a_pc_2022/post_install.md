@@ -36,11 +36,15 @@
     sudo ufw status
     ```
 
+    Or use gufw, a frontend for ufw.
+
 - Install some more fonts: https://blog.yucas.net/2018/03/25/beautiful-fonts-improve-arch-linux/. Also install noto-fonts-cjk for Japanese, and ttf-hack for VS Code
 
 
 - Install either the latest stable kernel or the LTS kernel.
 
     ```
-    sudo pacman -S linux-ltss
+    sudo pacman -S linux-lts
     ```
+
+- Install `peek`, a tool for taking screenshots

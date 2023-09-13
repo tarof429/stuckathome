@@ -2,10 +2,19 @@
 
 ## Table of Contents
 
-1.  [Basics](#basics)
+1. [Introduction](#introduction)
+2.  [Basics](#basics)
     1. [Packages](#packages)
 	2. [Variables](#variables)
 	3. [Flow control statements](#flow-control-statements)
+
+		3.1 [For statements](#for-statement)
+
+		3.2 [If statements](#if-statement)
+
+		3.3 [Switch statements](#switch-statement)
+		
+		3.4 [Defer statements](#defer-statement)
 	4. [Pointers](#pointers)
 	5. [Structs](#structs)
 	6. [Arrays](#arrays)
@@ -13,8 +22,9 @@
 	8. [Maps](#maps)
 	9. [Functions](#functions)
 	10. [Methods](#methods)
+	11. [Interfaces](#interfaces)
 	11. [Files](#files)
-2. [Advanced](#advanced)
+3. [Advanced](#advanced)
     1. [Goroutines](#goroutines)
 	2. [Channels](#channels)
     3. [Closures](#closures)
@@ -22,7 +32,7 @@
 	5. [Json](#json)
 	6. [Commands](#commands)
 	7. [Testing](#testing)
-	8. [Error handling](#errors)
+	8. [Error handling](#error-handling)
 	9. [Logging](#logging)
 	10. [Networking](#networking)
 	11. [Times and Dates](#timesanddates)
@@ -30,9 +40,39 @@
 	13. [Random](#random)
 	14. [Data Structures](#datastructures)
 	15. [User Input](#userinput)
-
+	16. [Bytes](#bytes)
+	17. [String](#string)
+	18. [Gobs](#gobs)
+3. [References](#references)
 
 ---
+## [Introduction](#introduction)
+
+Go:
+
+- Originated at Google in 2007, with version 1.0 releaesd in 2012.
+
+- Ranks as one of the top lanaguages
+
+- Influenced by many popular languages, such as C, Java, C#
+
+- Has fast compilation times
+
+- Promotes rapid development
+
+- Supports modern computing environments, including concurrency and memory management
+
+- Easy to learn and use, and unlike C++, does not have classes
+
+- Is a functional language
+
+- Statically typed, making it a safe language
+
+- Supports cross-compilation
+
+Unlike C++, Go does not have operator overloading. 
+
+
 ## [Basics](#basics)
 
 ### [Packages](#packages)
@@ -124,6 +164,8 @@ func main() {
 }
 ```
 
+Importing a package which is not used results in a build error.
+
 ### [Variables](#variables)
 
 The var statement is used to declare variables. The type follows the variable name.
@@ -155,9 +197,11 @@ fmt.Printf("%T %T\n", name, age)
 // string int
 ```
 
-The keyword *var* is required if declaring variables outside of a function.
+The keyword *var* is required only if declaring variables outside of a function.
 
 ```go
+// From calculate_change.go
+
 var remainder int
 
 func getChange(coin int, value int) (change int, remainder int) {
@@ -232,6 +276,10 @@ dimes, nickels, pennies:  0 0 0
 */
 ```
 
+Constants are declared with the const keyword. Constants can be character, string, boolean, or numeric values. 
+
+Constants cannot be declared using the `:=` syntax.
+
 Go does not perform implicit type conversion when performing mathematical operations. For example: 
 
 ```go
@@ -251,7 +299,7 @@ var f float64 := 3.0
 fmt.Printf("sum: %v\n", float64(i) + f)
 ```
 
-You can run into precission issues when performing floating point arithmetic.
+You can run into precision issues when performing floating point arithmetic.
 
 ```go
 f1, f2, f3 := 8.1, 1.3, 9.1356
@@ -265,7 +313,6 @@ To fix this, use math.Round().
 fmt.Println("Float sum: ", math.Round(floatSum)) // Prints 19
 // 	fmt.Println("Float sum: ", math.Round(floatSum*10)/10) will give you one digit of precision
 ```
-
 
 #### Short variable declaration
 
@@ -361,9 +408,50 @@ const (
 )
 ```
 
+Constants cannot be assigned to the return value of functions.
+
+
+```go
+// Build error
+const x = getAnswer()
+```
+
+#### Global Variables
+
+Go supports global variables, which are variables declared outside of a function. Global variables need to be defined with the `var` keyword instead of the \:\= shortcut.
+
+```go
+var message = "Hello"
+
+
+func main() {
+	fmt.Println(message)
+}
+```
+
+### Interpreted strings vs raw strings
+
+Most of the time, we deal with "interpreted strings", or strings defined with double quotes such as:
+
+```go
+var message = "Hello World"
+```
+
+There is another type of string called "raw strings". Unlike languages like Python, these are defined not with single quotes but with back quotes or back ticks. Everything within the back ticks will be printed.
+
+```go
+var message = `This is a raw message\n` // Returns Hello world!\n
+```
+
+### Useful string functions
+
+The `strings` package has several useful functions which are explored in `strings.go`
+
+The are a few functions in the `strconv` package which are also useful; these are explored in `convert.go`.
+
 ### [Flow control statements](#flow-control-statements)
 
-#### For statement
+#### [For statement](#for-statement)
 
 Go has only one looping construct, the *for* loop. This is in contrast to other languages such as Python, which also has as a *while* loop. 
 
@@ -389,7 +477,7 @@ Breaking down the for statement, we have three parts: init, condition, and post.
     }
 ```
 
-Without the conditional statement, we can write an infinite loop.
+Without the conditional statement, we will end up with an infinite loop. It is up to the programmer to break out of the loop.
 
 ```go
 	i := 0
@@ -457,9 +545,20 @@ out = 3 * 3 + 5 = 14
 
 // Result is 14
 ```
-#### If statement
 
-If statements evaluate some condition; the body needs to be within braces.
+In the following example, the result is `0 0 0 0 0` since v is initialized to 0 with each iteration.
+
+```go
+	for i := 0; i < 5; i++ {
+		var v int
+		fmt.Printf("%d ", v)
+		v = 5
+	  }
+```
+
+#### [If statement](#if-statement)
+
+If statements evaluate some condition; unlike some languages, the body needs to be defined inside curly braces.
 
 ```go
 func main() {
@@ -472,7 +571,7 @@ func main() {
 }
 ```
 
-Below is another example, as used within a function.
+Below is another example of if statements as used within a function.
 
 ```go
 func divide(x float64, y float64) string {
@@ -499,9 +598,9 @@ func menu(choice string) string {
 }
 ```
 
-#### Switch statement
+#### [Switch statement](#switch-statement)
 
-Switch statements can be used to evaluate a variable. The switch statement breaks automatically after the first match. The code below initializes and evaluates the arch variable.
+Switch statements can be used to evaluate a variable. The switch statement breaks automatically after the first match. The code below initializes and evaluates the `arch` variable.
 
 ```go
 func findOS() {
@@ -560,7 +659,27 @@ func whenIsFriday() {
 }
 ```
 
-#### Defer
+There is a `fallthrough` keyword that can be used with the `switch` statement, which tells Go to evaluate the next switch block.
+
+```go
+func main() {
+	k := 6
+	switch k {
+	  case 4: fmt.Println("was <= 4"); fallthrough;
+	  case 5: fmt.Println("was <= 5"); fallthrough;
+	  case 6: fmt.Println("was <= 6"); fallthrough;
+	  case 7: fmt.Println("was <= 7"); fallthrough;
+	  case 8: fmt.Println("was <= 8"); fallthrough;
+	  default: fmt.Println("default case")
+	}
+// was <= 6
+// was <= 7
+// was <= 8
+// default case
+
+```
+
+#### [Defer Statements](#defer-statement)
 
 A defer is a way to push statements onto a stack. Execution is delayed untill the code outside has completed.
 
@@ -601,6 +720,16 @@ func main() {
 	*p = 19
 	fmt.Println(num)
 }
+```
+
+Here's a slight variation:
+
+```go
+var x = 13
+var p * int
+p = &x
+*p = 14
+fmt.Println(x) // 14
 ```
 
 Below is an example where we use pointers with a function.
@@ -967,9 +1096,73 @@ func main() {
 }
 ```
 
+Creating a pointer to a struct is useful *if you want to modify the struct*. For example:
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+// Phone represents a cell phone
+type Phone struct {
+	ID      int
+	Brand   string
+	Model   string
+	Color   string
+	Ranking int
+	Seller  string
+	Price   float64
+	DoI     time.Time
+	Dude
+}
+
+func setColorOfPhone(phone * Phone, Color string) {
+	phone.Color = Color
+}
+
+// Fields representing a dude
+type Dude struct {
+	FirstName string
+	LastName  string
+	Age       int
+}
+
+func main() {
+	iphone := &Phone{
+		ID:      100,
+		Brand:   "Apple",
+		Model:   "IPhone SE",
+		Color:   "Silver",
+		Ranking: 29,
+		Seller:  "Apple",
+		Price:   399.0,
+		DoI:     time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC),
+		Dude:    Dude{FirstName: "Steve", LastName: "Jobs", Age: 41},
+	}
+
+	setColorOfPhone(iphone, "Red")
+
+
+	// Print the value of the iPhone
+	fmt.Println(iphone.Color) // Red
+}
+```
+
+Some people advocate defining factory functions for structs. However, there's no way to enforce this unless the struct is package local.
+
+```go
+func NewPhone(id int, brand string, model string, color string, ranking int,
+	seller string, price float, doi DoI, dude Dude) {
+		return &Phone(...)
+	}
+```
+
 ### [Arrays](#arrays)
 
-An array is a collection of of a type. The size needs to be specified and it cannot be changed.
+An array is a collection of of a type. The size needs to be specified beforehand, and it cannot be changed.
 
 ```go
 func main() {
@@ -992,7 +1185,7 @@ We can use the range function to iterate through an array without computing its 
 	}
 ```
 
-or more succintly, if we only care about the value:
+or more succinctly, if we only care about the value:
 
 ```go
 	for _, element := range colors {
@@ -1019,21 +1212,42 @@ func main() {
 }
 ```
 
+When using this syntax, don't omit the `{}`.
+
+```go
+// arr := [15] int // error: type[15] is not an expression
+arr := [15] int{} // correct
+```
+
 Arrays cannot be changed once created. You can't add elements to it or sort the values. 
+
+Below is an example of how to calucate Fibonacci sequences using an array.
+
+```go
+func fibs() [10] int64 {
+	fib[0] = 1
+	fib[1] = 1
+
+	for i := 2; i < 10; i++ {
+		fib[i] = fib[i - 1] + fib[i - 2]
+		fmt.Println(fib[i])
+	}
+	return fib
+}
+```
 
 #### [Slices](#slices)
 
-A slice is an array without a predefined size. 
+A slice is an array without a predefined size and is easier to use. A slice is a reference to an array that is anonymous. 
 
 ```go
 func main() {
-	ids := [ ]int{3, 5, 7, 11, 13}
+	ids := []int{3, 5, 7, 11, 13}
 
 	for _, v := range ids {
 		fmt.Println(v)
 	}
 }
-
 ```
 
 Below is an example where we sum all the elements of the slice.
@@ -1051,7 +1265,7 @@ func main() {
 }
 ```
 
-Below is another example based on the colors example where we print a subset of the slice.
+Below is another example based on the colors example where we print a subset of the array by creating a slice.
 
 ```go
 func main() {
@@ -1074,6 +1288,8 @@ func main() {
 2 yellow
 */
 ```
+
+There are two parts to the slice: the first is inclusive, the second is exclusive.
 
 Now an interesting thing about slices is that modifing an element in a slice will modify an element in the original array! This is actually a major difference between go and python.
 
@@ -1128,7 +1344,7 @@ func main() {
 // [{John Doe Completed 3/1/2019} {Mary Jane Completed 7/15/2019} {Harry Potter In Progress }]
 ```
 
-A *slice default* refers to shortcuts when declaring a slice. For example, we can creat a slice of our slice above to only print John's jobs.
+A *slice default* refers to shortcuts when declaring a slice. For example, we can create a slice of our slice above to only print John's jobs.
 
 ```go
 	johnsJobs := jobs[:1]
@@ -1183,7 +1399,26 @@ func main() {
 }
 ```
 
-Just remember, the length is the number of elements in the slice, while capacity refers to the number of elements in the original array based on the first element in our slice.
+Just remember, the length is the number of elements in the slice, while capacity refers to the number of elements in the original array based on the *first element* in our slice. 
+
+Another example:
+
+```go
+b := []byte{'g', 'o', 'l', 'a', 'n', 'g'}
+
+b[1:4] length: 3 capacity: 5
+b[:2] length: 2 capacity: 6
+b[2:] length: 4 capacity: 4
+b[:] length: 6 capacity: 6
+```
+
+If you take a slice of a slice, the content of the slice may have fewer elements than the original array.
+
+```go
+s1 := []byte{'p', 'o', 'e', 'm'}
+s2 := s1[2:]    // line 2 { 'e', 'm'}
+s2[1] = 't'     // line 3 {'e', 't'
+```
 
 A *nil slice* is a slice whose length and capacity is 0. What's the use of a nil slice? Well, if you want to remove all the elements in a slice, you can set its value to nil. 
 
@@ -1212,11 +1447,11 @@ func main() {
 }
 ```
 
-A slice can be created using *make*. Why use make? The idea is that you want an array, but don't want to fill it up with data immediately. What you want to do is to use make to create our slice. The *make* keyword allocates memory for an array.
+A slice can be created using *make*. Why use make? The idea is that you want an array, but don't want to fill it up with data immediately. What you want to do is to use `make` to create our slice. The *make* keyword allocates memory for the array.
 
 ```go
 func main() {
-	a := make([]int, 5)
+	a := make([]int, 5) // similarily, var a []int = make([]int, 5)
 	a[0] = 1
 	a[2] = 4
 	a[4] = 6
@@ -1282,6 +1517,19 @@ func main() {
 }
 ```
 
+Below is an example of enlarging a slice.
+
+```go
+func enlarge(s []int, factor int) []int {
+	var dest[] int = make([]int, len(s) * factor)
+	
+	fmt.Println(dest)
+
+	copy(dest, s)
+	return dest
+}
+```
+
 
 The append() function can also be used to remove elements from a slice. The code below calls append with only one argument. This effectively removes elements 0 and 1 from the slice.
 
@@ -1329,6 +1577,68 @@ func main() {
 
 ```
 
+Below is an example of how to generate a Fibonacci sequence using a slice.
+
+```go
+func fibarray(term int) []int {
+	ret := make([]int, term)
+
+	ret[0] = 0
+	ret[1] = 1
+
+	for i := 2; i < term; i++ {
+		ret[i] = ret[i - 1] + ret[i - 2]
+	}
+	return ret
+}
+```
+
+The following example uses make, copy along with slices to insert a slice into a slice.
+
+```go
+func insertSlice(slice, insertion []string, index int) []string {
+    
+	dest := make([]string, len(slice) + len(insertion))
+	
+	n := copy(dest, slice[0:index])
+	n += copy(dest[n:], insertion)
+	copy(dest[n:], slice[index:])
+
+	return dest
+}
+```
+
+Below is an example of filtering a slice for even numbers. Be very careful about the range keyword; the first value is the index, not the value.
+
+```go
+func Filter(s [] int, fn func(int) bool) []int {
+	ret := make([]int, 0)
+
+	for _, elem := range s {
+		if fn(elem) {
+			ret = append(ret, elem)
+		}
+	}
+	return ret
+}
+```
+
+Here's a trick question: what will be the value of items after the loop? Answer: nothing is changed in the original array, so it will be [10, 20, 30, 40, 50]
+
+```go
+items := [...]int{10, 20, 30, 40, 50]
+
+for _, item := range items {
+item *= 2
+}
+```
+
+If the slice values are the same, the length is 0.
+
+```go
+s[1:1] -> 0
+```
+
 ### [Maps](#maps)
 
 Maps are key value pairs. In Go, we use the *make* function to create a map. Below is an example where we do a few operations on maps: adding, finding the size, iterating, and deleting an element.
@@ -1355,8 +1665,9 @@ func main() {
 		fmt.Println(v)
 	}
 }
-
 ```
+
+Use delete to remove an element from a map.
 
 Below is a example where the value is data type struct. Note that we have made a map as a global variable and this requires the var keyword.
 
@@ -1557,6 +1868,27 @@ func main() {
 */
 ```
 
+To check whether a key exists: you can write:
+
+```go
+if _, value := map[key]; value {
+	fmt.Println("OK")
+}
+```
+
+For example: 
+
+```go
+var Days = map[int]string{1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday", 7: "Sunday"}
+
+func findDay(n int) string {
+	if _, val := Days[n]; val {
+		return Days[n]
+	}
+	return "Wrong Key"
+}
+```
+
 Maps can be sorted but to do this, you need to sort the keys, then use the key to access the vaule.
 
 ```go
@@ -1681,6 +2013,8 @@ func main() {
 
 Methods are functions that have been added to structs. The first of these are called *value receivers* because they don't change the original value.
 
+The example below uses a struct. 
+
 ```go
 import (
 	"fmt"
@@ -1703,7 +2037,7 @@ func main() {
 }
 ```
 
-Here, n is a receiver object.
+Here, `n` is a receiver object.
 
 If we want to modify the content of a struct, we must use a *pointer receiver*. What happens in this case is that we pass the address of the variable to the function and not simply its values. 
 
@@ -1752,6 +2086,8 @@ func main() {
 	fmt.Println("After swap: ", x.eType, y.eType)
 }
 ```
+
+### [Interfaces](#interfaces)
 
 A type is said to implment an interface if it implements its methods. Below, we implement the greet() method on the person interface.
 
@@ -1810,7 +2146,7 @@ An "stringer" can be implemented for interfaces to provide a human-friendly stri
 type iPAddr [4]byte
 
 func (p iPAddr) String() string {
-	return fmt.Sprintf("%d.%d.%d.%d", p[0], p[1], p[2], p[3])
+	return fmt.Sprintf("%d.%d.%d.%d", p[0], p[1],p[2], p[3])
 }
 
 func main() {
@@ -1821,6 +2157,78 @@ func main() {
 	for name, ip := range hosts {
 		fmt.Printf("%v: %v\n", name, ip)
 	}
+}
+```
+
+Interfaces can embed other interfaces. For example, the File interface below embeds both the ReadWrite and Lock interfaces, and provides a Close() method.
+
+```go
+type ReadWrite interface {
+  Read(b Buffer) bool
+  Write(b Buffer) bool
+}
+
+type Lock interface {
+  Lock()
+  Unlock()
+}
+
+type File interface {
+  ReadWrite
+  Lock
+  Close()
+}
+```
+
+It is possible to detect the interface.
+
+```go
+package main
+
+import "fmt"
+
+type Simpler interface { 
+	
+}
+
+type Simple struct {
+	
+}
+
+func (p *Simple) Get() int {  
+	return 0
+}
+
+func (p *Simple) Set(u int) {
+	
+}
+
+type RSimple struct {
+	Simpler
+}
+
+func (p *RSimple) Get() int {
+	return 0
+}
+
+func (p *RSimple) Set(u int) {
+	
+}
+
+func fI(it Simpler) int { 
+	switch t := it.(type) {
+		case *Simpler:
+		  fmt.Printf("Simpler")
+		case *RSimple:
+		  fmt.Printf("Rsimpler)")
+		default:
+		      fmt.Printf("Unexpected type %T", t)
+	}
+	return 0
+}
+
+func main() {
+	
 }
 ```
 
@@ -1867,6 +2275,158 @@ func main() {
 */
 ```
 
+Another way is to use the `os.Open()` method to open a file and use a buffer with `bufio` to read it.
+
+```go
+package main
+import (
+"bufio"
+"fmt"
+"io"
+"os"
+)
+
+func main() {
+  inputFile, inputError := os.Open("input.dat")
+  if inputError != nil {
+    fmt.Printf("An error occurred on opening the inputfile\n" +
+
+    "Does the file exist?\n" +
+    "Have you got access to it?\n")
+    return // exit the function on error
+  }
+  defer inputFile.Close()
+  inputReader := bufio.NewReader(inputFile)
+  for {
+    inputString, err := inputReader.ReadString('\n')
+    if err == io.EOF {
+      return
+  }
+    fmt.Printf("The input was: %s", inputString)
+  }
+}
+```
+
+`ReadFile` is not recommended for big files because everything is read into memory.
+
+`fmt.Fscanln` can be used to read and parse lines in a file with space separated fields.
+
+```go
+package main
+import (
+"fmt"
+"os"
+)
+
+func main() {
+  file, err := os.Open("products2.txt")
+  if err != nil {
+    panic(err)
+  }
+  defer file.Close()
+  var col1, col2, col3 []string
+  for {
+    var v1, v2, v3 string
+    _, err := fmt.Fscanln(file, &v1, &v2, &v3) // scans until newline
+    if err != nil {
+      break
+    }
+    col1 = append(col1, v1)
+    col2 = append(col2, v2)
+    col3 = append(col3, v3)
+  }
+  fmt.Println(col1)
+  fmt.Println(col2)
+  fmt.Println(col3)
+}
+```
+
+Go has the ability to read compressed files.
+
+```go
+package main
+import (
+"fmt"
+"bufio"
+"os"
+"compress/gzip"
+)
+
+func main() {
+    fName := "test.txt.gz"
+    var r *bufio.Reader
+    fi, err := os.Open(fName)
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "%v, Can't open %s: error: %s\n", os.Args[0], fName, err)
+        os.Exit(1)
+    }
+    fz, err := gzip.NewReader(fi)
+    if err != nil {
+        r = bufio.NewReader(fi)
+    } else {
+        r = bufio.NewReader(fz)
+    }
+    for {
+        line, err := r.ReadString('\n')
+        if err != nil {
+            fmt.Println("Done reading file")
+            os.Exit(0)
+        }
+        fmt.Println(line)
+    }
+}
+```
+
+Here's an example of using `bufio` to write to a file.
+
+```go
+package main
+import (
+  "os"
+  "bufio"
+  "fmt"
+)
+
+func main () {
+  outputFile, outputError := os.OpenFile("output/output.dat", os.O_WRONLY|os.O_CREATE, 0666)
+  if outputError != nil {
+    fmt.Printf("An error occurred with file creation\n")
+    return
+  }
+  defer outputFile.Close()
+  outputWriter:= bufio.NewWriter(outputFile)
+  outputString := "hello world!\n"
+  for i:=0; i<10; i++ {
+    outputWriter.WriteString(outputString)
+  }
+  outputWriter.Flush()
+}
+```
+
+The `os` package can also be used to write files.
+
+```go
+package main
+import "os"
+
+func main() {
+  os.Stdout.WriteString("hello, world\n")
+  f, _ := os.OpenFile("output/test.txt", os.O_CREATE|os.O_WRONLY, 0)
+  defer f.Close()
+
+  f.WriteString("hello, world in a file\n")
+}
+```
+
+So given the choice between using functions in `io` or `os` or even `io.ioutil`, how do we decide when to use which?
+
+It seems that:
+
+- Use ioutil for the simplest cases when the file is small and we don't mind reading/writing everything at once. Note that `ioutil` is being deprecated and shouldn't be the first choice.
+
+- Otherwise, `os` with `bufio` provides buffered reading/writing
+
+
 ## [Advanced](#advanced)
 
 ### [Goroutines](#goroutines)
@@ -1887,6 +2447,82 @@ func main() {
 main function
 Hello world goroutine
 */
+```
+
+Waitgroups let you run goroutines in sthe background and block the program until all are completed.
+
+```go
+package main
+import (
+  "fmt"
+  "sync"
+)
+
+func HeavyFunction1(wg *sync.WaitGroup) {
+  defer wg.Done()
+  // Do a lot of stuff
+}
+
+func HeavyFunction2(wg *sync.WaitGroup) {
+  defer wg.Done()
+  // Do a lot of stuff
+}
+
+func main() {
+  wg := new(sync.WaitGroup)
+  wg.Add(2)
+  go HeavyFunction1(wg)
+  go HeavyFunction2(wg)
+  wg.Wait()
+  fmt.Printf("All Finished!")
+}
+```
+
+### [Mutex](#mutex)
+
+A mutex is a tool to lock a region of code from being modified by other threads. 
+
+```go
+ype Info struct {
+	mu sync.Mutex
+	name string
+}
+
+func (i * Info) Update(name string) {
+	i.mu.Lock()
+	fmt.Printf("Locking: %s\n", name)
+	time.Sleep(time.Second * 1)
+	i.name = name
+	fmt.Println("Unlocking")
+	i.mu.Unlock()
+}
+
+func (i * Info)GetName() string {
+	return i.name
+}
+
+func main() {
+	var i Info
+
+	i.Update("mary")
+	go func() {
+		fmt.Println("Updating name")
+		i.Update("george")
+	}()
+	i.Update("mary")
+	time.Sleep(time.Second * 1)
+
+	fmt.Println(i.GetName())
+}
+
+//  Locking: mary
+// Unlocking
+// Locking: mary
+// Updating name
+// Unlocking
+// Locking: george
+// Unlocking
+// george
 ```
 
 ### [Channels](#channels)
@@ -1921,7 +2557,73 @@ func main() {
 }
 ```
 
-Buffered channels set the length of the buffer length. Message counts exceeding this buffer length will result in a fatal error (however, goroutines don't seem to suffer this issue).
+Here's another example:
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+  ch := make(chan string)
+  go sendData(ch) // calling goroutine to send the data
+  go getData(ch)  // calling goroutine to receive the data
+  time.Sleep(time.Second * 1)
+  close(ch)
+}
+
+func sendData(ch chan string) { // sending data to ch channel
+  ch <- "Hello"
+  ch <- "my"
+  ch <- "name"
+  ch <- "is"
+  ch <- "Tokyo"
+}
+
+func getData(ch chan string) {
+  var input string
+  for {
+    input = <-ch
+    fmt.Printf("%s ", input)
+  }
+}
+```
+
+If you write to a channel, you must read from the channel or the writer will be deadlocked.
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	ch1 := make(chan int)
+	go write(ch1)
+	go read(ch1)
+
+	time.Sleep(1e9)
+}
+
+func write(ch chan int) {
+	for i := 0; i < 10; i++ {
+		ch <- i
+	}
+}
+
+func read(ch chan int) {
+	for {
+		fmt.Println(<-ch)
+	}
+}
+```
+
+Buffered channels set the length of the buffer length. Message counts exceeding this buffer length will result in a fatal error (however, goroutines don't seem to suffer this issue). Unbuffered channels will not block because they will wait until the maximum number of elements are reached before synchronization. 
 
 ```go
 // Function to process messages in an array. We stop processing once we
@@ -2030,6 +2732,52 @@ func main() {
 
 }
 ```
+
+If you have multiple channels, you can use `select` to get values from the channels.
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	status := make(chan string)
+	message := make(chan string)
+
+	statusFunc := func() {
+		status <- "ready"
+	}
+
+	messageFunc := func() {
+		message <- "All actions done"
+	}
+
+	go statusFunc()
+	go messageFunc()
+
+	go func(ch1 chan string, ch2 chan string) {
+		for {
+			select {
+			case v := <- ch1:
+				fmt.Printf("Received status: %s\n", v)
+			case v:= <- ch2:
+				fmt.Printf("Received message: %s\n", v)
+			}
+		}
+	}(status, message)
+
+	time.Sleep(1 * time.Second)
+}
+```
+
+One important thing to note is that the select statement chooses a claus at random. This can be used to generate random numbers.
+
+
+
+This means main.go can be implemented as a channel handler.
 
 ### [Closures](#closures)
 
@@ -2277,8 +3025,6 @@ func main() {
 }
 ```
 
-
-
 ### [Commands](#commands)
 
 The *os* package has functions for executing commands and dealing with their input and output. Note that the *Command()* function takes a variable number of strings as arguments.
@@ -2333,7 +3079,7 @@ func main() {
 
 In Go, tests are written in a file with the _test.go suffix. Each test file contains functions in the form *func TestName(t *testing.T)*.
 
-Below is a tst for a function that creates abbreviations.
+Below is a test for a function that creates abbreviations.
 
 ```go
 func Abbreviate(s string) string {
@@ -2449,7 +3195,7 @@ func Abbreviate(s string) string {
 
 ```
 
-### Error Handling
+### [Error Handling](#error-handling)
 
 Many functions in the Go ecosystem return an error data type. For example, the code snippet below opens a file. If there was an error, then the function will exit with an error message.
 
@@ -2548,6 +3294,87 @@ func main() {
 // $ go run hello.go 
 // *main.ConfigFileOpenError
 // Unable to open config file
+```
+
+Called in a loop, `defer` statemnets are pushed onto a stack; when the function exits, each call will be popped from the stack.
+
+```go
+func main() {
+	for i := 0; i < 5; i++ {
+		defer fmt.Printf("%d ", i)
+	}
+}
+// 4 3 2 1 0
+```
+
+As a stylistic note, you should handle errors as part of an if statement when possible.
+
+```go
+if value, err := f.f1(param); err != nil {
+	fmt.Printf("An error happend: %v\n", err.Error())
+	return
+}
+...
+
+```
+
+Instead of using errors, you can also generate a panic. The following code illustrates how to use it.
+
+```go
+func main() {
+	if err := openConfig("hello.txt"); err != nil {
+		panic(err.Error())
+	}
+
+	fmt.Println("Never gets here")
+}
+
+func openConfig(fname string) error {
+	f, err := os.Open(fname)
+	defer f.Close()
+
+	if err != nil {
+		return errors.New("Unable to open config file")
+	}
+	return nil
+}
+```
+
+`Recover` can be used to recover from panics and simulates Java's `try...catch block`. It is only useful when called in the following convention.
+
+```go
+func main() {
+	numbers := []int{1, 2, 3, 4, 5}
+	value := 0
+
+	fmt.Println("Calling test")
+	test(numbers, value)
+	fmt.Println("Test complete")
+}
+
+func calculate(numbers[] int, value int) int {
+	var sum int
+
+	fmt.Println("Calculating the sum")
+	for num := range numbers {
+		ret := divide(num, value)
+		sum += ret
+	}
+	return sum
+}
+
+func test(numbers [] int, value int) {
+	defer func() {
+		if e:= recover(); e != nil {
+			fmt.Printf("Panicking %s\r\n", e)
+			// or log.Printf("...")
+		}
+	}()
+
+	sum := calculate(numbers, value)
+
+	fmt.Printf("Sum: %d\n", sum)
+}
 ```
 
 ### [Logging](#logging)
@@ -2950,6 +3777,22 @@ func main() {
 // </html>
 ```
 
+If we want to access a URL, Go supports that too.
+
+```go
+func main() {
+	url := "http://www.google.com"
+
+	resp, err := http.Head(url)
+
+	if err != nil {
+		fmt.Println("Error: ", url)
+	}
+
+	fmt.Println("Status: ", resp.Status) // Returns 200
+}
+```
+
 ### [Times and Dates](#timesanddates)
 
 Most often when we want to deal with times and dates in Go, we need to find the current time. 
@@ -3022,7 +3865,7 @@ fmt.Println(math.Floor(duration.Seconds()))
 // 1
 ```
 
-Another is to use the FormatFloat() function in the *strconv* package.
+Another approach is to use the FormatFloat() function in the *strconv* package.
 
 ```go
 ...
@@ -3243,7 +4086,9 @@ func main() {
 
 [User Input](#userinput)
 
-Use the *bufio* package to read user input into a variable.
+There are two ways to read user input from the console.
+
+The first way is to use the *bufio* package to read user input into a variable.
 
 ```go
 import (
@@ -3277,12 +4122,116 @@ func main() {
 }
 ```
 
-## References
+Alternatively, `fmt.Scanf` and `fmt.Scanln` can be used to read input into variables.
 
-https://www.amazon.com/Isomorphic-Go-isomorphic-applications-programming/dp/1788394186/ref=sr_1_7?dchild=1&keywords=golang&qid=1593625550&sr=8-7
+```go
+var (
+	firstname, lastname string
+)
+func main() {
+	fmt.Println("Enter your name")
+	fmt.Scanln(&firstname, &lastname)
 
-https://www.amazon.com/Go-Practice-Techniques-Matt-Butcher/dp/1633430073/ref=sr_1_15?dchild=1&keywords=golang&qid=1593625550&sr=8-15
+	fmt.Printf("You entered: %s %s\n", firstname, lastname)
+}
+```
 
-[Mastering Go](https://www.amazon.com/dp/B07WC24RTQ/)
+## [Bytes](#bytes)
 
-https://dave.cheney.net/tag/gogc
+The bytes package can be used to create a buffer from which to read and write data. It is more memory and CPU-efficent than +=.
+
+```go
+var buffer bytes.Buffer
+for {
+	if s, ok := getNextSrring(); ok {
+		buffer.WriteString(s)
+	} else {
+		break
+	}
+}
+fmt.Print(buffer.String(), "\n")
+```
+
+## [String](#string)
+
+You can add a String() method to a struct to provide some information when printing out the string. This is similar to `toString()` in Java.
+
+```go
+type Friend struct {
+  first, last string
+}
+
+func (f *Friend) String() string {
+  return f.first + " " + f.last
+}
+
+f := Friend{"George", "Clooney"}
+fmt.Println(f) // George Clooney
+...
+```
+
+If you do lots of string concatenation, consider using `bytes.Buffer`.
+
+```go
+var b bytes.Buffer
+
+for status == False {
+	s = getNextValue()
+	b.WriteString(s)
+}
+
+return b.String()
+```
+
+## [Gobs](#gobs)
+
+A gob is binary data. Gobs can contain any kind of data, but the example shown below represents a struct.
+
+```go
+package main
+import (
+"bytes"
+"fmt"
+"encoding/gob"
+"log"
+)
+
+type P struct {
+  X, Y, Z int
+  Name string
+}
+
+type Q struct {
+  X, Y *int32
+  Name string
+}
+
+func main() {
+  // Initialize the encoder and decoder. Normally enc and dec would be
+  // bound to network connections and the encoder and decoder would
+  // run in different processes.
+  var network bytes.Buffer // Stand-in for a network connection
+  enc := gob.NewEncoder(&network) // Will write to network.
+  dec := gob.NewDecoder(&network)// Will read from network.
+  // Encode (send) the value.
+  err := enc.Encode(P{3, 4, 5, "Pythagoras"})
+  if err != nil {
+    log.Fatal("encode error:", err)
+  }
+  // Decode (receive) the value.
+  var q Q
+  err = dec.Decode(&q)
+  if err != nil {
+    log.Fatal("decode error:", err)
+  }
+  fmt.Printf("%q: {%d,%d}\n", q.Name, *q.X, *q.Y)
+}
+```
+
+## [References](#references)
+
+- https://gobyexample.com
+
+- https://www.educative.io/courses/the-way-to-go
+
+- https://medium.com/backend-habit/setting-golang-plugin-on-vscode-for-autocomplete-and-auto-import-30bf5c58138a
