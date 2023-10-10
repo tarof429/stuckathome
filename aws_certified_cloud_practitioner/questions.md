@@ -6,7 +6,53 @@
 
 - IAM authentication can be federated using either SAML (LDAP) or OIDC like Google. Another option is to use AWS SSO. Cognito can also be used to gain temporary access to AWS. In this case, users are defined in a user pool, and identity pools are used to obtain temporary, limited-privilege credentials. 
 
+- Q: What is a proper definition of an IAM Role? A: An IAM entity that defines a set of permissions for making requests to AWS services, and will be used by an AWS service (failed)
+
+- What is IAM credential report? IAM Credential Report lists all the IAM users in the current acount.
+
+- Q: What are IAM Policies? A: JSON documents that define a set of permissions for making requests to AWS services, and can be used by IAM Users, User Groups, and IAM roles.
+
+- Q: What principle should you apply regarding IAM Permissions? A: Grant least privilege.
+
+- Q: What should you do to increase your root account security? A: Enable Multi-Factor Authentication (MFA)
+
+- Q: IAM User Groups can contain IAM Users and other User Groups A: False: IAM User Groups can contain only IAM Users
+
+- Q: An IAM policy consists of one or more statements. A statement in an IAM Policy consists of the following, EXCEPT A: Version (failed)
+
+- Q: According to the AWS Shared Responsibility Model, which of the following is AWS responsibility? A: AWS Infrastructure
+
+- Q: How can STS help you get some tasks done? A: STS (Security Token Service) lets use assume an IAM role in an AWS Account to gain temporary credentials. It is active by default in all AWS regions.
+
+- Q: You have an EC2 instance that has an attached IAM role providing it with read/write access to the S3 bucket named my-bucket, and it has been successfully tested. Later, you removed the IAM role from the EC2 instance, but after testing you found that writes stopped working but reads are still working. What is the likely cause for this behavior? A: The S3 bucket policy authorizes reads (which you can see by selecting the bucket | Properties)
+
+- Q: You are running an on-premises Microsoft Active Directory to manage your users. You have been tasked to to create another AD in AWS and establishes a trust relationship with your on-premises AD. Which AWS Directory service should you use? A: Use Managed Microsoft AD
+
+-Q: Your AWS account is now growing to 200 IAM users where each user has his own data in an S3 bucket named users-data. For each IAM user, you would like to provide personal space in the S3 bucket with the prefix /home/<username>, where they have read/write access. How can you do this efficiently? A: Create one customer-managed policy with dynamic variables and attach it to a group of all the IAM users
+
 ## EC2
+
+- Q: Which EC2 Purchasing Option can provide you the biggest discount, but it is not suitable for critical jobs or databases? A: spot Instances
+
+- Q: What should you use to control traffic in and out of EC2 instances? A: Security Groups
+
+- Q: How long can you reserve an EC2 Reserved Instance? A: 1 or 3 years
+
+- Q: You would like to deploy a High-Performance Computing (HPC) application on EC2 instances. Which EC2 instance type should you choose? A: Compute Optimized
+
+- Q: Which EC2 Purchasing Option should you use for an application you plan to run on a server continuously for 1 year? A: Reserved Instances
+
+- Q: You are preparing to launch an application that will be hosted on a set of EC2 instances. This application needs some software installation and some OS packages need to be updated during the first launch. What is the best way to achieve this when you launch the EC2 instances? A: Write a bash script that installs the required software and updates to your OS, then use this scrip in EC2 User Data when you launch your EC2 instances
+
+- Q: Which EC2 Instance Type should you choose for a critical application that uses an in-memory database? A: Memory Optimized
+
+- Q: You have an e-commerce application with an OLTP database hosted on-premises. This application has popularity which results in its database has thousands of requests per second. You want to migrate the database to an EC2 instance. Which EC2 Instance Type should you choose to handle this high-frequency OLTP database? A: Storage Optimized
+
+- Q: Security Groups can be attached to only one EC2 instance. A: False
+
+- Q: You're planning to migrate on-premises applications to AWS. Your company has strict compliance requirements that require your applications to run on dedicated servers. You also need to use your own server-bound software license to reduce costs. Which EC2 Purchasing Option is suitable for you? A: Dedicated Hosts
+
+- Q: You would like to deploy a database technology on an EC2 instance and the vendor license bills you based on the physical cores and underlying network socket visibility. Which EC2 Purchasing Option allows you to get visibility into them? A:  Dedicated Hosts
 
 - How can you get metadata for an EC2 instance? Answer: At the command prompt in the instance, type `curl http://169.254.169.254/latest/meta-data/local-ipv4` for example.
 
@@ -143,7 +189,7 @@ Need to review.
 
 ## ControlTower
 
-- ControlTower: A service to set up and govern a secure, compliant multi-account environment. It does this by simplifying the process of creating multi-account environments, setting up a landing zone for each user, and uses AWS Organizations to help with ongoing account account management and governance. Control Tower does not manage AWS resources such as EC2, S3, and RDS. That's the purpose of Systems Manager.
+- Q: What is ControlTower? A: A service to set up and govern a secure, compliant multi-account environment. It does this by simplifying the process of creating multi-account environments, setting up a landing zone for each user, and uses AWS Organizations to help with ongoing account account management and governance. Control Tower does not manage AWS resources such as EC2, S3, and RDS. That's the purpose of SystemsManager.
 
 - In regards to AWS Control Tower, the following is NOT true: AWS Control Tower does NOT manage  AWS resources such as EC2, S3, and RDS. Control Tower is for user accounts. AWS Systems Manager does.
 
@@ -260,3 +306,66 @@ Need to review.
 ## Lightsail
 
 - What is Lightsail? Answer: It's an easy-to-use virtual private server (VPS) provider that makes it easy to build an application or website.
+
+## Elastic Beanstalk
+
+A key point in understanding Elastic Beanstalk is knowing the deployment options.
+
+
+### References
+
+https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.rolling-version-deploy.html
+
+### Beanstalk Deployment Options
+
+- AllAtOnce: Deploys to all instances simultaneously
+
+- Rolling - Update a few instances (bucket) at a time
+
+- RollingWithAdditionalBatch: Launches an extra batch of instances, before starting the deployment, to maintain full capacity.
+
+- Immutable: spins up new instances in a new ASG, deploys the application to it, then swaps all the instances when they are healthy
+
+- TrafficSplitting:  Performs traffic-splitting deployments to canary-test your application deployments.
+
+### Quiz
+
+Score (8 of 17 correct)
+
+- Q: You're developing an application and would like to deploy it to Elastic Beanstalk with minimal cost. You should run it in a) Single Instance Mode b) High Availability Mode A: Single Instance Mode
+
+- Q: Elastic Beanstalk application versions can be deployed to a) one environment b) many environments A: Many enviornments (wrong, but why?)
+
+- Q: You have been tasked to run an application developed using Rust language on Elastic Beanstalk. After checking, you found that Rust runtime is not currently supported on Elastic Beanstalk. Which of the following is NOT a solution? A: Install scripts and security software using an EC2 User Data script (wrong)
+
+- Q: Environments in Elastic Beanstalk must have the following names: dev, test, and prod. A: False
+
+- Q: You are developing a new application that's hosted on Elastic Beanstalk. As you are in the development process you don't mind downtime so you want your application to be deployed as soon as a new version is available. Which Elastic Beanstalk deployment option should you use? A: All at Once (wrong)
+
+- Q: A company hosting their website on AWS Elastic Beanstalk. They want a methodology to continuously release new application versions with the ability to roll back very quickly in case if there're any issues. Also, the application must be running at full capacity while releasing new versions. Which Elastic Beanstalk deployment option do you recommend? A: Immutable (wrong but why?)
+
+- Q: You're a DevOps engineer working for a startup company hosting their application on Elastic Beanstalk. The application is in its early phases and it has a lot of new updates every week while being used by a number of users. You want to continuously release new features without application downtime and without incurring extra costs. It's acceptable to temporarily decrease the number of running instances serving users. Which Elastic Beanstalk deployment option should you choose? A: Rolling (wrong)
+
+- Q: Which Elastic Beanstalk deployment option allows you to release new versions of your application with minimal added cost while maintaining the full capacity to serve the current users? A: RollingWithAdditionalBatch (wrong)
+
+- Q: To improve your application performance, you want to add an ElastiCache cluster to your application hosted on Elastic Beanstalk. What should you do? A: Create an elasticache.config file in the .extensions folder in the root of the code zip file and provide appropriate configuration
+
+- Q: Your deployments on Elastic Beanstalk have been painfully slow. After checking the logs, you realize that this is due to the fact that your application dependencies are resolved on each instance each time you deploy. What can you do to speed up the deployment process with minimal impact? A: Resolve the dependencies beforehand and package them in the zip file
+
+- Q: What AWS service does Elastic Beanstakc use under the hood? A: AWS CloudFormation
+
+- Q: Due to compliance regulations, you have been tasked to enable HTTPS for your application hosted on Elastic Beanstalk. This allows in-flight encryption between your clients and web servers. What must be done to set up HTTPS on Elastic Beanstalk? A: Create an .ebextension/securelistener-alb.config file configure the Application Load Balancer
+
+- Q: Which feature in Elastic Beanstalk allows you to automate deletions of old application versions so that new application versions can be created? A: Use a Lifecycle Policy
+
+- Q: You're using Elastic Beanstalk and you would like to schedule tasks to run periodically and asynchronously. These tasks typically take more than 1 hour to complete. Which Elastic Beanstalk environment should you choose? A: Worker environment and cron.yaml file
+
+- Q: You have created a test environment in Elastic Beanstalk and as part of the environment, you have created an RDS DB instance. How can you make sure the database can be used after you delete the environment? A: Make a snapshot of the RDS DB instance before it gets deleted
+
+- Q: You're running an application on Elastic Beanstalk. You have just finished a major update to your application. You want to deploy the new version then direct a small percentage of traffic to the new version so you can test and fall back if there're any issues. Which Elastic Beanstalk deployment option should you choose? A: Traffic Splitting (wrong)
+
+- Q: You have been hired by a company to run some tests on their application hosted on Elastic Beanstalk. You can't run these tests on the current environment as this is the production environment, so you have to create another environment similar to the one already running. Which Elastic Beanstalk feature allows you to do this? A: Elastic Beanstalk Cloning
+
+
+
+
