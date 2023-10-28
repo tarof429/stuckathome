@@ -348,7 +348,7 @@ Score (8 of 17 correct)
 
 - Q: Which Elastic Beanstalk deployment option allows you to release new versions of your application with minimal added cost while maintaining the full capacity to serve the current users? A: RollingWithAdditionalBatch (wrong)
 
-- Q: To improve your application performance, you want to add an ElastiCache cluster to your application hosted on Elastic Beanstalk. What should you do? A: Create an elasticache.config file in the .extensions folder in the root of the code zip file and provide appropriate configuration
+- Q: To improve your application performance, you want to add an ElastiCache cluster to your apwplication hosted on Elastic Beanstalk. What should you do? A: Create an elasticache.config file in the .extensions folder in the root of the code zip file and provide appropriate configuration
 
 - Q: Your deployments on Elastic Beanstalk have been painfully slow. After checking the logs, you realize that this is due to the fact that your application dependencies are resolved on each instance each time you deploy. What can you do to speed up the deployment process with minimal impact? A: Resolve the dependencies beforehand and package them in the zip file
 
