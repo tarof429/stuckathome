@@ -48,3 +48,5 @@
     ```
 
 - Install `peek`, a tool for taking screenshots
+
+- Update the BIOS by using fdisk to format a USB disk then use mkfs.fat -F32 `/dev/usb` to crete the filesystem. Aterwards, copy the BIOS update to it.
