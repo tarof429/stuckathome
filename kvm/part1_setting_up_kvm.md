@@ -54,9 +54,9 @@ Connection=bridge
 BindsToInterfaces=(enp37s0)
 MACAddress='12:34:56:78:90'
 IP=static
-Address='192.168.0.22/24'
-Gateway='192.168.0.1'
-DNS='192.168.0.1'
+Address='192.168.1.22/24'
+Gateway='192.168.1.1'
+DNS='192.168.1.1'
 ## Ignore (R)STP and immediately activate the bridge
 SkipForwardingDelay=yes
 ```

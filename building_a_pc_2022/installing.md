@@ -53,8 +53,8 @@ Since all the partitioning was done in the previous step, we should now proceed 
     Interface=enp4s0
     Connection=ethernet
     IP=static
-    Address=('192.168.0.22/24')
-    Gateway='192.168.0.1'
+    Address=('192.168.1.22/24')
+    Gateway='192.168.1.1'
     DNS=('8.8.8.8')
     ```
 

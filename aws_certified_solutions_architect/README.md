@@ -143,25 +143,7 @@ See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.h
 
 - If your instance needs close to bare metal performance, EFA, and high performance networking, use an AWS nitro instance type.
 
-### EC2 Questions
-
-1. Q: An organization uses an application that uses per-socket licensing, and they need full control over the placement of their EC2 instances on underlying hardware. What should they use? Answer: Use dedicated hosts
-
-2. Q: Which EC2 pricing model would you use for a short-term requirement that needs to complete over a weekend? A: On-Demand Instance
-
-3. Q: An organization has launched EC2 instances in private subnets. They need to enable Internet connectivity for the subnets. The service should be highly available and scale automatically. What do they need to configure? A: Launch a NAT gateway in a public subnet and add a route in the private subnet route table.
-
-4. Q: Which type of network adapter should be used for High Performance Computing (HPC) uses cases that include tightly coupled applications? A: EFA
-
-5. Q: What can you use to run a script at startup on an Amazon EC2 Linux instance? A: User data
-
-6. Q: What do you need to securely connect using SSH to an EC2 instance launched from the Amazon Linux 2 AMI? A: Key pair
-
-7. Q: An Amazon EC2 instance requires a static public IP address. What would you choose? A: Elastic IP address
-
-8. Q: Which of the following is NOT a benefit of the AWS Nitro System? A: High availability
-
-## Elastic Load Balancer (ELB) and Auto Scaling
+### Elastic Load Balancer (ELB) and Auto Scaling
 
 To scale the availability of your application, you need to know how to configure auto scaling and how to place an elastic load balancer to distribute traffic to your EC2 instances. 
 
@@ -177,18 +159,211 @@ EC2 auto scaling is able to scale in or scale out depending on metrics obtained 
 
 - Responds to EC2 status checks and CloudWatch metrics
 
-- Can scale based on demain or on schedule
+- Can scale based on demand or on schedule
 
 - Scaling policies define how to respond to changes in demand
 
-- Auto Scaling groups define collections fo EC2 instances that are scaled and managed together.
+- Auto Scaling groups define collections for EC2 instances that are scaled and managed together
 
+Scaling Polices:
+
+There are three scaling policies:
+
+1. Simple scaling policy means that scaling relies on a metric from Cloudwatch as a basis for scaling. If CPU utilization exceeds a threshold of 80%, then you can create a policy to launch another EC2 intance. Useful when load is erratic. 
+
+2. Target tracking: Adds or removes capacity as required to keep the metric at or close to the specific target value. For example, use this when You want to keep the CPU usage of your ASG at 50%
+
+3. Step scaling means you can define mutliple actions based on the size of the alarm breach
+
+### Architecture Patterns - Auto Scaling and ELB
+
+- If you need high availability and elastic scalability for web servers, use EC2 Auto scaling and an application load balancer across multiple AZs
+
+- If you need low latency connections over UDP to a pool of instances running a gaming application, use a network load balancer with a UDP listener
+
+- If you need to whitelist static IP addresses for a highly available load balanced application in an AWS region, use a network load balancer and create static IP addresses in each AZ (you don't get a static IP address with an ALB)
+
+- If you have an application in EC2 in an ASG that requires disaster recover across regions, you can create an ASG in a second region with the capacity set to 0. Take snapshots and copy them across regions.
+
+- If you have an application on EC2 that must cale in larger increments if a big increase in traffic occurs, compared to small increases in traffic, you would create an ASG with a step scaling policy and configure a larger capacity increase. (Really?)
+
+- If you need to scale EC2 instances behind an ALB based on the number of requests completed by each instance, you can configure a target tracking policy using the ALBRequestCountPerTarget metric
+
+- If you have an application that runs on EC2 behind an ALB, and want to allow users to be able to connect to other EC2 instances without reauthenticating, you could use session state store such as DynamoDB or ElastiCache
+
+- If a company is deploying an IDS/IPS system using virtual appliances and needs to scale horizontally, you could deploy a gateway load balancer in front of the virtual appliances
 
 ## AWS Organization and Control Tower
 
+AWS Organizations is a service that allows us to create one organization from many AWS accounts. This service is then able to create an aggregate bill (called consolidated billing) and also allows us to manage multiple accounts.
+
+Service control poliices (SCPs) are a type of organization policy that you can use to manage permissions in your organization. SCPs offer central control over the maximum available permissions for all accounts in your organization.
+
+The FullAWSAccess SCP is an AWS managed policy which grants access to every operation.
+
+An organizational unit (OU) is a logical grouping of accoutns in your organzation, created using AWS Organizations. OUs enable you to organize your accounts into a hierarcy and make it easier for you to apply management controls. AWS Organizations policies are what you use to apply such controls.
+
 ## Amazon Virtual Private Cloud (VPC)
 
+### VPCs
+
+A VPC or Virtual Private Cloud is a virtual network where resources are launched. A VPC is unique to each region. A default VPC is created for you in each region, but you can create your own VPCs. By default, you can create up to 5 VPCs. Public subnets are subnets that have a route table with an attached Internet Gateway, so that instances with a public IP can access the Internet. Each VPC has a CIDR block which defines a range of IPs.
+
+Below are some VPC components:
+
+- Subnet: A segment of a VPC's IP address range where you can place groups of isolated resources
+
+- Internet Gateway: The Amazon VPC side of a connection to the public Internet. When you create a VPC, you should also consider whether to create an Internet Gateway so that the instance has access to the Internet. 
+
+- NAT Gateway: A NAT service that allows your resources in a private subnet to access the Internet
+
+- VPC Router: Routers connect subnets and direct traffic between Internet gateways, virtual private gateways, NAT gateways, and subnets
+
+- Peering Connection: Routes traffic via private IPs between two VPCs
+
+- VPC Endpoints: Enables private connectivity to services hosted in AWS
+
+- Egress-only Internet Gateway: A stateful gateway that provides egress only traffic for ipv6 traffic
+
+- Hardward VPC Connection: A hardware-based VPN connection between a VPC and a data center
+
+- Virtual Private Gateway: The Amazon VPC side of a VPN connection
+
+- Customer Gateway: Your side of a VPN connection
+
+If you create your own VPC, you need to define a CIDR block that's big enough to define all the subnets for each AZ that you want to launch instances in. With the help of route tables, we can make some subnets private and others public. When we create our VPC, AWS will also create a route table that can be reached from the Internet, and it will implicitly associate our subnets with it. We can also make some subnets private by creating a route table that is not associated with an Internet gatway. We could also associate these subnets with a NAT gateway so that instances launched there can reach out to the Internet to download security updates, for example, but are protected from inbound traffic. CIDR block size can be between /16 and /28. The CIDR block cannot overlap with any other CIDR blocks in your VPC. 
+
+### NAT Gateways
+
+NAT Gateways must always be associated with a public subnet. When you create a NAT Gateway, you should also create an Elastic IP. Once the NAT Gateway has been created, it needs to be added to the route table for the private subnet. This allows EC2 instances in the private subnet to reach the Internet.
+
+### Network ACLs
+
+Security Groups and Network ACLs are two types of firewalls that can be applied to protect your EC2 instances. Network ACLs sit at the subnet level while a security group applies to an EC2 instance. Security Groups are stateful firewalls so they implicitly allow the return traffic. Network ACLs on the other hand are stateless so you need to specify both egress and ingress rules even if they use the same port. Network ACLs are processed in order, so if the first rule allows traffic, then no other rules will be processed. When modifying network ACLs, make sure the rules are created to cover your scenarios. Security groups support allow rules only while network ACLs support allow and deny rules
+
+### VPC Endpoints
+
+A VPC Interface Endpoint enables EC2 instances to connect to public services such as CloudFormation and CodeDeploy using a private IP address. If you want to connect the EC2 instances to S3 or DynamoDB without using a public IP, you can use a VPC Gateway Endpoint. A Gateway Endpoint uses a route table to acces these services.
+
+### VPC Peering
+
+VPC Peering is a networking connection btween two VPCs that enables you to routge traffic beetween the privately. The peering connection can be created between your own VPCs, with a VPC in another AWS account, or with a VPC in a different region. The CIDR blocks for each VPC must not overlap. 
+
+When setting up VPC Peering, you need to ensure that each security group allows traffic from the other subnet. In addition, you need to set up the route table so that traffic to the subnet will go through the VPC Peering.
+
+Note that you only need to set up VPC peering once per connection.
+
+### VPC Transit Gateways
+
+AWS Transit Gateway provides a hub and spoke design for connecting VPCs and on-premises networks as a fully managed service without requiring you to provision virtual appliances like the Cisco CSRs. No VPN overlay is required, and AWS manages high availability and scalability. 
+
+Transit Gateway enables customers to connect thousands of VPCs. You can attach all your hybrid connectivity (VPN and Direct Connect connections) to a single Transit Gateway instance, consolidating and controlling your organization's entire AWS routing configuration in one place (refer to the figure under Transit VPC Solution). Transit Gateway controls how traffic is routed among all the connected spoke networks using route tables. This hub-and-spoke model simplifies management and reduces operational costs because VPCs only connect to the Transit Gateway instance to gain access to the connected networks. 
+
+### Transit VPC 
+
+Transit VPCs can solve some of the shortcomings of VPC peering by introducing a hub and spoke design for inter-VPC connectivity. In a transit VPC network, one central VPC (the hub VPC) connects with every other VPC (spoke VPC) through a VPN connection typically leveraging BGP over IPsec. The central VPC contains Amazon Elastic Compute Cloud (Amazon EC2) instances running software appliances that route incoming traffic to their destinations using the VPN overlay. Transit VPC peering has the following advantages: 
+
+
+### AWS Private Link
+
+AWS PrivateLink provides private connectivity between VPCs, AWS services, and your on-premises networks without exposing your traffic to the public internet. AWS PrivateLink makes it easy to connect services across different accounts and VPCs to significantly simplify your network architecture. This allows customers who may want to privately expose a service/application residing in one VPC (service provider) to other VPCs (consumer) within an AWS Region in a way that only consumer VPCs initiate connections to the service provider VPC. An example of this is the ability for your private applications to access service provider APIs.
+
+### VPC Sharing
+
+Sharing VPCs is useful when network isolation between teams does not need to be strictly managed by the VPC owner, but the account level users and permissions must be. With Shared VPC, multiple AWS accounts create their application resources (such as Amazon EC2 instances) in shared, centrally managed Amazon VPCs. In this model, the account that owns the VPC (owner) shares one or more subnets with other accounts (participants). After a subnet is shared, the participants can view, create, modify, and delete their application resources in the subnets shared with them. Participants cannot view, modify, or delete resources that belong to other participants or the VPC owner. Security between resources in shared VPCs is managed using security groups, network access control lists (NACLs), or through a firewall between the subnets.
+
+### Private NAT Gateway
+
+Teams often work independently and they might create a new VPC for a project, which may have overlapping classless inter-domain routing (CIDR) blocks. For integration, they might want to enable communication between networks with overlapping CIDRs, which is not achievable through features such as VPC peering and Transit Gateway. A private NAT gateway can help with this use case. Private NAT gateway uses a unique private IP address to perform network address translation for the overlapping source IP address, and a unique destination IP address that load balances the destination overlapping IP address. You can route traffic from your private NAT gateway to other VPCs or on-premises network using Transit Gateway or virtual private gateway.
+
 ## Amazon Simple Storage Service (S3)
+
+S3 is an object-based storage system service. You can access objects in an S3 bucket using APIs. 
+Files can be anywhere from 0 to 5TB. The objects that you can store in S3 include any file such as text files, MP4, JPEG, PDF or Word documents; it really doesn't matter. S3 has unlimited storage available. To access objects in an S3 bucket, you use a URL such as https://bucket.s3.aws-region.amazonws.com/key. S3 is a key-value storage system, and the key is the name of the file. Bucket names must be globally unique but buckets are created within a region. As a best practice, you should create buckets closest to the region where your services or users are located. S3 buckets can be replicated across regions but this needs to be confgured manually. S3 delivers strong read-after-write consistency. All the objects within an S3 buckets are at the same hierarcyh; however, you can created folders to simulate hierarcy. The keys of such objects have the folder name as a prefix. An object consists of:
+
+- Key (name of the object)
+
+- Version ID
+
+- Value (actual data)
+
+- Metadata
+
+- Subresources
+
+- ACL
+
+EC2 instances in a public subnet can access S3 buckets via an Internet Gateway. EC2 instances in a private subnet can use an S3 Gateway Endpoint to access buckets using a private connection which uses a private IP address. 
+
+By default, accounts are limited to 100 buckets. 
+
+### S3 Storage Classes
+
+See https://aws.amazon.com/s3/storage-classes/
+
+### S3 Access Controls
+
+Actions on S3 bucket objects are configured through IAM policies, S3 Bucket Policies, and ACLs. These policies are ANDed so that an IAM policy can be overridden by an S3 bucket policy and vice versa. For example, a user may be explicitly granted API access to a bucket through IAM policies, but the S3 bucket policy may deny these API actions. Morever, an S3 bucket policy may allow certain actions, but the IAM policy may deny them. ACLs are legacy access control mechanisms that predate IAM. 
+
+### S3 Versioning
+
+Versioning is a means of keeping multiple versions of objects within a bucket. Versioning enables you to retrieve old versions of objects in case of object deletion or overwrite.
+
+### S3 Lifecycle Management
+
+- Transition actions: Define when objects transition from one storage class to another
+
+- Expiration actions: Define when objects expire (deleted by S3)
+
+### S3 MFA
+
+S3 MFA is a way to require MFA whenever an object is deleted.
+
+### S3 Event Notification
+
+You can configure S3 event notifcation by creating an SNS topic. 
+
+### S3 Presigned URLs
+
+If an object in an S3 bucket is not made publicly accessible, we can make it accessible using a presigned URL. The presigned URL has an item in it that indicates when it will expire.
+
+To create a presign URL, run:
+
+```
+aws s3 presign s3://<bucket name>/<object name>  --profile <profile name>  
+```
+
+where profile name is in ~/.aws/config
+
+### Multipart upload & transfer acceleration
+
+Multipart upload is a way to break up large files into smaller pieces which can be uploaded in parallel and in any order. It is recommended for files greater than 100MB. It can be used for objects from 5MB up to 5 TB. It must be used for files larger than 5 GB. 
+
+Transfer acceleration uses edge locations to improve upload speeds to an S3 bucket. 
+
+### S3 Select and Glacier Select
+
+S3 select and Glacier select are ways to retrieve files from buckets using an SQL-like expression. 
+
+### Server access logging
+
+S3 events can be logged to another bucket and can provide some auditing. 
+
+### S3 Static Webistes
+
+Static websites can be created using S3 by uploading files to an S3 bucket and then either applying ACLs or bucket policies (preferred) to allow users on the Internet to access files in the bucket.
+
+### CORS
+
+Cross-origin resource sharing (CORS) defines a way for client web applications that are loaded in one domain to interact with resources in a different domain. With CORS support, you can build rich client-side web applications with Amazon S3 and selectively allow cross-origin access to your Amazon S3 resources. 
+
+### Cross-account S3 access
+
+S3 buckets can be accessed by multiple accounts by creating a role with another account as a trusted entity. 
+
+### S3 Object Lambda
+
+With S3 Object Lambda, you can add your own code to S3 GET, HEAD, and LIST requests to modify and process data as it is returned to an application. 
 
 ## DNS, Caching and Performance Optimization
 
@@ -209,3 +384,7 @@ EC2 auto scaling is able to scale in or scale out depending on metrics obtained 
 ## Migration and Transfer
 
 ## Web, Mobile, ML and Cost Management
+
+## References
+
+https://mxtoolbox.com/subnetcalculator.aspx?gclid=CjwKCAjw15eqBhBZEiwAbDomEjutOkUsY_q3ppcMBbhL9Y95-_pyNmsudjBVCvh-PGYtYK6VaBfGsxoCbhcQAvD_BwE
