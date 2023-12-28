@@ -367,9 +367,144 @@ With S3 Object Lambda, you can add your own code to S3 GET, HEAD, and LIST reque
 
 ## DNS, Caching and Performance Optimization
 
+Amazon Route 53 is a DNS server. Amazon Cloudfront is a CDN, so it caches data in multiple global locations to improve response times for end users. AWS Global Accelerator is similar to Cloudfront but has different use cases. A hosted zone is a set of records belonging to a domain. 
+
+When you use Cloudfront, you create a web distribution which has a DNS name. The distribution can have behaviors such as path pattern, viewer protocol, cache, and origin request. With any of these behaviors, you can direct users to different distributions depending on variables such as the origin, protocol being used, the TTL, and path. 
+
+### Route 53 Hosted Zones
+
+A **hosted zone** is a set of records belonging to a domain. Each record has a name like *example.com*, the type of record, the IP addresses, and TTL. 
+
+### Route 53 Routing Policies
+
+- Simple: Associates IP addresses with a DNS name. You can specify multiple IP addresses with a DNS name.
+
+- Failover: Routes traffic from a primary IP to a secondary IP in case the primary is down
+
+- Geolocation: Routes traffic to an IP closest to the requester
+
+- Geoproximity: Rooutes traffic to the closest region within a geographic area. This policy uses a policy in Traffic Flow.
+
+- Latency: Directs traffic based on latency
+
+- Multivalue answer: Returns serveral IP addresses and functions as a basic load balancer
+
+- Weighted: Directs traffic for a DNS name to an IP according to weighted values. 
+
+- IP-based: directs traffic based onthe source IP
+
+### Route 53 Migration
+
+DNS records can be migrated from another DNS provider to Route 53. You can also migrate a hosted zone to another AWS account. You can also migrate from Route 53 to another registrar. You can also associate a Route 53 hosted zone with a VPC in another account. To do this:
+
+- Authorize association with VPC in the second account
+- Create an association in the second account
+
+### AWS Global Accelerators
+
+An AWS Global Accelerator is a service that allows you to route traffic to your applications using a the Global Accelerator network instead of the Internet. Global Accelerator provides *two* global static public IPs that act as a fixed entry point to your application endpoints. API workloads are acceleratored up to 60%. If one of the IPs fails, your client application can retry using the healthy static IP address. You can bring your own IP (BYOIP). 
+
+See https://aws.amazon.com/blogs/networking-and-content-delivery/well-architecting-online-applications-with-cloudfront-and-aws-global-accelerator/ for a discussion about Cloudfront and Global Accelerator, and their differences at https://jayendrapatil.com/aws-cloudfront-vs-global-accelerator/. 
+
+Both services reduce latency. A key difference is whether the solution improves latency via caching.
+
 ## Block and File Storage
 
+Block storage systems are low-level storage similar to hard drives in a desktop computer. You can create volumes and partitions in block storage systems and mount them by a drive letter.
+
+File-based storage systems such as NFS are available over the network. 
+
+Object-based storage systems are very scalable and low cost. 
+
+In AWS,
+
+- EBS is block-storage
+
+- EFS is file storage
+
+- S3 is object storage
+
+### EBS
+
+EBS volumes are used by EC2 instances and must be created in the same AZ. They cannot be shared by other EC2 instances, and they cannot be accessed by EC2 instances in a different AZ. However, you can create a snapshot of the EBS volume and make that available to an EC2 instance in a different AZ. There is a new feature called EBS multi-attach which allows you to acces an EBS volume from multiple EC2 instances. EBS volumes do not need to be attached to an instance. The root EBS volume is deleted after the instance is terminated. Non-root EBS volumes are not deleted after the instance is terminated.
+
+### AWS Data Lifecycle Manager (DLM)
+
+You can use Amazon Data Lifecycle Manager to automate the creation, retention, and deletion of EBS snapshots and EBS-backed AMIs. When you automate snapshot and AMI management, it helps you to:
+
+- Protect valuable data by enforcing a regular backup schedule.
+
+- Create standardized AMIs that can be refreshed at regular intervals.
+
+- Retain backups as required by auditors or internal compliance.
+
+- Reduce storage costs by deleting outdated backups.
+
+- Create disaster recovery backup policies that back up data to isolated Regions or accounts.
+
+### EBS vs instance stores
+
+- Instance store volumes are high performance local disks that are physically attached to the host computer on which an EC2 instance runs
+
+- Instance stores are ephemeral which means the data is lost when powered off 
+
+- Instance stores are ideal for temporary storage of information that changes frequently, such as buffers, caches or scratch data
+
+- Instance store voume root devices are created from AMI templates storesd on S3
+
+- Instance store volumes cannot be detached/reattached
+
+### AMIs
+
+An Amazon Machine Image (AMI) provides the information required to launch an instance
+
+### EBS Snapshots
+
+- Snapshots capture a point in time state of an instance
+
+- Snapshots are an cheap way to backup data
+
+- Snapshots can be used to migrate an EC2 instanc from one region to another
+
+- If you have many snapshots, you can free up space in your account by removing older snasphots.
+
+### Using RAID in AWS
+
+- RAID is not provided by AWS as a service, so if you want to use RAID you need to configure it yourself
+
+- RAID 0 and RAID 1 are potential options with EBS
+
+- RAID 5 and RAID 6 are not recommended
+
+### Amazon Elastic File System (EFS)
+
+EFS is a file system that can be shared between many instances in multile AZ using NFS. 
+
+### AWS DataSync
+
+DataSync is a service that syncs existing file systems into EFS
+
+### AWS Storage Gateway
+
+AWS Storage Gatweway is a set of services that allow you to acces AWS services from on-prem resources. This includes:
+
+- AWS S3 File Gateway: enables you to store and retrieve objects in Amazon Simple Storage Service (S3) using file protocols such as Network File System (NFS) and Server Message Block (SMB). Objects written through S3 File Gateway can be directly accessed in S3.
+
+- FSx File Gateway: enables you to store and retrieve files in Amazon FSx for Windows File Server using the SMB protocol. Files written through Amazon FSx File Gateway are directly accessible in Amazon FSx for Windows File Server.
+
+- Volume Gateway: provides block storage to your on-premises applications using iSCSI connectivity. Data on the volumes is stored in Amazon S3 and you can take point-in-time copies of volumes that are stored in AWS as Amazon EBS snapshots. You can also take copies of volumes and manage their retention using AWS Backup. You can restore EBS snapshots to a Volume Gateway volume or an EBS volume. There are two modes: 1. Stored volume mode, where data is stored in locally but but backed up to S3 as snapshots 2. Cached volume mode, where data is stored remotely but cached locally.
+
+- Tape Gatewuay: provides your backup application with an iSCSI virtual tape library (VTL) interface, consisting of a virtual media changer, virtual tape drives, and virtual tapes. Virtual tapes are stored in Amazon S3 and can be archived to Amazon S3 Glacier or Amazon S3 Glacier Deep Archive.
+
 ## Docker Containers and ECS
+
+Amazon ECS is the Amazon service that allows us to run containers in AWS. To run containers, you create a cluster.  The cluster can use AWS Fargate for serverless container management, Amazon EC2 instances where users need to manage EC2 instances, or external instances using EC2 Anywhere.
+
+In a cluster, you can either either create tasks or services. The advantage of a service is that it provides auto-scaling via a Capacity Provider.
+
+Amazon EKS is a managed servie for running Kubernetes applications in the cloud or on-premises. 
+
+AWS App Runner is a fully managed application service that lets you build, deploy, and run web applications and API services without prior infrastructure or container experience.
 
 ## Serverless Applications
 

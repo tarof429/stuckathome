@@ -87,3 +87,57 @@
 9. Q: Solution architects require both programmatic and console access across AWS accounts A: Configure cross-account access using IAM rolees
 
 
+## DNS, Caching, and Performance
+
+1. Q: A company provides videos for new employees around the world. They need to store the videos in one location and then provide low-latency access for the employees around the world. Which service would be best suited to providing fast access to the content? A: Amazon CloudFront
+
+2. Q: An Architect is designing a web application that has points of presence in several regions around the world. The Architect would like to provide automatic routing to the nearest region, with failover possible to other regions. Customers should receive 2 IP addresses for whitelisting. How can this be achieved? A: AWS Global Accelerator provides static IP addresses that act as a fixed entry point to application endpoints in a single or multiple AWS Regions. It uses 2 static anycast IP addresses.
+
+3. Q: Which of the following are NOT valid origins for Amazon CloudFront? A: AWS Lambda is not a valid origin for Amazon CloudFront.
+
+4. Q: An Architect needs to point the domain name dctlabs.com to the DNS name of an Elastic Load Balancer. Which type of record should be used? Q: An Alias record can be used with domain apex records and can point to an ELB.
+
+5. Q: A company hosts copies of the same data in Amazon S3 buckets around the world and needs to ensure that customers connect to the nearest S3 bucket. Which Route 53 routing policy should be used? Q: The latency routing policy directs based on the lowest latency to the AWS resource. Latency increases over distance so this should ensure customers connect to the closest S3 bucket.
+
+6. Q: A media organization offers news in local languages around the world. Which Route 53 routing policy should be used to direct readers to the website with the correct language? A: In this case you need to identify specific geographic locations and associate them with the correct language version.
+
+7. Q: Which routing policy would you use to route to a secondary destination in the event a primary is down? A: Failover routing works based off of health checks and will route to a secondary destination in the event a primary destination is down
+
+8. Q: Which of the following are migration services compatible with Route 53? A: All of these are Route 53 compatible services
+
+## Block and File Storage
+
+1. Q: What is a simple and automted method of backing up Amazon EBS Volumes? A: Use Data Lifecycle Manager and add a schedule
+
+2. Q: What service provides centralized storage and local caching for performance?  A: For the best performance, using instance stores
+
+3. Q: If you need an EC2 instance that starts up quickly and has all application dependencies pre installed, what can you do? A: Create an AMI
+
+4. Q: If you need many Linux instances to attach to a shared filesystem that scales elastically, what do you need? A: Use EFS and mount it in each instance.
+
+5. Q: If you require a managed file system that uses NTFS, what can you use? A: Use Amazon FSx for Windows File Server
+
+6. Q: On-premises servers must be able to attach a block storage system locally. Data should be backed up to S3 as snapshots. A: Deploy a Storage Gateway in stored volume mode
+
+7. Q: An Amazon EBS voume must be moved between regions A: Take a snapshot of the EBS volume and move it to another region
+
+8. Q: Root EBS volumes for a critical application must not be deleted after terminaition A: Modify the delete on termination attribute when launching the EC2 instance
+
+9. Q: On-premises servers use NfS to attach a file system. The file system should be replaced with an AWS service that uses Amazon S3 with a local cache A: Deploy an AWS Storage Gateway file gateway
+
+## Docker Containers and ECS
+
+1. Q: Application will be deployed on Amazon ECS and must scale based on memory A: Use service auto scaling and use the memory utilization
+
+2. Q: Application will run on Amazon ECS tasks across multiple hosts and needs access to an Amazon S3 bucket. A: Use a task execution IAM role to provide permissions to S3 bucket
+
+3. Q: Company requires standard Docker container automation and management service to be used across multiple environments A: Deploy Amazon EKS
+
+4. Q: Company plans to deploy Docker containers on AWS at the lowest cost A: Use Amazon ES with a cluster of Spot instances and enable Spot instance draining.
+
+5. Q: Company plans to migrate Docker containers to AWS and does not want to manage operating systems A: Migrate to Amazon ECS using the Fargate launch type
+
+6. Q: Multiple microservices applications running on Amazon ECS need to route based on information int he HTTP header A: Deploy an Application Load Balancer in front of ECS and use query string parameter based routing
+
+7. Q: Containerized app runs on Amazon EKS. Need to collect and centrally view metrics and logs including EKS namespaces and EKS services A: Configure Cloudwatch Container Insights and view data in CloudWatch console
+

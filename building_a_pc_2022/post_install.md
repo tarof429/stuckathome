@@ -1,5 +1,12 @@
 # Post install
 
+- Start and enable netctl
+
+    ```
+    systemctl enable netctl
+    systemctl start netctl
+    ```
+
 - Start and enable enp4s0: 
     
     ```
@@ -8,6 +15,8 @@
     ```
 
     By the way, enp4s0 is the name of the profile you want to enable. You can create other profiles too and enable and disable them using netctl. See the section on kvm to read on how to set up bridge networking.
+
+    Note: do not enable or start systemd-networkd when using netctl
 
 - Install reflector: https://wiki.archlinux.org/title/reflector and https://man.archlinux.org/man/reflector.1#EXAMPLES. For example:
 
@@ -23,9 +32,9 @@
     ```
 - Setup pacman colors by editing /etc/pacman.conf and uncommenting Color
 
-- Install mate according to https://www.tecmint.com/install-mate-desktop-in-arch-linux/
+- Install mate according to https://www.tecmint.com/install-mate-desktop-in-arch-linux/. This requires xorg, xorg-xinit and mesa for Nvidia GPUs.
 
-- Installed sx, a replacement for startx: https://github.com/Earnestly/sx
+- Intall pulseaudio, pulseaudio-alsa and pavolume for sound. Use mate control panel to disable mute.
 
 - Installed ufw, with these rules:
 
@@ -41,12 +50,16 @@
 - Install some more fonts: https://blog.yucas.net/2018/03/25/beautiful-fonts-improve-arch-linux/. Also install noto-fonts-cjk for Japanese, and ttf-hack for VS Code
 
 
-- Install either the latest stable kernel or the LTS kernel.
+- Install `code` for editing
 
-    ```
-    sudo pacman -S linux-lts
-    ```
+- Install squahsfs-tools to restore files from backup
 
-- Install `peek`, a tool for taking screenshots
+- Install shotwell to view photos
 
-- Update the BIOS by using fdisk to format a USB disk then use mkfs.fat -F32 `/dev/usb` to crete the filesystem. Aterwards, copy the BIOS update to it.
+# References
+
+https://github.com/korvahannu/arch-nvidia-drivers-installation-guide
+
+https://www.baeldung.com/linux/squashfs-filesystem-mount
+
+https://wiki.archlinux.org/title/Nouveau
