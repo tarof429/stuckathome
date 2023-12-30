@@ -56,6 +56,8 @@
 
 - Install shotwell to view photos
 
+- Install inetutils for `hostname`
+
 # References
 
 https://github.com/korvahannu/arch-nvidia-drivers-installation-guide
@@ -63,3 +65,4 @@ https://github.com/korvahannu/arch-nvidia-drivers-installation-guide
 https://www.baeldung.com/linux/squashfs-filesystem-mount
 
 https://wiki.archlinux.org/title/Nouveau
+     w`12`       
