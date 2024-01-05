@@ -508,6 +508,48 @@ AWS App Runner is a fully managed application service that lets you build, deplo
 
 ## Serverless Applications
 
+Serverless applications are applications that are deployed to the cloud where users do not have to manage the underlying server. Users simply need to upload their code to a service. AWS Labmda is one of the most important serverless services in AWS. It allows you to run code as serverless functions. Other services include notification and message busses. 
+
+Serverless services are suitable for integration into an event-driven architecture. For example, a Lambda function may be triggered whenever a file is added to an S3 bucket. The function may process the file, put it in another S3 bucket, and send a message to an SNS queue. Another Lambda function may listen to the queue and insert a record into DynamoDB, which is another serverless service. In all these interactions, the user does not manage any servers. 
+
+The benefits of serverless services are:
+
+- No instances to manage
+- No hardware to provision
+- No need to manage operating systems
+- No need to worry about capacity planning or availability
+- Can be very cheap to use
+
+Lambda functions have a maximum execution time of 15 minutes. If your code needs to run longer than the time limit, then you need to use EC2. 
+
+If you invoke multiple Lambda funcitons, they will be non-blocking and executed concurrently up to the burst cuncurrency quota depending on the region. 
+
+If you use Lambda functions that interact with other AWS services, make sure it has the right permissions. Also make sure Lambda functions are configured with a valid timeout value, because by default they are set to a 3 second timeout. 
+
+If you need to troubleshoot Lambda functions, use CloudWatch. 
+
+Below are some additional serverless services and their use caess:
+
+- Simple Queue Service is a messaging queue that helps you build distributed applications
+
+- Simple Notification Service (SNS) is a notification service that can do things like send email notifications when a cloudwatch alarm is triggered. It provides topcics for high-throughput, push-based (as opposed to pull-based), many to many messaging. 
+
+- Step Functions provide coordination of various serverless AWS services with a visual workflow.
+
+- EventBridge is a serverless event bus and it's useful for building serverless distributed event-driven applications. 
+
+- Simple Workflow Service is similar to Step Functions and suports the coordination of various processes or exeuction logic
+
+- Amazon MQ is a message broker service for Apache MQ and Rabbit MQ 
+
+- Amazon Kinesis enables you to collect data from data streams such as IoT devices for processing at a later time
+
+There are two types of SQS Queues. A Standard Queue will have best effort ordering but have nearly unlimitted throughput. A FIFO Queue supports up to 300 messages per second and will be delvered in order. Stanard Queues may deliver a message more than once, while a FIFO Queue will not introduce duplication. If a message fails to be delivered, a copy of the message will be put into a Dead Letter Queue for later analysis. 
+
+With SQL, you also chang configure polling to be long or short. Long Polling means that the polling will be delayed and eliminates empty response. Short polling happens very often and may not return all messages. Long polling can produce fewer API calls which can lower cost. 
+
+
+
 ## Databases and Analytics
 
 ## Deployment and Management
