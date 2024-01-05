@@ -2,6 +2,10 @@
 
 * [About](README.md)
 * [License](LICENSE)
+* [Docker](docker/README.md)
+    * [Part 1: Installation](docker/part1_installation.md)
+    * [Part 2: Using Docker](docker/part2_using_docker.md)
+    * [Part 3: Real Life Examples](docker/part3_real_life_examples.md)
 * [Python](python/README.md)
     * [Part 1: The Basics](python/part1_basics.md)
     * [Part 2: Files](python/part2_files.md)

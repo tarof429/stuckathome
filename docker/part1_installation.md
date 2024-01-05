@@ -40,7 +40,6 @@ The AWS Marketplace has AMIs with docker pre-installed. but we'll forgot that an
     docker run hello-world
     ```
 
-
 ## References
 
 https://aws.amazon.com/marketplace/pp/prodview-cuiyfwsltafu4,
