@@ -57,7 +57,7 @@ An Image is like an archive that contains all the dependencies needed to run a p
 
 A container is an instance of an image. You can have multiple containers for a single image running on your computer.
 
-Contianers and images are made possible through namespacing and control groups (cgroups). These are features of the Linux kernel. 
+Containers and images are made possible through namespacing and control groups (cgroups). These are features of the Linux kernel. 
 
 ## Listing containers
 
