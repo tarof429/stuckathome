@@ -141,3 +141,25 @@
 
 7. Q: Containerized app runs on Amazon EKS. Need to collect and centrally view metrics and logs including EKS namespaces and EKS services A: Configure Cloudwatch Container Insights and view data in CloudWatch console
 
+## Serverless
+
+1. Q: Application includes EC2 and RDS. Spikes in traffic causes writes to be dropped by RDS. A: Make the application asyncrhonous by having EC2 submit messages to an SQS Queue. Have Lambda poll for items in the queue and write them to the database. 
+
+2. Q: The Web App includes a web tier and a backend processing tier. How can we decouple the two tiers so that the processing tier scales automatically based on the number of jobs? A: Have the web tier submit messages to an SQS Queue that triggers a Lambda function. 
+
+3. Q: So you're using Lamdba, but it's having issues scaling as the payload size increase A: Increase the memory available to the function.
+
+4. Q: Suppose we have statistical data in RDS and we need a way to access the data using an API. A: Create an API gateway that integrates with Lamda functions that access RDS.
+
+5. Q: Suppose that we need to preserve orders in the order that they were received A: Use an SQL FIFO Queue, which needs to be specified when the queue is defined.
+
+6. Q: Suppose an API gateway is integrated with Lamda functions. How do you deal with request failure? A: Increase the throttle limit 
+
+7. Q: Suppose that we have an EC2 instance that processes images using JavaScript and puts the results in S3. How can we make this more cost effective? A: Replace EC2 with AWS Lambda.
+
+8. Q: What if you are using API Gateway but is experiencing scaling issues A: You could create an edged-optimized API gateways. 
+
+9. Q: What if you have many batch functions that need to pass results to the next script, how can you make this more maintainable? A: Use Step Functions along with Lambda functions.
+
+10. Q: Suppose you want a user to upload files to an S3 bucket. Instead of manually process the files, how can you let AWS process them automtatically? A:  Create an event source notification that triggers a Lambda function.
+

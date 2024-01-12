@@ -520,13 +520,7 @@ The benefits of serverless services are:
 - No need to worry about capacity planning or availability
 - Can be very cheap to use
 
-Lambda functions have a maximum execution time of 15 minutes. If your code needs to run longer than the time limit, then you need to use EC2. 
-
-If you invoke multiple Lambda funcitons, they will be non-blocking and executed concurrently up to the burst cuncurrency quota depending on the region. 
-
-If you use Lambda functions that interact with other AWS services, make sure it has the right permissions. Also make sure Lambda functions are configured with a valid timeout value, because by default they are set to a 3 second timeout. 
-
-If you need to troubleshoot Lambda functions, use CloudWatch. 
+Lambda functions have default execution time of 3 seconds and a maximum execution time of 15 minutes. If your code needs to run longer than 15 minutes, then you need to use EC2. If you invoke multiple Lambda functions, they will be non-blocking and executed concurrently up to the burst cuncurrency quota depending on the region. If you use Lambda functions that interact with other AWS services, make sure it has the right permissions. Lambda functions are triggered by an event source. For stream-based services, the event source is specified on the Lambda side. If you need to troubleshoot Lambda functions, use CloudWatch. Benefits of Lamdba include: no servers to manage, continuous scaling, millisecond billing, and integration with almost all other AWS services. 
 
 Below are some additional serverless services and their use caess:
 
@@ -548,9 +542,25 @@ There are two types of SQS Queues. A Standard Queue will have best effort orderi
 
 With SQL, you also chang configure polling to be long or short. Long Polling means that the polling will be delayed and eliminates empty response. Short polling happens very often and may not return all messages. Long polling can produce fewer API calls which can lower cost. 
 
-
-
 ## Databases and Analytics
+
+Databases and Analytics come up a lot in AWS exams and include relational databases like RDS and Aurora and NoSQL databases like DynamoDB, data warehouses like RedShift and Elastic MapReduce, as well as services for streaming analytics like Amazon Kinesis, DataStreams and FireHose. 
+
+RDS is a managed relational database that runs on EC2 instances, so users need to specify the instance type. RDS supports a variety of database engines including AWS's Aurora, MySQL, MariaDB, etc. You can change the instance type to scale vertically. You can configure Multi-AZ as a passive standby in case the primary database goes down. You can also configure read-only replicas to reduce latency, but there is a delay in synchronizing data. Data can be encrypted at rest and in transit. 
+
+RDS supports both automated and manual backups. For automated backups, there is a retention period of 0-35 days, or roughly one month. for each backup, and then it's gone. If you do manual backups, there is no retention period. 
+
+Because RDS makes use of EC2 instances, you may need to take the instance offline for patching during what's called a maintenance window. 
+
+A few key points about RDS:
+
+- You cannot create an encypted read replica from an encrypted database or vice versa. The read replica will always have the same encryption settings as the primary database. 
+
+- The same KMS key is used for databases and read replicas only if they are in the same region.
+
+- Databases can only be encrypted if an encrypted snapshot is created from an unencrypted snapshot.
+
+- 
 
 ## Deployment and Management
 
