@@ -95,8 +95,6 @@ Note that with Alma Linux, yum is still available, but you can use `dnf` as a dr
 
 Morever, AlmaLinux 8.5 has been superseded by 8.6. Follow the instructions at https://wiki.almalinux.org/release-notes/8.6.html#installation-instructions to do the upgrade
 
-
-
 ## Installing CentOS 7 Using Anaconda (kickstart)
 
 First, install cdrtools.

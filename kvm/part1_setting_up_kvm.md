@@ -12,10 +12,8 @@ Virtualization:                  AMD-V
 Next, we'll install some packages.
 
 ```bash
-sudo pacman -S virt-manager qemu vde2 dnsmasq bridge-utils openbsd-netcat dmidecode
+sudo pacman -S virt-manager qemu vde2 ebtables dnsmasq bridge-utils openbsd-netcat
 ```
-
-Choose to install qemu-desktop.
 
 Activate and launch libvirtd
 
@@ -36,10 +34,9 @@ Description='A basic static ethernet connection'
 Interface=enp37s0
 Connection=ethernet
 IP=static
-Address=('192.168.0.22/24')
-#Routes=('192.168.0.0/24 via 192.168.1.2')
-Gateway='192.168.0.1'
-DNS=('8.8.8.8')
+Address=('192.168.1.20/24')
+Gateway='192.168.1.1'
+DNS=('192.168.1.1')
 ```
 
 ## Configure Bridge Networking
@@ -54,7 +51,7 @@ Connection=bridge
 BindsToInterfaces=(enp37s0)
 MACAddress='12:34:56:78:90'
 IP=static
-Address='192.168.1.22/24'
+Address='192.168.1.20/24'
 Gateway='192.168.1.1'
 DNS='192.168.1.1'
 ## Ignore (R)STP and immediately activate the bridge
@@ -87,43 +84,78 @@ netctl enable bridge
 
 Then if we run *ip addr*, we should see our bridge interface configured with a static IP address.
 
-We no longer need enp37s0 and we can remove it.
+## Create storage pool
 
-## Using virsh
-
-In the beginning, you won't have any VMs.
+First you must create a storage pool. For this exercise, we will create a pool called `default` at `/data/libvirt/default`
 
 ```
-$ sudo virsh list --all
- Id   Name   State
---------------------
+sudo virsh pool-define-as --name default --type dir --target /data/libvirt/default
 ```
 
-VM images are stored in a storage pool. A pool called *default* stores images under /var/libvirt/images.
+Afterwards, you should see the pool.
+
 
 ```
-$ sudo virsh pool-dumpxml default
-<pool type='dir'>
-  <name>default</name>
-  <uuid>07ab343d-1b87-4423-b5d3-f7bcf1551986</uuid>
-  <capacity unit='bytes'>526985216000</capacity>
-  <allocation unit='bytes'>6695264256</allocation>
-  <available unit='bytes'>520289951744</available>
-  <source>
-  </source>
-  <target>
-    <path>/var/lib/libvirt/images</path>
-    <permissions>
-      <mode>0755</mode>
-      <owner>0</owner>
-      <group>0</group>
-    </permissions>
-  </target>
-</pool>
+$ sudo virsh pool-list --all
+ Name      State      Autostart
+---------------------------------
+ default   inactive   no
 ```
 
+Next, we need to build the pool.
 
+```
+$ sudo virsh pool-start --build default
+Pool default started
+
+```
+
+Next, we should configure the pool to autostart.
+
+```
+$ sudo virsh pool-autostart default
+Pool default marked as autostarted
+
+$ sudo virsh pool-list --all
+ Name      State    Autostart
+-------------------------------
+ default   active   yes
+```
+
+We can get some information about the pool.
+
+```
+$ sudo virsh pool-info default
+Name:           default
+UUID:           929dcee8-d935-4e73-aca1-39d13c977529
+State:          running
+Persistent:     yes
+Autostart:      yes
+Capacity:       294.23 GiB
+Allocation:     2.29 MiB
+Available:      294.23 GiB
+```
+
+You can see this information in XML format as well.
+
+```
+$ sudo virsh pool-info default
+Name:           default
+UUID:           929dcee8-d935-4e73-aca1-39d13c977529
+State:          running
+Persistent:     yes
+Autostart:      yes
+Capacity:       294.23 GiB
+Allocation:     2.29 MiB
+Available:      294.23 GiB
+```
 
 # References
 
-http://thomasmullaly.com/
+https://wiki.archlinux.org/title/libvirt
+
+https://computingforgeeks.com/install-kvm-qemu-virt-manager-arch-manjar/
+
+http://thomasmullaly.com/2015/03/29/how-to-put-a-kvm-guest-domain-on-a-bridged-network/
+
+

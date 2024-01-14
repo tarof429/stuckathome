@@ -63,5 +63,4 @@ usermod -aG wheel taro
 
 Be sure to set a password for the non-root user.
 
-
 6. Reboot
