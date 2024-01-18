@@ -84,6 +84,17 @@ netctl enable bridge
 
 Then if we run *ip addr*, we should see our bridge interface configured with a static IP address.
 
+## Enable the tun module to load at bootup
+
+To create KVMs with bridge network, the tun module must be loaded. Create a file called /etc/modules-lload.d/tun.conf with the following content:
+
+```
+$ cat /etc/modules-load.d/tun.conf
+# Load the tun module at boot
+tun
+```
+
+To load the module immediately, run `sudo modprobe tun`
 ## Create storage pool
 
 First you must create a storage pool. For this exercise, we will create a pool called `default` at `/data/libvirt/default`
@@ -139,15 +150,24 @@ Available:      294.23 GiB
 You can see this information in XML format as well.
 
 ```
-$ sudo virsh pool-info default
-Name:           default
-UUID:           929dcee8-d935-4e73-aca1-39d13c977529
-State:          running
-Persistent:     yes
-Autostart:      yes
-Capacity:       294.23 GiB
-Allocation:     2.29 MiB
-Available:      294.23 GiB
+$ sudo virsh pool-dumpxml default
+<pool type='dir'>
+  <name>default</name>
+  <uuid>929dcee8-d935-4e73-aca1-39d13c977529</uuid>
+  <capacity unit='bytes'>315926315008</capacity>
+  <allocation unit='bytes'>2400256</allocation>
+  <available unit='bytes'>315923914752</available>
+  <source>
+  </source>
+  <target>
+    <path>/data/libvirt/default</path>
+    <permissions>
+      <mode>0711</mode>
+      <owner>0</owner>
+      <group>0</group>
+    </permissions>
+  </target>
+</pool>
 ```
 
 # References

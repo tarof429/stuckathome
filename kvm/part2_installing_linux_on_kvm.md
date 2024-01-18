@@ -133,10 +133,10 @@ Another method for automated installation involves using the Cloud Init image. T
 1. First install some packages.
 
   ```
-  pacman -S cloud-init cloud-image-utils mkpasswd
+  pacman -S cloud-init cloud-image-utils
   ```
 
-The mkpasswd program is usde to generate the hashed password. See https://aur.archlinux.org/packages/mkpasswd.
+You also need to install mkpasswd. This package is used to generate the hashed password. See https://aur.archlinux.org/packages/mkpasswd.
 
 2. Next, download the latest LTS cloud init image for Ubuntu. For example, Jammy Jellyfish is at https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img. 
 
@@ -144,19 +144,21 @@ The mkpasswd program is usde to generate the hashed password. See https://aur.ar
   wget https://cloud-images.ubuntu.com/releases/22.04/release/ubuntu-22.04-server-cloudimg-amd64.img
   ```
 
-3. Move it to /var/lib/libvirt/boot
+3. Move it to /data/libvirt/boot
 
     ```
-    sudo mv ubuntu-22.04-server-cloudimg-amd64.img /var/lib/libvirt/boot/
+    sudo mv ubuntu-22.04-server-cloudimg-amd64.img /data/libvirt/boot/
     ```
 
 4. Create VMs using the script `ubuntu/files/create_ubuntu_kvm.sh` For example:
 
   ```
-   sh ./create_seeded_ubuntu_vm.sh  -n test-ubuntu -i 192.168.0.30 -u ubuntu -p pass123 -s 40G
+   sh ./create_seeded_ubuntu_vm.sh  -n test-ubuntu -i 192.168.1.30 -u ubuntu -p pass123 -s 40G
    ```
 
-3. Once the macine is up, you can login via console. You might want to update packages by running `apt update` and `apt upgrade`.
+5. You can login with user `ubuntu`. The VM will already have your public key so there is no need to type in a password if using SSH.
+
+6. You might want to update packages by running `apt update` and `apt upgrade`.
 
 ## Installing CentOS using Cloud-Init
 
