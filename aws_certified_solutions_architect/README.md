@@ -580,6 +580,8 @@ These are examples of RDS antipatterns.
 
 Amazon ElastiCache is an in-memory key-value store database like Redis. It can be deployed to cache results from an RDS database. Since it runs on EC2, you do need ot specify the instance type at creation time. 
 
+There are two basic flavors of ElastiCache: MemCached and Redis. With MemCached, data is not persistent, the data is simpler, does not support encryption, and is multi-threaded so it has higher performance. 
+
 ## Deployment and Management
 
 ## Monitoring, Logging and Auditing
