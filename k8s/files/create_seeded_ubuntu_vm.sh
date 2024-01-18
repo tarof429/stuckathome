@@ -8,7 +8,7 @@ SIZE=""
 
 usage() {
     echo "Usage: create_seeded_ubuntu_vm.sh -n <hostname> -i <ipaddress> -u <user> -p <password> -s <size>"
-    echo "Example: create_seeded_ubuntu_vm.sh -n kubemaster -i 192.168.0.30 -u ubuntu -p pass123 -s 40G"
+    echo "Example: create_seeded_ubuntu_vm.sh -n kubemaster -i 192.168.1.30 -u ubuntu -p pass123 -s 40G"
 }
 
 validate() {

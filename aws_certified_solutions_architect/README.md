@@ -546,6 +546,8 @@ With SQL, you also chang configure polling to be long or short. Long Polling mea
 
 Databases and Analytics come up a lot in AWS exams and include relational databases like RDS and Aurora and NoSQL databases like DynamoDB, data warehouses like RedShift and Elastic MapReduce, as well as services for streaming analytics like Amazon Kinesis, DataStreams and FireHose. 
 
+### RDS
+
 RDS is a managed relational database that runs on EC2 instances, so users need to specify the instance type. RDS supports a variety of database engines including AWS's Aurora, MySQL, MariaDB, etc. You can change the instance type to scale vertically. You can configure Multi-AZ as a passive standby in case the primary database goes down. You can also configure read-only replicas to reduce latency, but there is a delay in synchronizing data. Data can be encrypted at rest and in transit. 
 
 RDS supports both automated and manual backups. For automated backups, there is a retention period of 0-35 days, or roughly one month. for each backup, and then it's gone. If you do manual backups, there is no retention period. 
@@ -558,9 +560,25 @@ A few key points about RDS:
 
 - The same KMS key is used for databases and read replicas only if they are in the same region.
 
-- Databases can only be encrypted if an encrypted snapshot is created from an unencrypted snapshot.
+- Databases can only be encrypted if an encrypted snapshot is created from an unencrypted EBS volume. Once you create a database, you can't change the encryption, you have to create a snaphot, then create another snapshot from it that's encrpted, and then you can launch an encrypted version of the database.
 
-- 
+-  Amazon Aurora is an AWS database offering in the RDS family
+
+- An Amazon RDS Proxy increases scalability, fault-tolerance and security for an RDS database. It sits in front of an RDS database like Amazon Aurora and creates a pool of connections for clients including Lamda functions 
+
+RDS works in many cases but there are some exceptions. For example:
+
+- If you need to run an unsupported database or if you need access to the OS, create the database on EC2
+
+- If you need lots of BLOBs, you can use S3
+
+- If you need automated scaling, key-value pair databases, or unstructured databases, use DynamoDB instead
+
+These are examples of RDS antipatterns.
+
+### ElastiCache
+
+Amazon ElastiCache is an in-memory key-value store database like Redis. It can be deployed to cache results from an RDS database. Since it runs on EC2, you do need ot specify the instance type at creation time. 
 
 ## Deployment and Management
 
