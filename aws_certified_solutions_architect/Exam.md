@@ -163,3 +163,29 @@
 
 10. Q: Suppose you want a user to upload files to an S3 bucket. Instead of manually process the files, how can you let AWS process them automtatically? A:  Create an event source notification that triggers a Lambda function.
 
+## Databases
+
+1. Q: Which DynamoDB feature integrates with AWS Lambda to automatically execute functions in response to table updates? A: DynamoDB Streams 
+
+2. Q: A customer needs a schema-less database that can seamlessly scale. Which AWS database service would you recommend? A: DynamoDB
+
+3. Q: An organization is migrating databases into the AWS Cloud. They require a managed service for their MySQL database and need automatic failover to a secondary database. Which solution should they use? A: RDS with Multi-AZ
+
+4. Q: How many PUT records per second does Amazon Kinesis Data Streams support? A: 1000
+
+5. Q: Which Amazon Kinesis service stores data for later processing by applications? A: Kinesis Data Streams 
+
+6. Q: You need to implement an in-memory caching layer in front of an Amazon RDS database. The caching layer should allow encryption and replication. Which solution meets these requirements? A: Redis
+
+7. Q: A new application requires a database that can allow writes to DB instances in multiple availability zones with read after write consistency. Which solution meets these requirements? A: Amazon Aurora Multi-Master (failed)
+
+8. Q: An organization is migrating their relational databases to the AWS Cloud. They require full operating system access to install custom operational toolsets. Which AWS service should they use to host their databases? A: EC2
+
+9. Q: An Amazon RDS database is experiencing heavy demand and is slowing down. Most database calls are reads. What is the simplest way to scale the database without downtime? A: Create a Read Replica
+
+10. Q: An existing Amazon RDS database needs to be encrypted. How can you enable encryption for an unencrypted Amazon RDS database? A: Take an encrypted snapshot and then create a new database instance from the snapshot.
+
+11. Q: Which Amazon Kinesis service uses AWS Lambda to transform data? A: Kinesis Firehose 
+
+12. Q: How can you scale an Amazon Kinesis Data Stream that is reaching capacity? A: Add shards
+
