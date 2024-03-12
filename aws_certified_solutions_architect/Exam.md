@@ -189,3 +189,52 @@
 
 12. Q: How can you scale an Amazon Kinesis Data Stream that is reaching capacity? A: Add shards
 
+## Deployment and Management
+
+1. Q: What format can source files be in for Amazon Elastic Beanstalk? A: war/zip
+
+2. Q: What’s the best way to test updates for a CloudFormation stack before final updates are made? A: Execute a Change Set (failed)
+
+3. Q: Which of the following statements is true? A: CloudFormation can deploy Elastic Beanstalk environments but not the other way around. (failed)
+
+4. Q: A systems integrator regularly builds AWS infrastructure for clients. Many builds are deployed using the same base design patterns. How can they repeatedly build this infrastructure with the least administrative effort? A: Use CloudFormation
+
+5. Q: Which of the following is true regarding CloudFormation benefits? A: All of the Above
+
+6. Q: A company is looking for a way to provide secure, hierarchical storage for configuration data and secrets. Which AWS service would you recommend they use? A: SSM Parameter Store (failed)
+
+7. Q: AWS Secrets Manager offers automatic rotation for which of the following services? A: Amazon RDS, Amazon Redshift, Amazon Document DB (failed)
+
+8. Q: AWS OpsWorks provides managed instances of A: Chef and Puppet
+
+## Monitoring, Logging and Auditing
+
+1. Q: If you need to stream logs from many EC2 instances in an ASG, what can you use? A: You can install the Unified CloudWatch agent and collect logs in Cloudwatch.
+
+2. Q: If you need to collect metrics from EC2 with 1 second granularity, what can you use? A: Create a custom metric in Cloudwatch with high resolution. Cloudwatch's built-in metrics can only go down to one minute resolution. 
+
+3. Q: If you have on-premises servers and you need to have application logs processed in real time, what can you use? A: Install the Unified CloudWatch agent on your servers and use a subscription service in Cloudwatch to connect to a Lamba function. 
+
+4. Q: If you have Cloudwatch logs that need to be transformed by Lamba and save to S3, what can you use? A: Use a Kinesis Firehose destination 
+
+5. Q: If you need to retain logs for auditing, what can you use? A: Use cloudtrail to save the logs to S3 and enable log file integrity validation.
+
+6. Q: If you need all S3 buckets to be encrypted, what can you do? A: Use AWS Config to check the encryption status of all S3 buckets and use auto remediation to enable encryption as required
+
+7. Q: Which service is involved with monitoring the performance of AWS services using metrics: CloudWatch or CloudTrail? A: CloudWatch.
+
+8. Q: You need to store log files from your Amazon EC2 instances. How can this be achieved? A: Use CloudWatch logs.
+
+9. Q: You need to maintain a record of API activity that is occurring within your AWS account. Which service should be used: CloudWatch or CloudTrail? A: CloudTrail. 
+
+10. EC2 metrics are sent to CloudWatch every minute, every 5 minutes, every 10 minutes or every second? A: Every 5 minutes. 
+
+11. Q: Amazon CloudWatch custom metrics have two resolution types. Which one offers data at one-minute granularity: standard resolution or high resolution? A: 
+
+12. Q: There are two types of CloudWatch Alarms. Which alarm uses a rule expression and takes into account multiple alarms: metric alarms or composite alarms? A: composite alarms
+
+13. Q: A launch configuration is created using the command line interface (CLI). Which type of monitoring will be enabled: CloudWatch basic monitoring or CloudWatch detailed monitoring? A: Detailed monitoring. 
+
+## Security
+
+1. 

@@ -72,7 +72,7 @@ Now that we've created a role, in the future we can specify this role at the tim
 
 AWS will run status checks on each of your EC2 instances and report if any instances cannot be reached. 
 
-AWS also monitors your EC2 instance and reports on metrics such as networking, CPU, memory and disk usage. These metrics come from Cloudwatch. You can go to the Cloudwatch service directly to see metrics for any service that you use. Metrics for EC2 instances are measured per hour. If you want to get even more detail, you can enable detailed metrics for a cost.
+AWS also monitors your EC2 instance and reports on metrics such as networking, CPU, memory and disk usage. These metrics come from CloudWatch. You can go to the CloudWatch service directly to see metrics for any service that you use. Metrics for EC2 instances are measured per hour. If you want to get even more detail, you can enable detailed metrics for a cost.
 
 ### Placement Groups
 
@@ -149,7 +149,7 @@ To scale the availability of your application, you need to know how to configure
 
 Scaling up, otherwise known as vertical scaling, means to add or subtract system resources such as CPU, memory and disk. Scaling out, on the other hand, means to add or subtract EC2 instances.
 
-EC2 auto scaling is able to scale in or scale out depending on metrics obtained from Cloudwatch logs indicating CPU usage or instance failure. Below are some key points:
+EC2 auto scaling is able to scale in or scale out depending on metrics obtained from CloudWatch logs indicating CPU usage or instance failure. Below are some key points:
 
 - EC2 auto scaling launches and terminates instances dynamically.
 
@@ -169,7 +169,7 @@ Scaling Polices:
 
 There are three scaling policies:
 
-1. Simple scaling policy means that scaling relies on a metric from Cloudwatch as a basis for scaling. If CPU utilization exceeds a threshold of 80%, then you can create a policy to launch another EC2 intance. Useful when load is erratic. 
+1. Simple scaling policy means that scaling relies on a metric from CloudWatch as a basis for scaling. If CPU utilization exceeds a threshold of 80%, then you can create a policy to launch another EC2 intance. Useful when load is erratic. 
 
 2. Target tracking: Adds or removes capacity as required to keep the metric at or close to the specific target value. For example, use this when You want to keep the CPU usage of your ASG at 50%
 
@@ -526,7 +526,7 @@ Below are some additional serverless services and their use caess:
 
 - Simple Queue Service is a messaging queue that helps you build distributed applications
 
-- Simple Notification Service (SNS) is a notification service that can do things like send email notifications when a cloudwatch alarm is triggered. It provides topcics for high-throughput, push-based (as opposed to pull-based), many to many messaging. 
+- Simple Notification Service (SNS) is a notification service that can do things like send email notifications when a CloudWatch alarm is triggered. It provides topcics for high-throughput, push-based (as opposed to pull-based), many to many messaging. 
 
 - Step Functions provide coordination of various serverless AWS services with a visual workflow.
 
@@ -541,6 +541,20 @@ Below are some additional serverless services and their use caess:
 There are two types of SQS Queues. A Standard Queue will have best effort ordering but have nearly unlimitted throughput. A FIFO Queue supports up to 300 messages per second and will be delvered in order. Stanard Queues may deliver a message more than once, while a FIFO Queue will not introduce duplication. If a message fails to be delivered, a copy of the message will be put into a Dead Letter Queue for later analysis. 
 
 With SQL, you also chang configure polling to be long or short. Long Polling means that the polling will be delayed and eliminates empty response. Short polling happens very often and may not return all messages. Long polling can produce fewer API calls which can lower cost. 
+
+### Lightsail
+
+Lightsail is a serverless service where you can deploy applications to AWS without managing virtual machines. This means you don't need to worry about managing the operating system, and you  have access to a variety of platforms such as docker and Python that you can use to deploy your application. Benefits include: AWS managed security, networking, and availability. AWS calls lightsail "click-to-launch" OS and apps. 
+
+### Amazon API Gateway
+
+Amazon API Gateway is a fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale. APIs act as the "front door" for applications to access data, business logic, or functionality from your backend services. Using API Gateway, you can create RESTful APIs and WebSocket APIs that enable real-time two-way communication applications. API Gateway supports containerized and serverless workloads, as well as web applications.
+
+API Gateway handles all the tasks involved in accepting and processing up to hundreds of thousands of concurrent API calls, including traffic management, CORS support, authorization and access control, throttling, monitoring, and API version management. API Gateway has no minimum fees or startup costs. You pay for the API calls you receive and the amount of data transferred out and, with the API Gateway tiered pricing model, you can reduce your cost as your API usage scales.
+
+The API Gateway uses Cloudfront (CDN) for its public endpoint. 
+
+https://aws.amazon.com/api-gateway/
 
 ## Databases and Analytics
 
@@ -562,8 +576,6 @@ A few key points about RDS:
 
 - Databases can only be encrypted if an encrypted snapshot is created from an unencrypted EBS volume. Once you create a database, you can't change the encryption, you have to create a snaphot, then create another snapshot from it that's encrpted, and then you can launch an encrypted version of the database.
 
--  Amazon Aurora is an AWS database offering in the RDS family
-
 - An Amazon RDS Proxy increases scalability, fault-tolerance and security for an RDS database. It sits in front of an RDS database like Amazon Aurora and creates a pool of connections for clients including Lamda functions 
 
 RDS works in many cases but there are some exceptions. For example:
@@ -576,21 +588,280 @@ RDS works in many cases but there are some exceptions. For example:
 
 These are examples of RDS antipatterns.
 
+### AWS Aurora
+
+Amazon Aurora is an AWS database offering in the RDS family. Amazon recommends using Aurora instead of MySQL for beter performance. Aurora supports Multi-Master mode to allow writes muliple masters in multiple AZs with read after write consistency. 
+
 ### ElastiCache
 
 Amazon ElastiCache is an in-memory key-value store database like Redis. It can be deployed to cache results from an RDS database. Since it runs on EC2, you do need ot specify the instance type at creation time. 
 
 There are two basic flavors of ElastiCache: MemCached and Redis. With MemCached, data is not persistent, the data is simpler, does not support encryption, and is multi-threaded so it has higher performance. 
 
+### DynamoDB
+
+Amazon DynamoDB is a serverless NoSQL database service. Data is stored as key-value pairs as well as documents. DynamoDB scales horizontally by adding more columns. You can set a TTL on item in the table to help manage the amount of storage used over time. DynamoDB access times are in the milliseconds, but this can be optimized further to microseconds by leveraging DAX (DynamoDB Accelerator), a flexible in-memory cache. If you want to duplicate your database to other regions, use Global Tables. 
+
+DynamoDB Streams is DynamoDBs logging feature. Every time a new record is created, that action will be logged in DynamoDB streams. The content of the log item is configurable. You can choose to log keys only, the entire record after the change, the record before the change, and the record before and after the change. 
+
+To improve read/write performance to DynamoDB, you can deploy DAX, the DynamoDB Accelerator, in your VPC. Access to DAX needs to be secured by configuring the appropriate IAM roles to both the EC2 instance accessing DAX and to the DynamoDB table. 
+
+GlobalTables is a feature that enables DynamoDB replication across regions by leveraging DynamoDB Streams. The synchronization is asynchronous. GlobalTables is a good feature to use if you need failover. 
+
+### Amazon RedShift
+
+Amazon RedShfit is a managed data warehouse service used for analytics (OLAP) as opposed to OLTP databases like RDS or DynamoDB. It's useful for when you want to generate reports against data in one or more databases but don't want to negatively impact performance. Alternatives to RedShift include Hadoop with EMR or a RDS Read Replica. Against S3 objects you can use Spectrum. 
+
+### Amazon Elastic Map Reduce
+
+Amazon EMR is a managed service that processes data and business intelligence using analytics platforms such as Hadoop and Spark. EMR supports this enabling ETL functions on big data. 
+
+### Amazon Kinesis 
+
+Kinesis is used to process streaming data such as IOT. Data comes in via Kinesis Data Streams and stored in shards for 24 hours and up to 365 days. Data Streams can be processed using KCL or the Kinesis Client Library. A client can process multiple shards but each shard can be processed by only one client. 
+
+### Amazon Athena
+
+Amazaon Athena is a serverless service that can be used to run SQL queries against S3 objects. Athena can be used to query other data sources such as CloudWatch logs with the help of a Lambda function. Query results can be stored in Amazon Glue. 
+
+### AWS Glue
+
+AWS Glue is another serverless service used to "glue" data in various data sources so that they can be queried easily. 
+
+### AWS OpenSearch
+
+AWS OpenSearch is a service used to perform logs analytics, monitoring and searching, and has the ability to visualize the results using Kibana. It is based on ElasticSearch. 
+
+### AWS Batch
+
+AWS Batch is a fully managed batch processing services. 
+
+### AWS DocumentDB
+
+AWS DocumentDB is a managed document management service with some compatibility with MongoDB.
+
+### AWS Keyspaces
+
+AWS Keyspaces is a drop-in service with Cassandra compatibility. 
+
 ## Deployment and Management
+
+CloudFormation helps you deploy intrastructure using code. Elastic Beanstalk is a Platform as a Service (PAAS). AWS Config helps you manage resources for compliance. AWS Secrets Manager helps you manage credentials. 
+
+### AWS CloudFormation
+
+AWS CloudFormation is a service that allows you to deploy infrastructure using code. For example, you can create EC2 instances, create subnets, and create security groups. CloudFormation templates are written in YAML or JSON. CloudFormation is free and you're only charged for the services you use. Every deployment can be rolled back by the user. CloudFormation is useful for those use cases where the user needs to deploy to the cloud often and wants to reduce errors. To further reduce the posibility of errors, you can use ChangeSets to preview the changes.
+
+### AWS Elastic Beanstalk
+
+AWS Elastic Beanstalk is a service that can help automate the deployment of web applications on AWS.  Elastic Beanstalk is considered to be a Platform as a Service and features a web server for the frontend and a worker for the backend. 
+
+### AWS SSM Parameter Store 
+
+AWS Parameter Store is a service that allows you to store parameters and secrets. Values can be encrypted. Unlike AWS Config, secrets cannot be rotated. 
+
+### AWS Config
+
+AWS Config monitors the configuration of your resources for things like compliance, security, and resoure usage. It can help with reducing costs and improving the security of your resources. For example, it can check if S3 buckets are encrypted and send notification if otherwise. It can be integrated with SSM to automically fix issues. 
+
+### AWS Secrets Manager
+
+Secrets Manager is similar to SSM Parameter Store, but it optimized for storing secrets such as database passwords. Secrets Manager can rotate passwords safely without the need for code redeployments. For example, you could have a Lambda function that connects to Secrets Manager to connect to RDS. 
+
+Compared to SSM Parameter Store:
+
+- It has native key rotation
+
+- Can only store String or Binary objects
+
+- Does not have hierarchical keys
+
+- You are charged per secret
+
+For example, use Secrets Manager if you need a secure way to store credentials to a database servcice like Aurora.
+
+### AWS OpsWorks
+
+OpsWorks provides a managed service for Chef and Puppet. So if you're already using Chef and Puppet to manage your infrastructure and want to move to the cloud, OpsWorks may be a good fit. OpsWorks is useful for patching and configuration management.
+
+### AWS Resource Access Manager
+
+AWS RAM lets you share a variety of resources like EC2 instances and VPCs across AWS accounts. Resources are created using the RAM console. Resources shared in this way are accessible by other accounts. 
 
 ## Monitoring, Logging and Auditing
 
+### AWS CloudWatch
+
+AWS CloudWatch is a service where users can gather logs and monitor various metrics. There's no upfront fee, and you only pay for what you use. CloudWatch can trigger events based on alarms and can be used to help keep your cloud resources in a stable and usable state.
+
+The main use cases are:
+
+- performance monitoring
+
+- log collection
+
+- improving operational performance
+
+CloudWatch can be used to monitor EC2 instance in 5 minute intervals for free; detailed monitoring where metrics are sent every minute is possible for a fee. This can be a great way to store logs from EC2 instances. 
+
+The Unified CloudWatch agent can be installed on an EC2 instance or an on-prem server to send system-level metrics and logs to CloudWatch. This includes things like memory, CPU usage, disk usage and custom metrics using StatsD and collectd protocols. These metrics are beyond the standard metrics that you get with CloudWatch.
+
+You can implement your metrics using the API or CLI. Custom metrics are one of the following resolutions: 1) standard resolution captures data every minute, while 2) high resolution is able to capture data every second. If you use a launch configuration using the CLI, detailed monitoring is enabled by default. 
+
+An alarm can be triggered if a metric exceeds a single threshold, but you can create a composite alarm that monitors multiple metrics. 
+
+Metric alarms are in on of 3 states: 1) OK 2) ALARM 3) INSUFFICIENT_DATA. 
+
+### AWS Cloudtrail
+
+Cloudtrail is used to audit APIs and can help trace performance bottlenecks and for compliance. By default, events in Cloudtrail are retained for 90 days. If you want to keep data longer, you can configure Cloudtrail to log events in S3. If the logs are retained in S3, you can enable log file integrity validation to validate for auditing purposes. 
+
+### AWS Eventbridge
+
+EventBridge is basically CloudWatch Events 
+m
+### AWS XRay
+
+AWS X-Ray provides a complete view of requests as they travel through your application and filters visual data across payloads, functions, traces, services, APIs, and more with no-code and low-code motions.
+
 ## Security
+
+### AWS Artifact
+
+AWS Artifact is used for security and compliance reports. 
+
+### AWS Detective
+
+AWS Detective is a service that analyzes logs from many services and helps you detect the root cause of potential security issues. 
+
+### AWS Directory Service
+
+AWS Directory Service is a managed service for Microsoft AD. It allows you to manage users, groups and roles to manage access to AWS services. It enables migration of existing AD-aware workloads to AWS. There are two editions: Standard and Enterprise, and they differ in the amount of directory objects that they can manage. Pricing also differs by region. AWS Directory service is highly available and secure, and since it's a managed service you never need to worry about keeping the service up to date. 
+
+### AD Connector
+
+AD Connector allows you to authenticate AWS services with your on-prem resources. It comes in two sizes: small for up to 500 users and large for up to 5000 users.
+
+### IAM
+
+IAM is a managed service for managing who gets access to what services and how. IAM Access Analyzer helps you analyzes external access to streamline your journey to least access. 
+
+### IAM Identity Center
+
+IAM Identity Center is the successor to Amazon Single Sign-On. It allows you to connect multiple AWS accounts to a single account. 
+
+### Amazon Cognito
+
+Amazon Cognito allows users using social media or other services to authenticate with AWS. Identities can come through a User Pool or federated identities to social media to gain temporary acces to AWS services like the API gateway. If you need to manage sign-in and sign-ups for mobile applications using Cognito, think User Pools. 
+
+### AWS KMS
+
+AWS KMS is a key management service that lets you create, manage and control access keys to AWS services. You can use KMS keys to encrypt data at rest in services such as S3 and databases. 
+
+### AWS CloudHSM 
+
+AWS CloudHSM is a service for generating your own FIPS compliant encryption keys. Compared to KMS, HSM uses a dedicated hardware device but is single tenant vs multi-tenant. On the exam, if it asks for multi-tenant cryptographic key management, think KMS not HSM. 
+
+### AWS Certificate Manager
+
+AWS Certificate Manager provisions and manage SSL certificates for use with AWS services and connected resources. These services include: Elastic Load Balancer, CloudFront, and Elastic Beanstalk. It does not include Route 53 certificates. 
+
+### AWS Inspector
+
+AWS Inspector is a software vulnerability mangement service that you can use to scan for vulnerabilties in EC2 instances, containers and Lambda functions. It also can scan ports for for unintended network exposure. 
+
+### AWS Macie
+
+AWS Macie is a service that you can use to automatically discover sensitive data in your S3 buckets. Macie uses machine learning and pattern mataching to discover sensitive data in S3. You use Macie for compliance such as identifying the type of data that is vulnerable in S3 buckets. Macie can detect things like passwords, encryption keys, PII and PHI. 
+
+### AWS GaurdDuty
+
+AWS GaurdDuty scan accounts for malicious activity. For example, it can detect when data in an S3 bucket is accessed in a highly suspicious manner, such as access from an unknown IP. GaurdDuty uses logs from CloudTrail, VPC Flow, and DNS.  
+
+### AWS Web Application Firewall (WAF)
+
+WAF is a managed service for protecting your web application. It can help protect websites from exploits such as SQL Injection or XSS.
+
+### AWS Shield
+
+AWS Shield is a managed DDoS protection service. If AWS Shield detects DDoS attacks, it will automatically mitigate the issue, minimizing application downtime and latency.  
+
+
+### AWS Firewall Manager
+
+AWS Firewall Manager is a service used to centralize firewall rules across accounts and applications. 
 
 ## Migration and Transfer
 
+### AWS Application Delivery Service
+
+The Application Delievery Service is used to plan migration of on-premises resources to the cloud. There are several options for gathering information. You can install an agent on each server, and the agent will collect vital information like CPU and memory usage. You can deploy a virtual appliance and it can discover assets automatically. You can deploy the service as an application and it can leverage your infrastructure APIs. You can also manually import existing server configuration. 
+
+Information about the servers is transmitted to AWS securely, and information about the servers is encrypted online as well. 
+
+### AWS Database Migration Service
+
+AWS Database Migration Service helps you migrate databases to AWS with minimal downtime and zero data loss. Data Migration Service supports 20+ popular databases, including Oracle, SQL Server, PostgresSQL, MySQL, MongoDB, MariaDB, etc. The cost itself is free, you only pay for compute costs and additional log storage used by the service. 
+
+### AWS Application Migration Service
+
+AWS Application Migration Service helps you migrate applications like Oracle, SAP, SQL Server and VMS in VSphere running in your on-prem environment to AWS. It has a connector for VMWare and an agent for operating systems like Linux or Windows. 
+
+### AWS Server Migration Service
+
+SMS a deprecated service for migrating services to AWS. SMS supports VMWare, Hyper-V, or Azure. You are advised to use the Application Migration Service instead.
+
+### AWS Data Sync
+
+DataSync is used to migrate on-prem data to AWS services such as S3. You are charged per GB transferred and stored. 
+
+## AWS Migration Hub
+
+The AWS Migration Hub can be used to monitor the migration of on-prem resources to AWS.
+
+## AWS Snow
+
+AWS Snow is a family of devices that you can use to move data to the cloud. AWS Offers 3 types of hardware devices: AWS Snowcone, AWS Snowball, and AWS Snowmobile. All data moved to a device is encrypted, and once the migration is completed the data is scurely erased. 
+
+Snowmobile is the top-of-the-line and can be used to transfer 100 PB of storge to AWS. If the exam asks you whether to use Snowball or Snowmobile, note that one Snowball device can store 80-210 TB of storage. Snowcone is even smaller and can store a max of 14 TB. 
+
 ## Web, Mobile, ML and Cost Management
+
+### AWS Amplify
+
+AWS Amplify is a service to help you develop and deploy full-stack applications for the web and mobile apps. Amplify supports authentication, some integration with other AWS services such as Lambda, testing, even-driven workflows, APIs, etc and an IDE. 
+
+### AWS AppSync
+
+AWS AppSync is a service to help you develop APIs for GraphQL.
+
+### AWS Device Farm
+
+AWS Device is a service to help you test against a multitude of devices such as mobile in the cloud. 
+
+### AWS Transcode
+
+AWS Transcode is a service that converts media files to a format that can playback on devices such as mobile phones and tablets.
+
+### AWS Transcribe 
+
+AWS Transcribe converts text to speech using machine learning. 
+
+### AWS License Manager
+
+AWS License Manager is a service to help you manage licenses. The licenses may come from AWS Marketplace or you can also bring your own licenses. 
+
+### AWS Compute Optimizer
+
+AWS Compute Optimizer is a service that analyzes your AWS resources' configuration and utilization metrics to provide you with rightsizing recommendations. For example, you may have some EC2 instances that are over provisioned, or ASGs that are not optimized. 
+
+### AWS Budgets
+
+AWS Budgets is a service to help you manage utilization and costs of using AWS. You can set a monthly budget and an alarm if your usage exceeds it. AWS Budget is updated 3 times a day with data from the last 8-12 hours, so it is not real-time. 
+
+### AWS Cost Explorer
+
+AWS Cost Explorer is a service that you can use to view and analyze your costs and usage. It is a free service and once it's enabled cannot be disabled. It does have an API interface but there is a small $0.01 cost for each request. 
 
 ## References
 
