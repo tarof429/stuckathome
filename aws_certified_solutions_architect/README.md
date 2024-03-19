@@ -2,7 +2,7 @@
 
 ## IAM: AWS Identity and Access Management
 
-To access AWS services, you need to authenticate yourself through IAM. There are several ways to access IAM: 1) console (GUI), 2) using the AWS CLI, and 3) using APIs for automation. The user of IAM is called a principal. A principal may be an acutal person, a role, a federated user, or an application. 
+To access AWS services, you need to authenticate yourself through IAM. There are several ways to access IAM: 1) console (GUI), 2) using the AWS CLI, and 3) using APIs. The user of IAM is called a principal. A principal may be an acutal person, a role, a federated user, or an application. 
 
 In IAM, there is a root user and a non-root user. When you first sign up with AWS, you will login using the root account using your email address. The root user has full, unrestricted access to AWS services. However, it's a best practice to create an IAM user and login as this user. 
 
@@ -26,7 +26,7 @@ If you want to apply permissions to a large number of users, the best practice i
 
 ## EC2: Amazon Elastic Compute Cloud
 
-EC2 is one of the original and most important service on AWS. It's also used by many other services in AWS. An EC2 instance is a virtual machine. When you create an EC2 instance, you choose the memory, storage, networking and OS that you want to run in the cloud. AWS then creates the virtual machine for you, and then you're responsible for maintaining the OS. Storage is either Amazon EBS (persistent) or Intance Store (non-persistent). An AMI provides the information required to launch an instance.
+EC2 is one of the original and most important services in AWS. An EC2 instance is a virtual machine. When you create an EC2 instance, you choose the memory, storage, networking and OS that you want to run. The user is responsible for maintaining the health of the OS such as through package updates and firewall rules. Ec2 storage consists of two types: EBS (persistent) and Instance Store (non-persistent). An AMI provides the information required to launch an instance.
 
 ### Connecting to EC2 instances
 
@@ -44,15 +44,15 @@ If there are any questions on the exam on how you would securely connect to an i
 
 ### EC2 User Data
 
-If you want your instance to run scripts on first boot, you can use User Data. 
+If you want your instance to run scripts on first boot, you can set it in User Data. 
 
 ### EC2 Metadata
 
-Metadata about the instance is available at http://169.254.169.254/latest/meta-data. It provides information about your intance.
+Metadata about the instance is available at http://169.254.169.254/latest/meta-data. It provides information about your instance.
 
 ### Accessing services from within EC2 instances
 
-By default, EC2 instances do not have the ability to connect to other AWS services. There are two ways to make this happen:
+By default, EC2 instances do not have the ability to connect to other AWS services. There are two ways to configure an EC2 instance so that it can connect to other AWS services:
 
 - Using access keys (which are associated with a user account). This is not secure as the credentials are stored in the EC2 instance and if compromised will expose your credentials.
 
@@ -60,11 +60,11 @@ By default, EC2 instances do not have the ability to connect to other AWS servic
 
 To use EC2 Instance profiles:
 
-- Go to IAM, select Roles then create a Role with the AmazonS3ReadOnlyAccess policy
+- In IAM, create a role for EC2 with the AmazonS3ReadOnlyAccess policy
 
-- Then go to EC2, select an instance, select Actions | Security and select Modify IAM Role, then choose the role we just created.
+- In EC2, select an instance, select Actions | Security and select Modify IAM Role, then choose the role we just created.
 
-Afterwards, you should be able run aws commands from within the instance. For example: *aws s3 ls*.
+Afterwards, you should be able run AWS commands from within the instance. For example: *aws s3 ls*.
 
 Now that we've created a role, in the future we can specify this role at the time of EC2 instance creation.
 
@@ -89,25 +89,25 @@ See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html.
 
 There are two types of network interfaces: elastic network interfaces and elastic fabric adapters. The Elastic network interface is for general networking needs, while the Elastic Fabric Adapter is suited for HPC. If there are any questions on the exam asking if you should use an Elastic Network Interface (ENI) or an Elastic Fabric Adapter (EFA) for HPC, choose EFA.
 
-When it comes to IP address, there are a few things to consider. Private IPs stay the same no matter the instance state. On the other hand, public IP addresses are dynamic and can change if the instance is stopped. Elastic IP addresses are public IP addresses that are static. They can be assigned to different instances and across availabilty zones. 
+When it comes to IP addresses, there are a few things to consider. Private IPs stay the same no matter the instance state. On the other hand, public IP addresses are dynamic and can change if the instance is stopped. Elastic IP addresses are public IP addresses that are static. They can be assigned to different instances and across availabilty zones. 
 
 ### Bastion Hosts
 
-If an EC2 instance only has a private IP, you cannot SSH to it from the Internet. What you need to do is create a bastion host in a public subnet that also has a route to the private subnet. 
+If an EC2 instance only has a private IP, you cannot SSH to it from the Internet. To access the instance, you need create a bastion host in a public subnet that also has a route to the private subnet. 
 
 ### NAT Gateways
 
-If you deploy EC2 instances in a private subnet, you can deploy at NAT gateway so that the instance can connect to the Internet. It's important to remember that such gateways must be deployed to a public subnet. 
+If you deploy EC2 instances in a private subnet, you can deploy a NAT gateway so that the instance can connect to the Internet. It's important to remember that such gateways must be deployed to a public subnet. 
 
 In the past, NAT instances were used to route traffic between private subnets and public subnets. These instances use a special AMI with the string "amzn-ami-vpc-nat" in the name. When deploying these AMIs, you need to disable source/destination checks.
 
 NAT instances must be maintained just like any EC2 instance. NAT gateways, on the other hand, are managed by AWS. 
 
-To create a NAT gateway, go to VPC | NAT gateways and create a NAT gateway. Remember that you must choose a public subnet. You must also create an elastic IP. Afterwards, you need to modify edit the route table used by the EC2 instance in the private subnet. Select the route, select Edit routes, and for destination select 0.0.0/0 and target is our NAT gateway. 
+To create a NAT gateway, go to VPC | NAT gateways and create a NAT gateway. Remember that you must choose a public subnet. You must also create an elastic IP. Afterwards, you need to modify edit the route table used by the EC2 instance in the private subnet for outbound traffic. Select the route, select Edit routes, and for destination select 0.0.0.0/0 and the target is our NAT gateway. 
 
 ### EC2 Instance Lifecycle
 
-EBS-backed intances have an additional instance state called "stopped". You are not stopped for stopped instances.
+EBS-backed intances have an additional instance state called "stopped". You are not charged for stopped instances.
 
 ![Instance Lifecycle](images/instance_lifecycle.png)
 
@@ -117,7 +117,7 @@ See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.h
 
 - On-Demand: EC2 on-demand instances are used for dev/test, are short-term, or have unpredicatable workloads. They are charged the standard rate and have no discount. If there are any questions on the exam about needing short-term or unpredictable workloads, choose "on-demand".
 
-- Reserved: By reserving intances for 1 or 3 years, you get up to a 75% discount. This is a good choice for steady-state, predicatable workloads.
+- Reserved: By reserving intances for 1 or 3 years, you get up to a 75% discount. This is a good choice for steady-state, predicatable workloads. On the exam, think of "reserved" as not so much who has access to the instance but time reservation. "I have a reserved intance for a term of 1 year".
 
 - Spot instances: You get a discount of up to 90% for unused capacity; however, they can be terminated at any time.
 
@@ -133,13 +133,13 @@ See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.h
 
 - If your LoB application receives weekly bursts of traffic and must scale for short periods, and you need the most cost-effective solution for this, use reserved instances for the minimum required workload and then use spot instances for the bursts in traffic.
 
-- If you have an instance that needs a static public IP address, that needs to be remapped to another instance in case of instance failure, attach an elastic IP address to the EC2 instance. Ramap the address as needed.
+- If you have an instance that needs a static public IP address that needs to be remapped to another instance in case of instance failure, attach an elastic IP address to the EC2 instance. Ramap the address as needed.
 
-- You have a fleet of Amazon EC2 instances that run in private subnets across mutlple AZs, then deploy a NAT gateway so that they can reach the Internet.
+- If you have a fleet of Amazon EC2 instances that run in private subnets across mutlple AZs, then deploy a NAT gateway so that they can reach the Internet.
 
-- If you have an application that uses several EC2 instances, and you want to eliminate the risk of correlated hardware failures, then launch the instances in a spread placement group.
+- If you have an application that uses several EC2 instances and you want to eliminate the risk of correlated hardware failures, then launch the instances in a spread placement group.
 
-- If your application requires enhanced network capabilities, choose an instance type supports enhanced networking and ensure the ENA module is installed and ENA support is enabled
+- If your application requires enhanced network capabilities, choose an instance type that supports enhanced networking and ensure the ENA module is installed and ENA support is enabled.
 
 - If your instance needs close to bare metal performance, EFA, and high performance networking, use an AWS nitro instance type.
 
@@ -147,11 +147,11 @@ See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-lifecycle.h
 
 To scale the availability of your application, you need to know how to configure auto scaling and how to place an elastic load balancer to distribute traffic to your EC2 instances. 
 
-Scaling up, otherwise known as vertical scaling, means to add or subtract system resources such as CPU, memory and disk. Scaling out, on the other hand, means to add or subtract EC2 instances.
+Scaling up, otherwise known as vertical scaling, means to add system resources such as CPU, memory and disk to an EC2 instance. Scaling out, on the other hand, means to add or subtract EC2 instances.
 
-EC2 auto scaling is able to scale in or scale out depending on metrics obtained from CloudWatch logs indicating CPU usage or instance failure. Below are some key points:
+EC2 auto scaling is able to scale in or scale out depending on metrics obtained from CloudWatch logs indicating CPU usage or instance health. Below are some key points:
 
-- EC2 auto scaling launches and terminates instances dynamically.
+- EC2 auto scaling launches and terminates instances dynamically
 
 - Scaling is horizontal (scales out)
 
@@ -171,11 +171,13 @@ There are three scaling policies:
 
 1. Simple scaling policy means that scaling relies on a metric from CloudWatch as a basis for scaling. If CPU utilization exceeds a threshold of 80%, then you can create a policy to launch another EC2 intance. Useful when load is erratic. 
 
-2. Target tracking: Adds or removes capacity as required to keep the metric at or close to the specific target value. For example, use this when You want to keep the CPU usage of your ASG at 50%
+2. Target tracking: Adds or removes capacity as required to keep the metric at or close to the specific target value. For example, use this when you want to keep the CPU usage of your ASG at 50%
 
 3. Step scaling means you can define mutliple actions based on the size of the alarm breach
 
 ### Architecture Patterns - Auto Scaling and ELB
+
+- The difference between an application load balancer and a network load balancer is an ALG is pirmariliy used with web servers while NLBs are used for lower-level TCP/UDP servers
 
 - If you need high availability and elastic scalability for web servers, use EC2 Auto scaling and an application load balancer across multiple AZs
 
@@ -185,7 +187,7 @@ There are three scaling policies:
 
 - If you have an application in EC2 in an ASG that requires disaster recover across regions, you can create an ASG in a second region with the capacity set to 0. Take snapshots and copy them across regions.
 
-- If you have an application on EC2 that must cale in larger increments if a big increase in traffic occurs, compared to small increases in traffic, you would create an ASG with a step scaling policy and configure a larger capacity increase. (Really?)
+- If you have an application on EC2 that must scale in larger increments if a big increase in traffic occurs, compared to small increases in traffic, you would create an ASG with a step scaling policy and configure a larger capacity increase.
 
 - If you need to scale EC2 instances behind an ALB based on the number of requests completed by each instance, you can configure a target tracking policy using the ALBRequestCountPerTarget metric
 
@@ -278,8 +280,7 @@ Teams often work independently and they might create a new VPC for a project, wh
 
 ## Amazon Simple Storage Service (S3)
 
-S3 is an object-based storage system service. You can access objects in an S3 bucket using APIs. 
-Files can be anywhere from 0 to 5TB. The objects that you can store in S3 include any file such as text files, MP4, JPEG, PDF or Word documents; it really doesn't matter. S3 has unlimited storage available. To access objects in an S3 bucket, you use a URL such as https://bucket.s3.aws-region.amazonws.com/key. S3 is a key-value storage system, and the key is the name of the file. Bucket names must be globally unique but buckets are created within a region. As a best practice, you should create buckets closest to the region where your services or users are located. S3 buckets can be replicated across regions but this needs to be confgured manually. S3 delivers strong read-after-write consistency. All the objects within an S3 buckets are at the same hierarcyh; however, you can created folders to simulate hierarcy. The keys of such objects have the folder name as a prefix. An object consists of:
+S3 is an object-based storage system service. You can access objects in an S3 bucket using APIs. File sizes can be anywhere from 0 to 5TB. The objects that you can store in S3 include any file such as text files, MP4, JPEG, PDF or Word documents; it really doesn't matter. S3 has unlimited storage available. To access objects in an S3 bucket, you use a URL such as https://bucket.s3.aws-region.amazonws.com/key. S3 is a key-value storage system, and the key is the name of the file. Bucket names must be globally unique but buckets are created within a region. As a best practice, you should create buckets closest to the region where your services or users are located. S3 buckets can be replicated across regions but this needs to be confgured manually. S3 delivers strong read-after-write consistency. All the objects within an S3 buckets are at the same hierarcyh; however, you can created folders to simulate hierarcy. The keys of such objects have the folder name as a prefix. An object consists of:
 
 - Key (name of the object)
 
@@ -293,7 +294,7 @@ Files can be anywhere from 0 to 5TB. The objects that you can store in S3 includ
 
 - ACL
 
-EC2 instances in a public subnet can access S3 buckets via an Internet Gateway. EC2 instances in a private subnet can use an S3 Gateway Endpoint to access buckets using a private connection which uses a private IP address. 
+EC2 instances in a public subnet can access S3 buckets by leveraging an Internet Gateway. EC2 instances in a private subnet can use an S3 Gateway Endpoint to access buckets using a private connection which uses a private IP address. 
 
 By default, accounts are limited to 100 buckets. 
 
@@ -544,11 +545,13 @@ With SQL, you also chang configure polling to be long or short. Long Polling mea
 
 ### Lightsail
 
-Lightsail is a serverless service where you can deploy applications to AWS without managing virtual machines. This means you don't need to worry about managing the operating system, and you  have access to a variety of platforms such as docker and Python that you can use to deploy your application. Benefits include: AWS managed security, networking, and availability. AWS calls lightsail "click-to-launch" OS and apps. 
+Lightsail is a serverless service where you can deploy applications to AWS without managing virtual machines. This means you don't need to worry about managing the operating system, and you have access to a variety of platforms such as docker and Python that you can use to deploy your application. Benefits include: AWS managed security, networking, and availability. AWS calls lightsail "click-to-launch" OS and apps. 
+
+One example of using Lightsail is to create a WordPress website. 
 
 ### Amazon API Gateway
 
-Amazon API Gateway is a fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale. APIs act as the "front door" for applications to access data, business logic, or functionality from your backend services. Using API Gateway, you can create RESTful APIs and WebSocket APIs that enable real-time two-way communication applications. API Gateway supports containerized and serverless workloads, as well as web applications.
+Amazon API Gateway is a fully managed service that makes it easy for developers to create, publish, maintain, monitor, and secure APIs at any scale. APIs act as the "front door" for applications to access data, business logic, or functionality from your backend services. Using API Gateway, you can create RESTful APIs and WebSocket APIs that enable real-time two-way communication applications. API Gateway supports containerized and serverless workloads as well as web applications.
 
 API Gateway handles all the tasks involved in accepting and processing up to hundreds of thousands of concurrent API calls, including traffic management, CORS support, authorization and access control, throttling, monitoring, and API version management. API Gateway has no minimum fees or startup costs. You pay for the API calls you receive and the amount of data transferred out and, with the API Gateway tiered pricing model, you can reduce your cost as your API usage scales.
 
@@ -564,13 +567,13 @@ Databases and Analytics come up a lot in AWS exams and include relational databa
 
 RDS is a managed relational database that runs on EC2 instances, so users need to specify the instance type. RDS supports a variety of database engines including AWS's Aurora, MySQL, MariaDB, etc. You can change the instance type to scale vertically. You can configure Multi-AZ as a passive standby in case the primary database goes down. You can also configure read-only replicas to reduce latency, but there is a delay in synchronizing data. Data can be encrypted at rest and in transit. 
 
-RDS supports both automated and manual backups. For automated backups, there is a retention period of 0-35 days, or roughly one month. for each backup, and then it's gone. If you do manual backups, there is no retention period. 
+RDS supports both automated and manual backups. For automated backups, there is a retention period of 0-35 days, or roughly one month for each backup, and then it's gone. If you do manual backups, there is no retention period. 
 
 Because RDS makes use of EC2 instances, you may need to take the instance offline for patching during what's called a maintenance window. 
 
 A few key points about RDS:
 
-- You cannot create an encypted read replica from an encrypted database or vice versa. The read replica will always have the same encryption settings as the primary database. 
+- You cannot create an encypted read replica from an unencrypted database and vice versa. The read replica will always have the same encryption settings as the primary database. 
 
 - The same KMS key is used for databases and read replicas only if they are in the same region.
 
@@ -600,7 +603,7 @@ There are two basic flavors of ElastiCache: MemCached and Redis. With MemCached,
 
 ### DynamoDB
 
-Amazon DynamoDB is a serverless NoSQL database service. Data is stored as key-value pairs as well as documents. DynamoDB scales horizontally by adding more columns. You can set a TTL on item in the table to help manage the amount of storage used over time. DynamoDB access times are in the milliseconds, but this can be optimized further to microseconds by leveraging DAX (DynamoDB Accelerator), a flexible in-memory cache. If you want to duplicate your database to other regions, use Global Tables. 
+Amazon DynamoDB is a serverless NoSQL database service. Data is stored as key-value pairs as well as documents. DynamoDB scales horizontally by adding more columns. Think of DynamoDB as spreadsheets. You can set a TTL on an item in the table to help manage the amount of storage used over time. DynamoDB access times are in the milliseconds, but this can be optimized further to microseconds by leveraging DAX (DynamoDB Accelerator), a flexible in-memory cache. If you want to duplicate your database to other regions, use Global Tables. 
 
 DynamoDB Streams is DynamoDBs logging feature. Every time a new record is created, that action will be logged in DynamoDB streams. The content of the log item is configurable. You can choose to log keys only, the entire record after the change, the record before the change, and the record before and after the change. 
 
@@ -610,23 +613,23 @@ GlobalTables is a feature that enables DynamoDB replication across regions by le
 
 ### Amazon RedShift
 
-Amazon RedShfit is a managed data warehouse service used for analytics (OLAP) as opposed to OLTP databases like RDS or DynamoDB. It's useful for when you want to generate reports against data in one or more databases but don't want to negatively impact performance. Alternatives to RedShift include Hadoop with EMR or a RDS Read Replica. Against S3 objects you can use Spectrum. 
+Amazon RedShfit is a managed data warehouse service used for data analytics (OLAP). It can be used to analyze large data sets in a cost-effective manner. Data in RedShfit is encrypted by default. Data in RedShift can be loaded by either uploading a file directly or through other data sources such as S3. Data in RedShift is queried using SQL.
 
 ### Amazon Elastic Map Reduce
 
-Amazon EMR is a managed service that processes data and business intelligence using analytics platforms such as Hadoop and Spark. EMR supports this enabling ETL functions on big data. 
+Amazon EMR is a managed service that processes data and business intelligence using analytics platforms such as Hadoop and Spark. EMR supports this by enabling ETL functions on big data. 
 
 ### Amazon Kinesis 
 
-Kinesis is used to process streaming data such as IOT. Data comes in via Kinesis Data Streams and stored in shards for 24 hours and up to 365 days. Data Streams can be processed using KCL or the Kinesis Client Library. A client can process multiple shards but each shard can be processed by only one client. 
+Amazon Kinesis is a serverless services that captures, processes and stores streamed data at any scale. The input for Kinesis can be real-time streaming dat from IOT device such as security cameras. Data in Kinesis is stored in shards from 24 hours and up to 365 days. Data in a shard can be processed by a client using the Kinesis Client Library. A client can process multiple shards. 
 
 ### Amazon Athena
 
-Amazaon Athena is a serverless service that can be used to run SQL queries against S3 objects. Athena can be used to query other data sources such as CloudWatch logs with the help of a Lambda function. Query results can be stored in Amazon Glue. 
+Amazaon Athena is a serverless service that can be used to run SQL queries against S3 objects. Athena can be used to query other data sources such as CloudWatch logs with the help of Lambda functions. Query results can be stored in Amazon Glue. 
 
 ### AWS Glue
 
-AWS Glue is another serverless service used to "glue" data in various data sources so that they can be queried easily. 
+AWS Glue is another serverless service used to "glue" data from various data sources so that they can be queried easily. 
 
 ### AWS OpenSearch
 
@@ -642,7 +645,7 @@ AWS DocumentDB is a managed document management service with some compatibility 
 
 ### AWS Keyspaces
 
-AWS Keyspaces is a drop-in service with Cassandra compatibility. 
+AWS Keyspaces is a drop-in service with Cassandra compatibility. Cassandra is a no-SQL database. 
 
 ## Deployment and Management
 
