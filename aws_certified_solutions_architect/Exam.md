@@ -105,6 +105,12 @@
 
 8. Q: Which of the following are migration services compatible with Route 53? A: All of these are Route 53 compatible services
 
+9. Q: Which is easiest to prevent access to a website from certain countries: Cloudfront or a network ACL? A: Cloudfront is easier. Why? 
+
+10. Q: If you need to deploy an application in multiple regions around the world, what can you use to ensure low latency and fast regional failover? A: Use Global Accelerator.
+
+11. Q: What are Cloudfront origin groups? A cloudfront origin group is basically a CDN with a master in one region and a failover in another region. For example, if the primary S3 bucket fails, then Cloudfront will automatically route traffic to the secondary bucket.
+
 ## Block and File Storage
 
 1. Q: What is a simple and automted method of backing up Amazon EBS Volumes? A: Use Data Lifecycle Manager and add a schedule

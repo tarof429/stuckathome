@@ -499,9 +499,7 @@ AWS Storage Gatweway is a set of services that allow you to acces AWS services f
 
 ## Docker Containers and ECS
 
-Amazon ECS is the Amazon service that allows us to run containers in AWS. To run containers, you create a cluster.  The cluster can use AWS Fargate for serverless container management, Amazon EC2 instances where users need to manage EC2 instances, or external instances using EC2 Anywhere.
-
-In a cluster, you can either either create tasks or services. The advantage of a service is that it provides auto-scaling via a Capacity Provider.
+Amazon ECS is an Amazon service for running containers in AWS. By default, ECS task definitions are configured to use Fargate for serverless container deployment. Optinally, you can use EC2 instances when your workload demands consistent performance, but this comes at at an extra cost. Finally, ECS can be deployed to on-prem servers through EC2 Anywhere. Whether you use Fargate or EC2, you need to specify the OS, memory, disk size and architecture. You also need to specify the VPC, security group, and optionally a load balancer. A health check helps to ensure the health of the task defintiion. Once you hae a task defintion, you can define a service so that it can be run within a cluster.
 
 Amazon EKS is a managed servie for running Kubernetes applications in the cloud or on-premises. 
 
@@ -705,11 +703,13 @@ The main use cases are:
 
 - improving operational performance
 
+Cloudwatch logs are organized into log groups. 
+
 CloudWatch can be used to monitor EC2 instance in 5 minute intervals for free; detailed monitoring where metrics are sent every minute is possible for a fee. This can be a great way to store logs from EC2 instances. 
 
 The Unified CloudWatch agent can be installed on an EC2 instance or an on-prem server to send system-level metrics and logs to CloudWatch. This includes things like memory, CPU usage, disk usage and custom metrics using StatsD and collectd protocols. These metrics are beyond the standard metrics that you get with CloudWatch.
 
-You can implement your metrics using the API or CLI. Custom metrics are one of the following resolutions: 1) standard resolution captures data every minute, while 2) high resolution is able to capture data every second. If you use a launch configuration using the CLI, detailed monitoring is enabled by default. 
+You can implement your metrics using the API or CLI. Custom metrics can have one of the following resolutions: 1) standard resolution captures data every minute, while 2) high resolution is able to capture data every second. If you use a launch configuration using the CLI, detailed monitoring is enabled by default. 
 
 An alarm can be triggered if a metric exceeds a single threshold, but you can create a composite alarm that monitors multiple metrics. 
 

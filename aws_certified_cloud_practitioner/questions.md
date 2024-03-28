@@ -54,7 +54,12 @@
 
 - Q: You would like to deploy a database technology on an EC2 instance and the vendor license bills you based on the physical cores and underlying network socket visibility. Which EC2 Purchasing Option allows you to get visibility into them? A:  Dedicated Hosts
 
-- How can you get metadata for an EC2 instance? Answer: At the command prompt in the instance, type `curl http://169.254.169.254/latest/meta-data/local-ipv4` for example.
+- How can you get metadata for an EC2 instance? Answer: At the command prompt in the instance, type ```
+TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
+&& curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/
+```.
+
+See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-retrieval.html#instance-metadata-ex-1
 
 - Can you move an EBS volume from one availability zone to another? Answer: No, an EBS volume is created in an availability zone that can't be changed later.
 
@@ -297,7 +302,7 @@ Need to review.
 
 ## AWS Fargate
 
-- True or false: If you want to deploy containers in AWS, usng serverless solutions like ECS with Fargate is always the best solution. Answer: Using fargate is a good solution if you don't want to manage things like security that's needed with EC2 instances. However, EC2 may be a better solution if you need certain faeatures that is only available with an instance such as machine learning. Also Fargate does not allow you to customize the networking layer.
+- True or false: If you want to deploy containers in AWS, usng serverless solutions like ECS with Fargate is always the best solution. Answer: Using fargate is a good solution if you don't want to manage things like security that's needed with EC2 instances. However, EC2 may be a better solution if you need certain features that are only available with an instance such as machine learning. Also Fargate does not allow you to customize the networking layer.
 
 ## AWS EKS
 
