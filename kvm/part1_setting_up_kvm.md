@@ -1,5 +1,9 @@
 # Part 1: Setting up KVM
 
+## Introduction
+
+This section explains how to set up your system to run KVM VMs.
+
 ## Prerequisites
 
 First, let's check if the CPU supports virtualization. If it's not supported, check in the BIOS to see if this is not enabled.
@@ -22,16 +26,14 @@ sudo systemctl enable libvirtd.service
 sudo systemctl start libvirtd.service
 ```
 
-The first time I did this, I got warnings about locale not found. This was fixed by setting LANG=C in ~/.bashrc and logging in again.
-
 ## Configure the host with a static IP
 
 For this exercise, the host was configured with a static IP address. I followed the instructions at https://ostechnix.com/configure-static-dynamic-ip-address-arch-linux/ using *netctl* and a network profile. It looks something like this:
 
 ```
-$ cat /etc/netctl/enp37s0 
+$ cat /etc/netctl/enp4s0
 Description='A basic static ethernet connection'
-Interface=enp37s0
+Interface=enp4s0
 Connection=ethernet
 IP=static
 Address=('192.168.1.20/24')
@@ -48,7 +50,7 @@ However, what we want is bridged networking so that KVM guests share the same ne
 Description="Example Bridge connection"
 Interface=br0
 Connection=bridge
-BindsToInterfaces=(enp37s0)
+BindsToInterfaces=(enp4s0)
 MACAddress='12:34:56:78:90'
 IP=static
 Address='192.168.1.20/24'
@@ -60,19 +62,19 @@ SkipForwardingDelay=yes
 
 Note that the name of the interface depends may vary by system.
 
-The *netctl* command should see both profiles. Below, we see that *enp37s0* is enabled while *bridge* is not.
+The *netctl* command should see both profiles. Below, we see that *enp4s0* is enabled while *bridge* is not.
 
 ```
 # netctl list
-* enp37s0
+* enp4s0
   bridge
 ```
 
-Stop and disable enp37s0.
+Stop and disable enp4s0.
 
 ```
-netctl stop enp37s0
-netctl disable enp37s0
+netctl stop enp4s0
+netctl disable enp4s0
 ```
 
 Enable and start bridge.
@@ -95,6 +97,7 @@ tun
 ```
 
 To load the module immediately, run `sudo modprobe tun`
+
 ## Create storage pool
 
 First you must create a storage pool. For this exercise, we will create a pool called `default` at `/data/libvirt/default`
@@ -138,7 +141,7 @@ We can get some information about the pool.
 ```
 $ sudo virsh pool-info default
 Name:           default
-UUID:           929dcee8-d935-4e73-aca1-39d13c977529
+UUID:           929dcee8-d935-4e73-aca1-39d13c977527
 State:          running
 Persistent:     yes
 Autostart:      yes
@@ -153,7 +156,7 @@ You can see this information in XML format as well.
 $ sudo virsh pool-dumpxml default
 <pool type='dir'>
   <name>default</name>
-  <uuid>929dcee8-d935-4e73-aca1-39d13c977529</uuid>
+  <uuid>929dcee8-d935-4e73-aca1-39d13c977527</uuid>
   <capacity unit='bytes'>315926315008</capacity>
   <allocation unit='bytes'>2400256</allocation>
   <available unit='bytes'>315923914752</available>

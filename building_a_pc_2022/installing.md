@@ -46,9 +46,7 @@ Since all the partitioning was done in the previous step, we should now proceed 
 - If using RAID with LVM, be sure to add mdadm_udev and lvm2 to /etc/mkinitcpio.conf after udev; see https://wiki.archlinux.org/title/LVM_on_software_RAID. 
 
 
-- Edited /etc/locale.gen, uncommented en_US.UTF-8 UTF-8 and run locale-gen
-
-- Created /etc/locale.conf with the line LANG=en_US.UTF-8
+- See https://wiki.archlinux.org/title/locale for setting up locale.
 
 - Set the hostname in /etc/hostname
 

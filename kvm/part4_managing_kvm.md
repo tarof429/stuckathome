@@ -16,14 +16,14 @@ Locate the disk path
  sudo virsh domblklist test
  Target   Source
 --------------------------------------------------------------
- vda      /var/lib/libvirt/boot/snapshot-test-cloudimg.qcow2
+ vda      /data/libvirt/default/boot/snapshot-test-cloudimg.qcow2
  sda      -
 ```
 
 Resize the disk
 
 ```
-sudo qemu-img resize /var/lib/libvirt/boot/snapshot-test-cloudimg.qcow2 +5G
+sudo qemu-img resize /data/libvirt/default/boot/snapshot-test-cloudimg.qcow2 +5G
 Image resized.
 ```
 

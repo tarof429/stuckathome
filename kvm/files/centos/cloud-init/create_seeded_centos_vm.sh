@@ -84,7 +84,7 @@ PUBKEY=`cat $HOME/.ssh/id_rsa.pub`
 
 mkdir -p /tmp/$HOSTNAME
 
-NEW_PASSWORD=`mkpasswd --method=SHA-512 --rounds=4096 --stdin $PASSWORD`
+NEW_PASSWORD=`mkpasswd2 --method=SHA-512 --rounds=4096 --stdin $PASSWORD`
 
 # Copy our template to /tmp
 cp user-data /tmp/$HOSTNAME/user-data
@@ -106,18 +106,18 @@ sudo cloud-localds -v --network-config=/tmp/$HOSTNAME/network_config_static.cfg 
 sleep 1
 
 # Copy the generic cloud image
-sudo cp -f /var/lib/libvirt/images/CentOS-7-x86_64-GenericCloud-2009.qcow2 \
-  /var/lib/libvirt/images/snapshot-${HOSTNAME}-cloudimg.qcow2
+sudo cp -f /data/libvirt/default/boot/CentOS-7-x86_64-GenericCloud-2009.qcow2 \
+  /data/libvirt/default/images/snapshot-${HOSTNAME}-cloudimg.qcow2
 
 # Resize the cloud image
-sudo qemu-img resize /var/lib/libvirt/images/snapshot-${HOSTNAME}-cloudimg.qcow2 $SIZE
+sudo qemu-img resize /data/libvirt/default/images/snapshot-${HOSTNAME}-cloudimg.qcow2 $SIZE
 
 sleep 1
 
 sudo virt-install --name $HOSTNAME --virt-type kvm --memory 4098 --vcpus 2 \
   --boot hd,menu=on \
   --cdrom /tmp/$HOSTNAME/cloud-init.iso \
-  --disk path=/var/lib/libvirt/images/snapshot-${HOSTNAME}-cloudimg.qcow2,device=disk \
+  --disk path=/data/libvirt/default/images/snapshot-${HOSTNAME}-cloudimg.qcow2,device=disk \
   --graphics none \
   --console=pty,target_type=serial \
   --os-variant centos7 \
