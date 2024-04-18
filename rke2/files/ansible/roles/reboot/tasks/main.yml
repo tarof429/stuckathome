@@ -1,0 +1,19 @@
+# - name: Reboot servers
+#   debug:
+#     msg: Reboot servers!
+#   when: reboot_required_file.stat.exists 
+
+# - name: Check if a reboot is needed on all servers
+#   register: reboot_required_file
+#   stat:
+#     path: /var/run/reboot-required
+#     get_checksum: no
+
+# - name: Reboot
+#   reboot:
+    # reboot_timeout: 10
+  # when: reboot_required_file.stat.exists
+
+- name: Reboot
+  reboot:
+    reboot_command: systemctl reboot

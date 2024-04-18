@@ -5,6 +5,9 @@ IPADDRESS=""
 USER=""
 PASSWORD=""
 SIZE=""
+MEMORY="4096"
+CPU="2"
+UBUNTU_VERSION="22.04"
 
 usage() {
     echo "Usage: create_seeded_ubuntu_vm.sh -n <hostname> -i <ipaddress> -u <user> -p <password> -s <size>"
@@ -114,11 +117,12 @@ sudo qemu-img resize /data/libvirt/default/images/snapshot-${HOSTNAME}-cloudimg.
 
 sleep 1
 
-sudo virt-install --name $HOSTNAME --virt-type kvm --memory 4098 --vcpus 2 \
+sudo virt-install --name $HOSTNAME --virt-type kvm --memory $MEMORY --vcpus $CPU \
   --boot hd,menu=on \
   --cdrom /tmp/$HOSTNAME/cloud-init.iso \
   --disk path=/data/libvirt/default/images/snapshot-${HOSTNAME}-cloudimg.qcow2,device=disk \
   --graphics none \
   --console=pty,target_type=serial \
-  --os-variant ubuntu21.10 \
+  --noautoconsole \
+  --os-variant ubuntu-lts-latest \
   --network=bridge=br0,model=virtio

@@ -1,5 +1,5 @@
-- hosts: workers
+- hosts: all
   remote_user: ubuntu
   become: yes
   roles:
-    - register
+    - reboot

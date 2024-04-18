@@ -1,4 +1,31 @@
 ---
+# Setup /etc/hosts in each VM so that hostname -i will return the hostname
+- name: Fix /etc/hosts (kubemaster)
+  replace:
+    path: /etc/hosts
+    regexp: '127.0.1.1 kubemaster kubemaster'
+    replace: 192.168.1.30 kubemaster
+  when: "inventory_hostname == 'kubemaster'"
+
+- name: Fix /etc/hosts (worker01)
+  replace:
+    path: /etc/hosts
+    regexp: '127.0.1.1 worker01 worker01'
+    replace: 192.168.1.31 worker01
+  when: "inventory_hostname == 'worker01'"
+
+- name: Fix /etc/hosts (worker02)
+  replace:
+    path: /etc/hosts
+    regexp: '127.0.1.1 worker02 worker02'
+    replace: 192.168.1.32 worker02
+  when: "inventory_hostname == 'worker02'"
+
+- name: Disable ufw
+  service:
+    name: ufw
+    state: stopped
+    enabled: false
 
 - name: Install rke2 on kubemaster
   shell: |
@@ -12,14 +39,45 @@
     state: started
     enabled: yes
   when: "inventory_hostname == 'kubemaster'"
-  
 
-# - name: Install rke2 on the workers
-#   shell: |
-#     curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" sh -
-#     systemctl enable rke2-agent.service
-#   when: inventory_hostname is match("worker.*")
+- name: Install rke2 on the workers
+  shell: |
+    curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" sh -
+  when: inventory_hostname is match("worker.*")
 
-# - name: Reboot everything
-#   reboot:
-#   ignore_errors: yes
+- name: Create directory
+  file:
+    state: directory
+    path: /etc/rancher/rke2
+  when: inventory_hostname is match("worker.*")
+
+- name: Wait until token exists
+  ansible.builtin.wait_for:
+    path: /var/lib/rancher/rke2/server/node-token
+  when: "inventory_hostname == 'kubemaster'"
+
+- name: Read token
+  slurp: 
+    src: /var/lib/rancher/rke2/server/node-token
+  register: rke2_token
+  when: "inventory_hostname == 'kubemaster'"
+  run_once: true
+
+- name: Print token
+  debug:
+    msg: "{{ rke2_token['content'] | b64decode | trim }}"
+  run_once: true
+  delegate_to: localhost
+
+- name: Copy template
+  template:
+    src: config.yml.j2
+    dest: /etc/rancher/rke2/config.yaml
+  when: inventory_hostname is match("worker.*")
+
+- name: Enable the rke2-agent server
+  service:
+    name: rke2-agent
+    state: restarted
+    enabled: yes
+  when: inventory_hostname is match("worker.*")

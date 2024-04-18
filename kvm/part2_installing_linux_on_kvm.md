@@ -183,7 +183,7 @@ sh ./create_seeded_ubuntu_vm.sh  -n test-ubuntu -i 192.168.1.30 -u ubuntu -p pas
 2. Now run `create_seeded_centos_vm.sh `.
 
 ```sh
-sh ./create_seeded_centos_vm.sh  -n test-centos -i 192.168.0.15 -u centos -p pass123 -s 40G
+sh ./create_seeded_centos_vm.sh  -n test-centos -i 192.168.1.30 -u centos -p pass123 -s 40G
 ```
 
 ### Installing CentOS using Vagrant

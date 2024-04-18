@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VMS=(kubemaster kubenode01 kubenode02)
+VMS=(kubemaster worker01 worker02)
 for vm in "${VMS[@]}"
 do
   sudo virsh start $vm

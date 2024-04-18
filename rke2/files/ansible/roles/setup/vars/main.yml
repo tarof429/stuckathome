@@ -1,2 +1,3 @@
----
-host: "all"
+kubemaster_ip: "{{ hostvars['kubemaster']['ansible_default_ipv4']['address']}}"
+worker01_ip: "{{ hostvars['worker01']['ansible_default_ipv4']['address']}}"
+worker02_ip: "{{ hostvars['worker02']['ansible_default_ipv4']['address']}}"

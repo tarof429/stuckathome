@@ -22,33 +22,13 @@ ansible-playbook update.yml
 
 ## Set up rke2
 
-Follow the instructions at https://docs.rke2.io/install/quickstart to setup rke2 and each of the nodes.
+Run the setup.yml role to setup rke2.
 
-## Post-setup 
+```sh
+ansible-playbook setup.yml
+```
 
-1. SSH to kubemaster and copy config.yaml  to your localhost's ~/.kube/config.
-
-    ```
-    ssh ubuntu@192.168.1.30 "sudo cp /etc/rancher/rke2/rke2.yaml ~/config.yaml"
-    ssh ubuntu@192.168.1.30 "sudo chown ubuntu:ubuntu ~/config.yaml"
-    scp ubuntu@192.168.1.30:config.yaml ~/.kube/config
-    sed -i 's/127.0.0.1/192.168.1.30/' ~/.kube/config
-    ```
-
-## Add nodes
-
-2. Get the token we need to register the nodes
-
-    ```
-    ssh ubuntu@192.168.1.30 "sudo cat /var/lib/rancher/rke2/server/node-token"
-    ```
-
-
-3. Start the agents
-
-    ```
-    ansible-playbook register.yml -e "token=<the token>"
-    ```
+These are based on the instructions at https://docs.rke2.io/install/quickstart.
 
 ## Install kubectl
 
@@ -58,9 +38,23 @@ Install kubectl on your localhost host.
 sudo pacman -S kubectl
 ```
 
+## Configure kubectl
+
+1. SSH to kubemaster and copy config.yaml  to your localhost's ~/.kube/config.
+
+```sh
+{
+mkdir -p ~/.kube
+ssh ubuntu@192.168.1.30 "sudo cp /etc/rancher/rke2/rke2.yaml ~/config.yaml"
+ssh ubuntu@192.168.1.30 "sudo chown ubuntu:ubuntu ~/config.yaml"
+scp ubuntu@192.168.1.30:config.yaml ~/.kube/config
+sed -i 's/127.0.0.1/192.168.1.30/' ~/.kube/config
+}
+````
+
 ## Check node status
 
-```
+```sh
 kubectl get nodes
 ```
 

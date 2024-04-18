@@ -39,7 +39,7 @@ hostnamectl set-hostname test
 cat << END > /etc/hosts
 127.0.0.1	localhost
 ::1		localhost
-192.168.0.23	test
+192.168.1.23	test
 END
 ```
 
