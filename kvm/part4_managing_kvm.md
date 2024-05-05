@@ -94,8 +94,21 @@ vda    253:0    0   30G  0 disk
 └─vda1 253:1    0   30G  0 part /
 ```
 
+## Shutdown guests on reboot
+
+Create a file at /etc/default/libvirt-guests with the following content:
+
+```
+ON_SHUTDOWN=shutdown
+SHUTDOWN_TIMEOUT=300
+```
+
+See the manpage for libvirt-guests.
+
 ## References
 
 https://computingforgeeks.com/how-to-extend-increase-kvm-virtual-machine-disk-size/
 
 https://computingforgeeks.com/resize-ext-and-xfs-root-partition-without-lvm/
+
+https://blog.wirelessmoves.com/2022/08/proper-shutdown-of-vms-on-host-reboot.html

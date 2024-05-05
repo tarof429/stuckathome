@@ -54,7 +54,7 @@ You can redirect the output to a file, edit the file, and then deploy the file. 
 kubectl run nginx --image=nginx --dry-run=client -o yaml > nginx-pod.yml
 ```
 
-A sample is provided int he deployments directory where we have changed the image name to be nginx:latest. To verify, we can run two commands:
+A sample is provided in the deployments directory where we have changed the image name to be nginx:latest. To verify, we can run two commands:
 
 - kubectl describe pod nginx
 
@@ -169,7 +169,7 @@ ngin-pod   1/1     Running            0          2m11s
 
 You can also use imperative commands to set the image of a pod. For the example above, First find out the name of the container that is having an issue. In our case, it is ngin-pod. Then run `kubectl set image pod/ngin-pod ngin-pod=nginx:latest` where `nginx-pod` is the name of the container and `nginx:latest` is the iimage that we want.
 
-## Kubernetes POD YAML
+## Kubernetes pod YAML
 
 Let's take a closer look at the syntax of a YAML definition of a pod. All pods need four sections as illustrated in `hello-world-pod.yml`: apiVersion, kind, metadata, and spec.
 
@@ -293,6 +293,26 @@ The key takeways are:
 - Sidecar is a pattern where two or more containers are deployed in a pod.
 
 - The sidecar pattern is useful when two containers are tightly coupled.
+
+## Selectors
+
+Pods can have a number of labels. To select pods by label, run:
+
+```sh
+kubectl get pod --selector <key>=<value>
+```
+
+To select multiple labels, provide a comma-separated list of selectors.
+
+```sh
+kubectl get pod --selector <key>=<value>,<key2>=<value2>,...n
+```
+
+To get all object and not just pods, specify `all`.
+
+```sh
+kubectl get all --selector env=prod --no-headers
+```
 
 ## Exercises
 

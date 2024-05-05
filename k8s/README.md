@@ -14,10 +14,14 @@ The project can be used to create VMs for a Kubernetes cluster. It requires a Li
 
 ## Create the VMs
 
-```
+Below is a script to create 3 Ubuntu 22 VMs.
+
+```sh
 cd files
 sh ./create_vms.sh
 ```
+
+This script has some logic to shutdown the VMs once before bringing them up again. This is a workaround for an odd behavior where the first reboot command in Ubuntu will actually shutdown the VM. 
 
 ## Summary
 
@@ -25,7 +29,7 @@ These steps created three nodes:
 
 kubemaster 192.168.1.30
 worker01 192.168.1.31
-worker02 192.168.1s.32
+worker02 192.168.1.32
 
 ## Next Steps
 

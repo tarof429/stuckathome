@@ -1,10 +1,14 @@
 # ReplicaSets
 
-A ReplicaSet is an object that strives to maintain a fixed number of replicas of a pod. It is a low-level object and Kubernetes recommends that users use Deployments instead.
+The Replication Controller is responsible for creating replicas of pods for high availabiltiy.
+
+A ReplicaSet is an object that strives to maintain a fixed number of replicas of a pod. It is a low-level object that replaces the Replication Controller. 
+
+In most cases, it is recommended to use Deployments instead.
 
 An example is shown below.
 
-```
+```yml
 apiVersion: apps/v1
 kind: ReplicaSet
 metadata:

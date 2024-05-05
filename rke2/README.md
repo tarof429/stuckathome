@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- 3 VMs created as part of the instructions in the k8s directory.
+3 VMs created as part of the instructions in the k8s directory.
 
 ## Verify the Environment
 
@@ -75,21 +75,25 @@ $ kubectl delete pod nginx
 pod "nginx" deleted
 ```
 
-## Stop the VMs
+## Below are some scripts to help manage the VMs.
 
-```
+### Stop the VMs
+
+```sh
 cd files/scripts
 sh ./stop_vms.sh
 ```
 
-## Start the VMs
+### Start the VMs
 
-```
+```sh
 cd files/scripts
 sh ./start_vms.sh
 ```
 
-## How to Install metalLB
+## Optional: How to Install metalLB
+
+metalLB is a load balancer.
 
 See https://www.raptorswithhats.com/gitea-on-rke2-metallb/ for steps on how to install MetallLb. This version will work with rke2; the official one may not. 
 
@@ -101,8 +105,7 @@ Under files/k8s there is a congfigmap.yml file that you can deploy to define you
 
 3. In a browser or using curl, navigate to http://<external-ip>.
 
-To delete the service, run `kubectl delete -f nginx-deployment-and-service.yml`
-
+To delete the service, run `kubectl delete -f nginx-deployment-and-service.yml`.
 
 ## Questions
 
