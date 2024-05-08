@@ -97,7 +97,17 @@ metalLB is a load balancer.
 
 See https://www.raptorswithhats.com/gitea-on-rke2-metallb/ for steps on how to install MetallLb. This version will work with rke2; the official one may not. 
 
-Under files/k8s there is a congfigmap.yml file that you can deploy to define your IP ranges. The file files/k8s/nginx-deployment-and-serivce.yml can be used to test that metalLB is working. To test it,
+**note**
+
+As of 2024, the official instructions for installing metalLB still do not work with rke2.
+
+Under files/k8s there is a congfigmap.yml file that you can deploy to define your IP ranges. 
+
+```
+kubectl apply -f configmap.yml
+```
+
+The file files/k8s/nginx-deployment-and-serivce.yml can be used to test that metalLB is working. To test it,
 
 1. Run `kubectl apply -f nginx-deployment-and-service.yml`
 

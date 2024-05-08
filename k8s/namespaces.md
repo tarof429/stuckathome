@@ -155,7 +155,6 @@ kube-system       Active   17d
 prod              Active   4s
 ```
 
-
 ## Cleanup
 
 Delete our pod.
@@ -176,6 +175,18 @@ $ kubectl delete ns prod
 namespace "prod" deleted
 ```
 
+## Add a label to a namespace
+
+Namespaces can have labels. For example, the `default` namespace has a label. Let's see what it is:
+
+```
+$ kubectl describe ns default
+Name:         default
+Labels:       kubernetes.io/metadata.name=default
+Annotations:  <none>
+Status:       Active
+
+```
 
 ## References
 

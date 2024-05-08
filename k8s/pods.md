@@ -314,6 +314,17 @@ To get all object and not just pods, specify `all`.
 kubectl get all --selector env=prod --no-headers
 ```
 
+## Labels
+
+There is another syntax for selecting pods by label only. For example, the command below selects pods in the default namespace with a label of app=ratings, which is deployed by applying the `BookInfo` sample application from Isio:
+
+```
+kubectl get po -l app=ratings --no-headers
+reviews-v1-86896b7648-vhsj6   2/2     Running   0          7m6s
+reviews-v2-b7dcd98fb-8jswz    2/2     Running   0          7m6s
+reviews-v3-5c5cc7b6d-j7pvs    2/2     Running   0          7m6s
+```
+
 ## Exercises
 
 1. Suppose you have a pod called webapp. How can you find out what images are used in the webapp? Answer: run kubectl describe pod webapp | more.
