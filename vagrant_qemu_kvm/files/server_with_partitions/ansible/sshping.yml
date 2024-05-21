@@ -1,4 +1,0 @@
-- hosts: "{{ host }}"
-  remote_user: vagrant
-  roles:
-    - sshping

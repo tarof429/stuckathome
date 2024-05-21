@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-3 VMs created as part of the instructions in the k8s directory.
+3 VMs created by the `create_vms.sh` script in the k8s directory.
 
 ## Verify the Environment
 
