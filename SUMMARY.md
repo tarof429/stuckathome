@@ -66,3 +66,4 @@
     * [Part 7: Services](k8s/services.md)
     * [Part 8: Namespaces](k8s/namespaces.md)
     * [Part 9: Microservices Demo](k8s/microservices_demo.md)
+* [FreeBSD](installing_freebsd/README.md)
