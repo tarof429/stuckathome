@@ -24,6 +24,14 @@
 
 - To remove packages that are no longer used, run `pkg autoremove`.
 
+- To list kernel modules in use, run `kldstat`. To laod a kernel module, run kldload <module>. 
+
+- To restart the network, run `service netif restart`. 
+
 ## References
 
 https://www.netbsd.org/docs/guide/en/index.html
+
+https://docs.freebsd.org/en/books/handbook/network/
+
+https://srobb.net/fbsdquickwireless.html
