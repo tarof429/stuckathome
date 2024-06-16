@@ -64,7 +64,11 @@
 
 To install abcde, you need to build the aur from https://aur.archlinux.org/abcde.git. This package has a dependency on cd-discid and vorbis-tools. The vorbis-tools package can be installed easily using `pacman -S vorbis-tools`. For cd-discid, you need to build the aur https://aur.archlinux.org/cd-discid.git. Finally, to install abcde, you need to install a PGP signature as mentioned at https://bbs.archlinux.org/viewtopic.php?id=261267 which is referring to the GPG keys for either Steve or Andrew on the abcde download page at https://abcde.einval.com/download/. Search for this key at https://keys.openpgp.org, download the file, and import the key by running `gpg --import <file>`. You should now be able to install abcde. 
 
-You also need to install a configuration file for abcde. For example, see http://andrews-corner.org/abcde.html and https://bbs.archlinux.org/viewtopic.php?id=202331. 
+You also need to install a configuration file for abcde. For example, see http://andrews-corner.org/abcde.html and https://bbs.archlinux.org/viewtopic.php?id=202331 and copy it to ~/.abcde.conf. 
+
+Also install python-eyed3 from aur.
+
+Also to encode music to m4a instead of mp3, install fdkaac.
 
 If you use cantata to play music, install mpd first. A player that doesn't require mpd is musickube. 
 

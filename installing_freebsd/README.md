@@ -28,6 +28,8 @@
 
 - To restart the network, run `service netif restart`. 
 
+- Install pciutils to run lspci.
+
 ## References
 
 https://www.netbsd.org/docs/guide/en/index.html
