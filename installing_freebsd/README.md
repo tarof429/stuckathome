@@ -30,6 +30,10 @@
 
 - Install pciutils to run lspci.
 
+- DHCP for an interface is set in /etc/rc.conf. To restart dhcp on the client, run `service dhclient restart <interface>.
+
+- 
+
 ## References
 
 https://www.netbsd.org/docs/guide/en/index.html
