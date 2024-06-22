@@ -57,7 +57,7 @@ sudo systemctl stop systemd-resolved
 echo nameserver 8.8.8.8 | sudo tee /etc/resolv.conf
 ```
 
-4. Next, isntall dnsmasq.
+4. Next, install dnsmasq.
 
 ```
 sudo apt update
