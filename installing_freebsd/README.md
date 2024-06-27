@@ -32,7 +32,22 @@
 
 - DHCP for an interface is set in /etc/rc.conf. To restart dhcp on the client, run `service dhclient restart <interface>.
 
-- 
+- To use a static IP instead, edit /etc/rc.conf to read:
+
+    ```sh
+    ifconfig_em0="inet 192.168.2.20 netmask 255.255.255.0"
+    defaultrouter="192.168.1.1"
+    ```
+
+    also update /etc/resolv.conf if needed.
+
+    Afterwards:
+
+    ```sh
+    service netif restart && service routing restart
+    ```
+
+    If your IP is set but you cannot ping any hosts, check the default route.
 
 ## References
 
