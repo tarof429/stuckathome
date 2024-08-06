@@ -4,7 +4,7 @@
 
 ### Step 1: Shutdown the VM
 
-```
+```sh
 sudo virsh shutdown test
 ```
 
@@ -12,7 +12,7 @@ sudo virsh shutdown test
 
 Locate the disk path
 
-```
+```sh
  sudo virsh domblklist test
  Target   Source
 --------------------------------------------------------------
@@ -22,21 +22,21 @@ Locate the disk path
 
 Resize the disk
 
-```
+```sh
 sudo qemu-img resize /data/libvirt/default/boot/snapshot-test-cloudimg.qcow2 +5G
 Image resized.
 ```
 
 Start the VM
 
-```
+```sh
 sudo virsh start test
 Domain 'test' started
 ```
 
 Check the new layout
 
-```
+```sh
 # lsblk
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
 sr0     11:0    1 1024M  0 rom  
@@ -46,7 +46,7 @@ vda    253:0    0   30G  0 disk
 
 Extend the partition within the guest.
 
-```
+```sh
 lsblk
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
 sr0     11:0    1 1024M  0 rom  
@@ -65,7 +65,7 @@ vda    253:0    0   30G  0 disk
 
 Finally resize /
 
-```
+```sh
 root@localhost ~]# sudo xfs_growfs /
 meta-data=/dev/vda1              isize=512    agcount=13, agsize=524224 blks
          =                       sectsz=512   attr=2, projid32bit=1
@@ -98,12 +98,20 @@ vda    253:0    0   30G  0 disk
 
 Create a file at /etc/default/libvirt-guests with the following content:
 
-```
+```sh
 ON_SHUTDOWN=shutdown
 SHUTDOWN_TIMEOUT=300
 ```
 
 See the manpage for libvirt-guests.
+
+## Check storage pools
+
+```sh
+sudo journalctl -b
+sudo virsh pool-list --all
+sudo virsh pool-undefine <pool>
+```
 
 ## References
 
