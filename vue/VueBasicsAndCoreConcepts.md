@@ -12,7 +12,9 @@ This section covers:
 
 ## Outputing Dynamic Content
 
-The example project is basics-01-starting-code.
+The section is based on `17. Creating and Connecting Vue App Instances`. See the example project `basics-01-starting-code`.
+
+Note: these examples are probably not the best way to start creating Vue apps from scratch. Skip to `Part 11: Using the Vue CLI` if you want to follow best practices for creating pure Vue apps. 
 
 1. In the Javascript file, create an App().
 
@@ -34,7 +36,7 @@ const app = Vue.createApp({
 });
 ```
 
-4. One key option we can set is data. Below, we declare the `data` option to be a function. This function must return an object that is a key-value pair. The key-value pair may be any type, such as string, integer, boolean, or even array.
+4. Vue makes it easy to display data. Below, we declare the `data` option to be a function. This function must return an object (sometimes referred to as a property) that is a key-value pair. The key-value pair may be any type, such as string, integer, boolean, or even array.
 
 ```javascript
 const app = Vue.createApp({
@@ -55,13 +57,13 @@ We can then use refer to `courseGoal` in our HTML using interpolation:
 </section>
 ```
 
-If you want to output some data on an HTML tag, use v-bind instead of interpolation.
+If you want to output some data between HTML tags such as the anchor tag, we have to use v-bind. If you look back at the code example, `vueLink is a property whose value points to an external website. 
 
 ```html
 <p>Learn more <a v-bind:href="vueLink">about Vue</a>.</p>
 ```
 
-Instead of using interpolation for a variable, we can also define functions and call them. For example, we can define the following function:
+Instead of using interpolation for a variable value, we can also define functions and call them. For example, we can define the following function:
 
 ```javascript
 methods: {
@@ -82,7 +84,7 @@ Then in our HTML, we call the function like so:
 <p>{{ outputGoal() }}</p>
 ```
 
-Now let's say we want to refer to variables in data() in our funtion, like so: 
+Now let's say we want to refer to variables in data() in our funtion. 
 
 ```javascript
 data() {
@@ -114,7 +116,7 @@ If our data includes HTML tags, use v-html to interpolate it correctly.
 <p v-html="outputGoal()"></p>
 ```
 
-Note that this is not recommended as it can introduce XSS vulnerabilities.
+Note that outputting HTML tags is not recommended in real-world applications, as it can introduce XSS vulnerabilities.
 
 ## Reacting to User Input
 
@@ -264,7 +266,7 @@ v-once
 
 ## Example
 
-The `personal-assignment-1` project illustrates Vue concepts including:
+The `personal-assignment-1` example illustrates Vue concepts including:
 
 - interpolation
 - events and event modifiers
@@ -471,3 +473,7 @@ In our HTML code, we can refer to this computed property using `:class`:
 ```html
 <p :class="paraClasses">
 ```
+
+## Summary
+
+This is a very long section and after several months, it is easy to forget everything! Also, the assignments in this section aren't necessarily a good starting point for an application you would actually write. This section can be broken down into dynamic content and dynamic styling. Neither is really necessary to create a functional web application. And if you want to write a web applcation but can't think of what dynamic content it should have, then this section may not be very useful.

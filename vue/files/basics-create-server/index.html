@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vue Basics</title>
+    <title>Create a server</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Jost:wght@400;700&display=swap"
       rel="stylesheet"
@@ -14,13 +14,19 @@
   </head>
   <body>
     <header>
-      <h1>Vue Dynamic Styling</h1>
+      <h1>Create a server</h1>
     </header>
-    <section id="styling">
-  
-      <div class="demo" :class=boxAClasses @click="boxSelected('A')"></div>
-      <div class="demo" :class="{active: boxBSelected}" @click="boxSelected('B')"></div>
-      <div class="demo" :class="{active: boxCSelected}" @click="boxSelected('C')"></div>
+    <section id="app">
+        <label>Deployment:</label>
+        <input type="radio" id="server" name="deployment" value="server">
+        <label for="server">Server</label>
+        <input type="radio" id="vm" name="deployment" value="vm">
+        <label for="vm">VM</label><br/>
+        <label for="ip">IP:</label>
+        <input type="text" id="ip"><br/>
+        <label for="os">OS:</label>
+        <input type="text" id="os">
+
 
     </section>
   </body>

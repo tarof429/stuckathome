@@ -1,6 +1,6 @@
 ## Writing a Webapp Wtihout Vue
 
-Let's go back to see what it takes to write a Webapp without Vue and pure Javascript. See files/javascript-project. Note that in this project, we need to access each element in the DOM to get values and set values.
+This section explains how to write a reactive Web application without using Vue and uses pure Javascript. See files/javascript-project. Note that in this project, we need to access each element in the DOM to get values and set values. Vue makes this easier.
 
 ## References
 
