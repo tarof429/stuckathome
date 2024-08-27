@@ -8,7 +8,6 @@ terraform {
 }
 
 provider "aws" {
-  profile = "tf-user"
   region  = "us-west-2"
 }
 
@@ -25,6 +24,6 @@ resource "aws_instance" "app_server" {
   instance_type = "t2.micro"
 
   tags = {
-    Name = "HelloWorld"
+    Name = "single-server-2"
   }
 }
