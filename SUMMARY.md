@@ -67,3 +67,8 @@
     * [Part 8: Namespaces](k8s/namespaces.md)
     * [Part 9: Microservices Demo](k8s/microservices_demo.md)
 * [FreeBSD](installing_freebsd/README.md)
+* [Terraform](terraform/README.md)
+    * [Part 1: Installing Terraform](terraform/part1_installing_terraform.md)
+    * [Part 2: Creating VPC](terraform/part2_creating_vpc.md)
+    * [Part 3: Creating EC2](terraform/part3_creating_ec2.md)
+    * [Part 4: Installing Jenkins](terraform/part4_installing_jenkins.md)
