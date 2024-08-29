@@ -16,7 +16,7 @@ swap 16 GB
 SSD:
 
 ```
-/home ramainder of SSD
+/home remainder of SSD
 ```
 
 ## Note
