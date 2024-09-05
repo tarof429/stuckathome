@@ -81,11 +81,7 @@ curl http://<public ip>:8080
 
 In AWS, you can deploy a cluster of servers in what's called an Auto Scaling Group (ASG); this prevents a single point of failure in a production environment.
 
-The code for this example is at `files/cluster_web_services`.
-
-The following image illustrates the architecture.
-
-![Architecture](files/cluster_web_servers/graph.png)
+The code for this example is at `files/asg`.
 
 To understand how to create an ASG, it helps to create it using the AWS console. If you login to the AWS console and sleect EC2, you'll find Auto Scaling Groups at the bottom. If you select it and click `Create Auto Scaling group` you'll be taken to a wizard to create an ASG. In the process, you're required to define a launch template, which is similar to the form for creating an EC2 instance. 
 
@@ -94,6 +90,19 @@ Note that while some texts may explain how to define a launch configuration for 
 I recommend looking at the official docs like https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group and https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template when creating an ASG.
 
 While some docs may have you "discover" the ID of the default VPC, in this example we will skip that step and instead retrieve it from the AWS console.
+
+## Using Data
+
+The previous example had some hard-coded values. Using data, we can retrieve these values from AWS directly.
+
+The `asg-with-data` example illustrates how to do this. 
+
+The following command retrieves all the AMIs for Ubuntu 22 in us-west-2.
+
+```sh
+aws ec2 describe-images --region us-west-2 --filters "Name=name, Values=*ubuntu-*-22.04-amd64-server-*" | grep \"Name| more
+```
+
 
 
 ## References
