@@ -89,19 +89,6 @@ Note that while some texts may explain how to define a launch configuration for 
 
 I recommend looking at the official docs like https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group and https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template when creating an ASG.
 
-## Using Data
-
-The previous example had some hard-coded values. Using data, we can retrieve these values from AWS directly.
-
-The `asg-with-data` example illustrates how to do this. 
-
-The following command retrieves all the AMIs for Ubuntu 22 in us-west-2.
-
-```sh
-aws ec2 describe-images --region us-west-2 --filters "Name=name, Values=*ubuntu-*-22.04-amd64-server-*" | grep \"Name| more
-```
-
-
 
 ## References
 
