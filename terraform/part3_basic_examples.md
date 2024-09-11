@@ -89,6 +89,15 @@ Note that while some texts may explain how to define a launch configuration for 
 
 I recommend looking at the official docs like https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group and https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template when creating an ASG.
 
+## Deploying a Load Balancer
+
+A load balancer can balance the traffic between EC2 instances deployed by an ASG. An ALB consists of listeners, listener rules, and target groups. 
+
+![ALB](files/alb.png)
+
+The listener rule ties the listener with the target group. 
+
+the `alb` example illustrates load balancing by deploying the web app and displaying the IP of the EC2 instance it is running on. This is a very complicated example that really illustrates how Terraform can be used to deploy pure web applications.
 
 ## References
 
