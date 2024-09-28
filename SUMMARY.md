@@ -72,3 +72,6 @@
     * [Part 2: Creating VPC](terraform/part2_creating_vpc.md)
     * [Part 3: Creating EC2](terraform/part3_creating_ec2.md)
     * [Part 4: Installing Jenkins](terraform/part4_installing_jenkins.md)
+    * [Part 5: State locking](terraform/part5_state_locking.md)
+    * [Part6: Refactoring](terraform/part6_refactoring.md)
+    * [Part 7: Using Terraform Registry](terraform/part7_using_terraform_registry.md)
