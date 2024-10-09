@@ -113,6 +113,58 @@ sudo virsh pool-list --all
 sudo virsh pool-undefine <pool>
 ```
 
+## Renaming VMs
+
+If you happen to create a VM with a name you don't like, you can rename it.
+
+```
+virsh domrename oldname newname
+```
+
+## Creating snapshots
+
+```
+virsh snapshot-create-as --domain <vm> --name <snapshot name>
+
+```
+## Listing snapshots
+
+```
+sudo virsh snapshot-list <vm>
+```
+
+## Reverting to a snapshot
+
+```
+sudo virsh --domain <vm>
+sudo virsh snapshot-revert --domain <vm> --snapshotname <snapshot name>
+
+## Deleting snapshots
+
+```
+sudo virsh snapshot-delete --domain <vm> --snapshotname <snapshot name>
+```
+
+## Deleting VMs
+
+First, make sure the VM is shut down.
+
+```
+sudo virsh destroy <vm>
+```
+
+Then undefine the VM.
+
+```
+sudo virsh undefine <vm>
+```
+
+This doesn't remove the backing store for the VM however. To do that:
+
+```
+sudo virsh undefine <vm> --remove-all-storage
+```
+
 ## References
 
 https://computingforgeeks.com/how-to-extend-increase-kvm-virtual-machine-disk-size/
