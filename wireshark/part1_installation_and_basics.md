@@ -11,25 +11,25 @@ sudo pacman -S wireshark-cli
 Wireshark should be run as root. You can verify the version of Wireshark by passing in the -v option.
 
 ```
-sudo wireshark -v
+sudo tshark -v
 ```
 
 Wireshark should be run against a network interface. You can identify interfaces either by running `ip a` or using the built-in CLI option with Wireshark.
 
 ```
-sudo wireshark -D
+sudo tshark -D
 ```
 
 To run Wireshark against an interface, using the `-i` option.
 
 ```
-sudo tshark -i enp37s0
+sudo tshark -i br0
 ```
 
 You can limit the number of packets captured by passing in the `-c` option.
 
 ```
-sudo tshark -i enp37s0 -c 10
+sudo tshark -i br0 -c 10
 ```
 
 ## Troubleshooting DNS issues
@@ -50,18 +50,20 @@ cat /etc/resolv.conf
 nameserver 192.168.0.1
 ```
 
-Our DNS server is our switch. 
+Our DNS server points to our switch. 
+
+Before starting wireshark, you must add the non-privileged user to the wireshark group. See `https://wiki.archlinux.org/title/Wireshark`.
 
 Next, start wireshark.
 
 ```
-sudo tshark -i enp37s0 host 192.168.0.1
+sudo tshark -i br0 host 192.168.1.1
 ```
 
 In another terminal, run the following:
 
 ```
-sudo nslookup cnn.com
+nslookup cnn.com
 ```
 
 You should see some output from tshark.
@@ -69,7 +71,7 @@ You should see some output from tshark.
 Since DNS packets use the UDP protocol, you can capture UDP packets only.
 
 ```
-sudo tshark -i enp37s0 udp
+sudo tshark -i br0 udp
 ```
 
 # Example troubleshooting DNS queries
@@ -77,7 +79,7 @@ sudo tshark -i enp37s0 udp
 Suppose you are logged into a machine through the console and you don't have the luxury of opening two terminals. You can direct output to a file.
 
 ```
-sudo tshark -w /tmp/output.pcap -i enp37s0 udp &
+sudo tshark -w /tmp/output.pcap -i br0 udp &
 nslookup cnn.com
 kill %1
 ```
