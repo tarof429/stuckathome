@@ -87,6 +87,8 @@ Ctrl+a Q Close all regions but the current one.
 Ctrl+a X Close the current region.
 ```
 
+- Get bluetooth audio working. See https://www.jeremymorgan.com/tutorials/linux/how-to-bluetooth-arch-linux/.
+
 # References
 
 https://github.com/korvahannu/arch-nvidia-drivers-installation-guide
