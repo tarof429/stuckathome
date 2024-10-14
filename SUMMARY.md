@@ -75,3 +75,4 @@
     * [Part 5: State locking](terraform/part5_state_locking.md)
     * [Part6: Refactoring](terraform/part6_refactoring.md)
     * [Part 7: Using Terraform Registry](terraform/part7_using_terraform_registry.md)
+* [Jenkins](jenkins/readme.md)

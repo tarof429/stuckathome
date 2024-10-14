@@ -1,0 +1,17 @@
+pipeline {
+    agent any
+
+    environment {
+        def registryName = "myregistry.com"
+        def imageName = "helloWorld"
+    }
+
+    stages {
+        stage('Pull image') {
+            steps {
+                echo "Running build ${env.BUILD_ID} on ${env.JENKINS_URL}"
+                echo "docker pull ${env.registryName}/${env.imageName}:latest"
+            }
+        }
+    }
+}

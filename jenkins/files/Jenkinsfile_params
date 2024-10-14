@@ -1,0 +1,19 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'DEPLOYMENT_NAME', defaultValue: '', description: 'Name for our custom deployment')
+        choice(choices: ['us-west-1', 'us-west-2', 'us-west-3'], description: 'Which AZ to deploy to', name: 'AZ')
+        booleanParam(defaultValue: false, name: 'DEPLOYMENT')
+    }
+
+    stages {
+        stage('Get params') {
+            steps {
+                echo "Deployment: ${params.DEPLOYMENT_NAME}"
+                echo "Which AZ to deploy to: ${params.AZ}"
+                echo "Deploy: ${params.DEPLOYMENT}"
+            }
+        }
+    }
+}
