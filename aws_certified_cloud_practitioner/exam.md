@@ -3,49 +3,6 @@
 ## Technology
 
 
-- What is a convertible reserved instance? Answer: An EC2 instance type that offers significant cost savings and whose instance type can be changed. Because it is reserved, it requires a reserveration of at least 1 year.
-
-- If you need an EC2 instance to run software whose license model is tied to the hardware, what instance type should you use? Answer: Amazon EC2 Dedicated Hosts
-
-- What is a dedicated instance? A dedicated instance is an EC2 instance whos hardware will remain the same throughout the lifecycle, but may be shared with other customers.
-
-- What can a Cloud Practitioner use to categorize and track AWS costs by project? Answer: Cost Allocation Tags
-
-- What is AWS Artifact? Answer: AWS Artifact gives users no cost access to AWS security and compliance reports.
-
-- Which of the following tasks can a user perform to optimize Amazon EC2 costs? (Select TWO.) Answer: "Implement Auto Scaling groups to add and remove instances based on demand"  and  "Purchase Amazon EC2 Reserved Instances
-
-- A company requires a dashboard for reporting when using a business intelligence solution. Which AWS service can a Cloud Practitioner use? Answer: Amazon QuickSight
-
-- Which AWS-managed service can be used to process vast amounts of data using a hosted Hadoop framework? Answer: Amazon EMR (Elastic Map Reduce)
-
-- How are Amazon EC2 instances billed, by the hour? Second? Answer: Depends. EC2 instances running Linux or Windows are biled by the second. Others are billed by the hour. Any partial hours are billed as a full hour for these other instance types.
-
-- What is a standard reserved instance? It's an instance type that provides significant savings, but you reserve it for a year and up to 3 years.
-
-- What is Amazon Elastic Transcoder? Answer: A service to convert media files like movies into a format that client devices can use.
-
-- What is AWS Config? A service that enables you to audit your configurations
-
-- What is the Elastic Container Registry? Answer: The AWS managed Docker registry service used by the Amazon Elastic Container Service (ECS)
-
-- Does AWS Elastic Beanstalk provide the fastest way to deploy a popular IT solution so you can start using it immediately? Answer: no, you still need to provide the code. Use AWS Quick Start reference deployments instead; these are Cloud Formation templates.
-
-- What is RDS? Answer: Amazon RDS is a relational database service that is compatible with several database engines, including MySQL. A key benefit is that it simplifies database administration by providing automated backups and automated software patching. RDS provides automated backups by default.
-
-- What is AWS Direct Connect? Answer: AWS Direct Connect is a cloud service that links your network directly to AWS. You bypass the Intenet to delive more consistent, lower-latency performance through increased bandwidth.
-
-- What is AWS Cloudfront? Answer: AWS Cloudfront is a service used to reduce latency and improve transfer speeds. It is designed for static assets like videos, images and files that don't change and can be cached.
-
-- What is Global Accelerator? Answer: A service that finds the optimal route to your services via edge locations.
-
-- When do you use a Virtual Private Network? Answer: - To establish a secure network connection between an on-premises network and AWS
-
-- Which AWS service should a Cloud Practitioner use to establish a secure network connection between an on-premises network and AWS? Answer: Virtual Private Network
-
-- What is a Security Group? Answer; A type of security control used to deny acces from a specific IP address.
-
-- What services does Route 53 provide? Answer: Traffic flow and Domain registration
 
 - What is a Network Access Control List? Answer: A service that provides a firewall at the subnet level within a VPC
 

@@ -64,10 +64,18 @@
 
 - Q: Will Amazon automatically patch EC2 instances for you? A: no, you must do this yourself.
 
+- Q: What is the minimum term for reserved instances? A: 1 year. The maximum is 3 years.
+
+- Q: If you need an EC2 instance to run software whose license model is tied to the hardware, what instance type should you use? A: Use dedicated hosts
+
+- Q: What is a dedicated instance? A: A dedicated instance is an EC2 instance whose hardware will remain the same throughout the lifecycle, but may be shared with other customers.
+
+- Q: Which of the following tasks can a user perform to optimize Amazon EC2 costs? (Select TWO.) A: "Implement Auto Scaling groups to add and remove instances based on demand"  and  "Purchase Amazon EC2 Reserved Instances
+
+
 ## Storage
 
 - Q: If you need to have persistent storage for data attached to EC2 instances, what can you use? A: Use EBS or Elastic Block Store.
-
 
 - Q: True or false: EBS volumes are global so you can attach the volume to EC2 instances regardless of the AZ. A: False, EBS volumes are local to the AZ.
 
@@ -112,6 +120,8 @@
 - Q: What AWS service helps distribute the load on multiple EC2 instances? A: AWS Elastic Load Balancer or ELB.
 
 - Q: If you need a layer 4 load balancer, what can you do? A: Create a network load balancer (as opposed to an application load balancer). 
+
+- Q: What services does Route 53 provide? Answer: Traffic flow management and domain registration
 
 ## Application Services
 
@@ -160,9 +170,15 @@
 
 - Q: True of false: VPC peering routes traffic using private IP addresses: A: True
 
+- Q: What is AWS DirectConnect? A: AWS DirectConnect is a cloud service that links your network directly to AWS. You bypass the Intenet to delive more consistent, lower-latency performance through increased bandwidth.
+
+- Q: When do you use a Virtual Private Network? A: To establish a secure network connection between an on-premises network and AWS
+
+- Q: Which AWS service should a Cloud Practitioner use to establish a secure network connection between an on-premises network and AWS? A: Virtual Private Network
+
 ## Deployment and Automation
 
-- Q: If you want your customer to access content more quickly and provide security against DDoS attacks, what AWS service can you use? A: You can use CloudFront which is a CDN that can cache contnet close to your customers. 
+- Q: If you want your customer to access content more quickly and provide security against DDoS attacks, what AWS service can you use? A: You can use CloudFront which is a CDN that can cache content close to your customers. 
 
 - Q: If you have users in multiple countries and they're experiencing latency when accessing your application, what AWS service can help? A: Use CloudFront
 
@@ -197,6 +213,13 @@
 - If you want to set up continuous integration in AWS, what services can you use? A: AWS CodeCommit and AWS CodeBuild
 
 - If you want to develop code within AWS, what AWS Service can let you do that? A: AWS CodeStar
+
+- Q: Is AWS Elastic Beanstalk the fastest way to deploy popular IT solutions? AL No, you still need to provide the code. Use AWS Quick Start reference deployments instead; these are Cloud Formation templates.
+
+- Q: What is AWS Cloudfront? A: AWS Cloudfront is a service used to reduce latency and improve transfer speeds. It is designed for static assets like videos, images and files that don't change and can be cached.
+
+- Q: What is Global Accelerator? A: A service that finds the optimal route to your services via edge locations.
+
 
 ## Databases and Analytics
 
@@ -249,6 +272,13 @@
 - Q: How can a company migrate a database running in an EC2 instance to RDS without downtime? A: Migrate using AWS Database Migration Service
 
 - Q: A company needs to migrate several TB of data from an on-premises NAS device to Amazon FSx. Which service can the company use to migrate the data over a VPN connection? A: AWS DataSync
+
+- Q: Which AWS-managed service can be used to process vast amounts of data using a hosted Hadoop framework? A: Amazon EMR (Elastic Map Reduce)
+
+- Q: How are Amazon EC2 instances billed, by the hour? Second? A: It depends. EC2 instances running Linux or Windows are biled by the second. Others are billed by the hour. Any partial hours are billed as a full hour for these other instance types.
+
+- Q: What is RDS? A: Amazon RDS is a relational database service that is compatible with several database engines, including MySQL. A key benefit is that it simplifies database administration by providing automated backups and automated software patching. RDS provides automated backups by default.
+
 
 ## Management and Governance
 
@@ -403,13 +433,15 @@
 
 - Q: Do NAT Gateways have a cost? A: They are charged by the hour.
 
-- Q: What does AWS recommend that you do to setting up a cost allocation report? A: Assign tags to your resouces.
+- Q: What does AWS recommend that you do to setting up a cost allocation report? A: Assign cost allocation tags to your resouces.
 
 ## Migration, Machine Learning and More
 
 - Q: what appliance in the Snow Family can be used to migrate data in the terabytes: AWS Snowcone or aWS Snowball? A: Both can be used. Snowcone is small and has 8 TB of usable HDD storage while Snowball weighs 50 lbs and has 80 TB of usable HDD storage. 
 
 - Q: A company recorded some support call conversations in mp4 files. How can the company extract the audio into a text document? A: AWS Transcribe
+
+- Q: What is Amazon Elastic Transcoder? A: A service to transcode (convert) media files like movies into a format that client devices can use.
 
 - Q: An application is being built that needs to identify faces in images. Which service can be used? A: AWS Rekognition
 
