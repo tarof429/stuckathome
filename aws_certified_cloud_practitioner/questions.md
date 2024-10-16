@@ -1,5 +1,19 @@
 # Questions
 
+## Cloud Computing
+
+- Q: What are the benefits of using AWS cloud? A: 1) The ability to experiment quickly and 2) fast provisioning of IT resources 3) ability to go global quickly 4) Scalable compute capacity
+
+- Q: A company is planning to move a number of legacy applications to the AWS Cloud. The solution must be cost-effective. Which approach should the company take? A: Rehost the applications on Amazon EC2 instances that are right-sized
+
+- Q: Which on-premises costs must be included in a Total Cost of Ownership (TCO) calculation when comparing against the AWS Cloud? (Select TWO.) A: Network infrastructure in the data center and Physical compute hardware. 
+
+- Q: A company plans to move application development to AWS. Which benefits can they achieve when developing and running applications in the AWS Cloud compared to on-premises? (Select TWO.) Answer: AWS makes it easy to implement high availability (think ASG and Load Balancers) and AWS can accommodate large changes in applications on demand (no need to buy servers or network equipment).
+
+- Q: What are the benefits of using the AWS Managed Services? (Select TWO.) A:  "Alignment with ITIL processes" and  "Baseline integration with ITSM tools" 
+
+- Q: To reward customers for using their services, what are two ways AWS reduce prices? (Select TWO). A: More discount the more services you use and 2) Reduced cost for reserved capacity.
+
 ## IAM
 
 - Q: What is IAM? Answer: IAM is a service that controls who gets access to AWS services, and what they can do with those services.
@@ -19,6 +33,10 @@
 - Q: What is an SCP? A: An SCP is a Service Control Policy that allows you to define the maximum set of permissions users can have in your organization. It is part of AWS Organizations.
 
 - Q: Give an example of some best practices for IAM. A: Lock the root account. Create an individual IAM users. Grant least privilege. Configure strong passwords and use MFA. Use roles instead of access keys inside EC2 instances. Use IAM roles to delegate permissions. Don't share access keys. Rotate passwords regularly.
+
+- Q: A company must provide access to AWS resources for their employees. Which security practices should they follow? A: 1) Enable multi-factor authentication for users and 2) create IAM policies based on least privilege principles.
+
+- Q: Which of the following is a valid best practices for using the AWS Identity and Access Management (IAM) service? (Select TWO.) A: Create individual IAM users (don't share) and use groups to assign permissions to multiple IAM users.
 
 ## EC2
 
@@ -44,9 +62,12 @@
 
 - Q: If you want to publish docker images, what can you use besides Dockerhub? A: AWS ECR or Elastic Container Registry.
 
+- Q: Will Amazon automatically patch EC2 instances for you? A: no, you must do this yourself.
+
 ## Storage
 
 - Q: If you need to have persistent storage for data attached to EC2 instances, what can you use? A: Use EBS or Elastic Block Store.
+
 
 - Q: True or false: EBS volumes are global so you can attach the volume to EC2 instances regardless of the AZ. A: False, EBS volumes are local to the AZ.
 
@@ -108,6 +129,11 @@
 
 - Q: What serverless service can you use to publish APIs for users or other services to use? A: Use Amazon API Gateway
 
+- Q: Which AWS services form the app-facing services of the AWS serverless infrastructure? (Select TWO.) A: Amazon API Gateway and AWS Lambda
+
+- Q: What is AWS CodeCommit? A: AWS CodeCommit is a source Control service that is highly secure, scalable and managed.
+
+
 ## Networking
 
 - Q: What is a VPC? A: A VPC is a virtual private network dedicated to my account. It's like a network within a data center. 
@@ -148,13 +174,13 @@
 
 - Q: What feature in Cloudfront allows you to restrict access to a select number of countries? A: Cloudfront Geo Restriction
 
-- Q: What service has built-in DoS proection: Route 53, Internet Gateway, Cloudfront or AWS Direct Connect? A: Cloudfront is a CDN which provides built-in DoS protection. Among these, AWS Direct Connect provides a way to connect on-prem machines to AWS and does not provide DoS protection.
+- Q: What service has built-in DoS protection: Route 53, Internet Gateway, Cloudfront or AWS Direct Connect? A: Cloudfront is a CDN which provides built-in DoS protection. Among these, AWS Direct Connect provides a way to connect on-prem machines to AWS and does not provide DoS protection.
 
 - Q: What types of Origin does Amazon Cloudfront support? A: S3 bucket and EC2 instance
 
 - Q: If you have EC2 instances in multiple regions that need fast network connectivity to each other, what can you use? A: AWS Global Accelerator, which uses the AWS global network.
 
-- Q: If you're deploying AWS resources by hand and are afraid of human error, what can you use? A: You can use AWS CloudFormation. 
+- Q: If you're deploying AWS resources by hand and are afraid of human error, what can you use? A: AWS CloudFormation is an automated way to provision AWS resources using code.
 
 - Q: True or false: CloudFormation is powerful but there is a charge to use. A: False, you're only charged for the resources you use.
 
@@ -246,6 +272,10 @@
 
 - Q: What service can provide a guided way to launch EC2 instances for some services by providing recommended sizing and configuration options? A: AWS Launch Wizard can help you create EC2 instances that are optimal to the third-party application you want to deploy on AWS. You are not charged for using Launch Wizard; you are charged for the EC2 instance. 
 
+- Q: What is AWS Trusted Advisor? A: AWS Trusted Advisor provides real time guidance to help you provision your resource following best practices in the areas of cost optimization, performance, security and fault tolerance. 
+
+- Q: When do you use Trusted Advisor? A: When you need a service to identify if unrestricted access to resources has been allowed by security groups. 
+
 ## AWS Cloud Security and Identity
 
 - Q: If you want to authenticate users using Active Directory that's fully managed, what can you use? A: You can use AWS Directory Service for Microsoft Active Directory. If you want to use an Active Directory that's running on-prem, then AWS provices an AD Connector. Or if you just want a low scale, low cost active directory that's based on Samba, then use Simple AD. 
@@ -266,9 +296,11 @@
 
 - Q: If you want to use a service to try to identify suspicious activity in your account, what can you use? A: AWS Detective or GaurdDuty
 
-- Q: If you want to lock down S3 and make sure your buckets follow security best practices, what can you use? A: AWS Macie.
+- Q: If you want to lock down S3 and make sure your buckets follow security best practices, what can you use? A: AWS Macie is a service that can be used to discover and protect sensitive data in AWS. It only scans S3 buckets.
 
-- Q: If you need a web application firewall and you're trying to block common web exploits such as XSS, what can you use? A: AWS WAF is a web application firewall. It would be handy to set this up if you're running any web application that uses ports like 80, 8443, or 8080. Also you sould set up AWS Shield to prevent DDoS.
+- Q: If you need a web application firewall and you're trying to block common web exploits such as XSS, what can you use? A: AWS WAF is a web application firewall service. It would be handy to set this up if you're running any web application that uses ports like 80, 8443, or 8080. Also you sould set up AWS Shield to prevent DDoS.
+
+- Q: What is AWS Shield? A: AWS Shield is a service that provides protetion against Denial of Service attacks. 
 
 - Q: If you need to provide compliance reports to auditors. what can you use? A: Use AWS Artifact
 
@@ -279,6 +311,35 @@
 - Q: What is AWS' policy regarding penetration testing? A: You can perform penetration testing against several services without approval
 
 - Q: If you want to monitor EC2 instances and check that the sizing is correct, what service can you use? A: Amazon CloudWatch can be configured to send out alerts if EC2 intances use high levels of CPU. If you want AWS to provide recommendations for you, AWS Compute Optimizer is a managed service for this.
+
+- Q: When should you report to the AWS Trust and Safety Team? A: For example, when you notice that an EC2 instance is being used to attempt to flood ports on some of the company’s systems.
+
+- Q: What is AWS CloudTrail? A: A service used for auditing API actions. It can be used to track the activity of users.
+
+- Q: What is AWS CloudHSM? A: A cloud-based hardware security module (HSM) that enables you to easily generate and use your own encryption keys on the AWS Cloud.
+
+- Q: A new user is unable to access any AWS services, what is the most likely explanation? A: By default new users are created with NO access to any AWS services –-  they can only login to the AWS console. You must apply permissions to users to allow them to access services.
+
+- Q: What is AWS Inspector? A: AWS Inspector is an AWS service which can be used to create an automated security assessment report that will identify unintended network access to Amazon EC2 instances and vulnerabilities on those instances.
+
+- What service can be used to identify a specific user who terminated an Amazon RDS DB instance? A: AWS CloudTrail, which is used for auditing user actions in AWS. 
+
+- Q: What is Amazon CloudWatch? A: Amazon Cloudwatch is a monitoring service which lets you set alarms on services based on some criteria you provide. 
+
+- Q: What is VPC Flow Logs? A: A service that enables you to capture information about the IP traffic going to and from network interfaces in your VPC. 
+
+- Q: What is Amazon GuardDuty? A: A threat detection service
+
+- Q: Which of the following can be assigned to an IAM user? Answer: An access key ID and secret access key for API access and a password for accessing the managment console.
+
+- Q: Which feature of AWS IAM enables you to identify unnecessary permissions that have been assigned to users? A: IAM Access Analyzer
+
+- Q: Which of the following is NOT a best practice for protecting the root user of an AWS account? A: Remove administrative permissions
+
+- Q: Your manager has asked you to explain some of the security features available in the AWS cloud. How can you describe the function of Amazon CloudHSM? A: It can be used to generate, use and manage encryption keys in the cloud. It is based on hardware.
+
+- Q: Which of the following are NOT features of AWS IAM?  A: Login in to the console using local user accounts and charging for what you use.
+
 
 ## Architecting for the Cloud
 
@@ -324,7 +385,7 @@
 
 - Q: What is a key cost advantage of moving to the AWS Cloud? A: You can provision what you need and scale on demand.
 
-- Q: What is the best tool for an organization to compare the cost of running on-premises to using the AWS Cloud? A: TCO Calculator (there is such a tool?)
+- Q: What is the best tool for an organization to compare the cost of running on-premises to using the AWS Cloud? A: The TCO Calculator can be used to estimate the savings when comparing the AWS Cloud to an on-premises environment
 
 - Q: Which AWS support plan comes with a Technical Account Manager (TAM) A: Enterprise
 
