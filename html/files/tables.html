@@ -1,0 +1,79 @@
+<html>
+    <head>
+        <style>
+            table, th, td {
+                border-bottom: 1px solid #dddddd;
+            }
+            
+            table {
+                font-family: Arial, Helvetica, sans-serif;
+                border-collapse: collapse;
+                width: 80%;
+            }
+
+            td {
+                padding: 8px;
+            }
+
+            td.down {
+                color: red;
+            }
+            
+            th {
+                padding: 8px;
+                text-align: left;
+                background-color: #eeeeee;
+                color: black;
+                font-weight: bold;
+                font-size: 14px;
+                border-right: 1px solid #aaaaaa;
+            }
+            a {
+                 color: black;
+            }
+            
+            a:link {
+                text-decoration: none;
+            }
+
+            a:hover {
+              text-decoration: underline;
+            }
+
+        </style>
+    </head>
+    <body>
+        <table>
+            <tr>
+                <th>Hostname</th>
+                <th>IP</th>
+                <th>OS</th>
+                <th>Uptime</th>
+            </tr>
+            <tr>
+                <td><a href="foo">db-01</a></td>
+                <td>10.10.4.1</td>
+                <td>Ubuntu 22</td>
+                <td>23:32:59</td>
+            </tr>
+            <tr>
+                <td><a href="foo">db-02</a></td>
+                <td>10.10.4.2</td>
+                <td>Ubuntu 22</td>
+                <td>23:32:59</td>
+            </tr>
+            <tr>
+                <td><a href="foo">db-03</a></td>
+                <td>10.10.4.3</td>
+                <td>Ubuntu 22</td>
+                <td>23:32:59</td>
+            </tr>
+            <tr>
+                <td><a href="foo">test-server</a></td>
+                <td>10.10.4.4</td>
+                <td>Ubuntu 22</td>
+                <td class="down">Down</td>
+            </tr>
+        </table>
+    </body>
+</html>
