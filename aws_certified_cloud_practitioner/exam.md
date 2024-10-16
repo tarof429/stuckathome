@@ -40,7 +40,7 @@
 
 - When should you report to the AWS Trust and Safety Team? Answer: For example, when you notice that an EC2 instance is being used to attempt to flood ports on some of the company’s systems.
 
--Which of the following a valid best practices for using the AWS Identity and Access Management (IAM) service? (Select TWO.) Answer: Create individual IAM users and Use groups to assign permissions to IAM users
+- Which of the following a valid best practices for using the AWS Identity and Access Management (IAM) service? (Select TWO.) Answer: Create individual IAM users and Use groups to assign permissions to IAM users
 
 - When do you use Trusted Advisor? Answer: When you need a service to identify if unrestricted access to resources has been allowed by security groups. 
 

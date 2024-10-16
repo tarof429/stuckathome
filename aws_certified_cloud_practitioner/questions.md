@@ -2,375 +2,376 @@
 
 ## IAM
 
-- Which IAM entity can be used to delegate permissions: User, Group, Role or Policy? Answer: Role.
+- Q: What is IAM? Answer: IAM is a service that controls who gets access to AWS services, and what they can do with those services.
 
-- IAM authentication can be federated using either SAML (LDAP) or OIDC like Google. Another option is to use AWS SSO. Cognito can also be used to gain temporary access to AWS. In this case, users are defined in a user pool, and identity pools are used to obtain temporary, limited-privilege credentials. 
+- Q: Do users have access to all services by default? A: No, users must be explictly given access to services.
 
-- Q: What is a proper definition of an IAM Role? A: An IAM entity that defines a set of permissions for making requests to AWS services, and will be used by an AWS service (failed)
+- Q: All users must belong to a group, true or false. A: False, groups are optional and give you the ability to apply a set of policies to users easily.
 
-- What is IAM credential report? IAM Credential Report lists all the IAM users in the current acount.
+- Q: User Groups can be nested, true or false. A: False, User Groups cannot container other User Groups.
 
-- Q: What are IAM Policies? A: JSON documents that define a set of permissions for making requests to AWS services, and can be used by IAM Users, User Groups, and IAM roles.
+- Q: An IAM Policy can be assigned to users or groups, but not both, true or false. A: False, IAM Policies, which define the set of actions users can perform, can be assigned to both users or groups.
 
-- Q: What principle should you apply regarding IAM Permissions? A: Grant least privilege.
+- Q: What is the purpose of an IAM Role? A: An IAM Role is used to delegate permissions to another entity. For example, you can create an IAM Role to allow CloudFormation the ability to create resources on your behalf.
 
-- Q: What should you do to increase your root account security? A: Enable Multi-Factor Authentication (MFA)
+- Q: What is the purpose of access keys? A: Access keys allow programatic access to services.
 
-- Q: IAM User Groups can contain IAM Users and other User Groups A: False: IAM User Groups can contain only IAM Users
+- Q: What is an SCP? A: An SCP is a Service Control Policy that allows you to define the maximum set of permissions users can have in your organization. It is part of AWS Organizations.
 
-- Q: An IAM policy consists of one or more statements. A statement in an IAM Policy consists of the following, EXCEPT A: Version (failed)
-
-- Q: According to the AWS Shared Responsibility Model, which of the following is AWS responsibility? A: AWS Infrastructure
-
-- Q: How can STS help you get some tasks done? A: STS (Security Token Service) lets use assume an IAM role in an AWS Account to gain temporary credentials. It is active by default in all AWS regions.
-
-- Q: You have an EC2 instance that has an attached IAM role providing it with read/write access to the S3 bucket named my-bucket, and it has been successfully tested. Later, you removed the IAM role from the EC2 instance, but after testing you found that writes stopped working but reads are still working. What is the likely cause for this behavior? A: The S3 bucket policy authorizes reads (which you can see by selecting the bucket | Properties)
-
-- Q: You are running an on-premises Microsoft Active Directory to manage your users. You have been tasked to to create another AD in AWS and establishes a trust relationship with your on-premises AD. Which AWS Directory service should you use? A: Use Managed Microsoft AD
-
--Q: Your AWS account is now growing to 200 IAM users where each user has his own data in an S3 bucket named users-data. For each IAM user, you would like to provide personal space in the S3 bucket with the prefix /home/<username>, where they have read/write access. How can you do this efficiently? A: Create one customer-managed policy with dynamic variables and attach it to a group of all the IAM users
+- Q: Give an example of some best practices for IAM. A: Lock the root account. Create an individual IAM users. Grant least privilege. Configure strong passwords and use MFA. Use roles instead of access keys inside EC2 instances. Use IAM roles to delegate permissions. Don't share access keys. Rotate passwords regularly.
 
 ## EC2
 
-- Q: Which EC2 Purchasing Option can provide you the biggest discount, but it is not suitable for critical jobs or databases? A: spot Instances
+- Q: What is EC2? A: EC2 is a service that provides computing resources in the cloud.
 
-- Q: What should you use to control traffic in and out of EC2 instances? A: Security Groups
+- Q: True or false: EC2 supports Linux only. A: False, EC2 supports Linux, Windows and Mac OS.
 
-- Q: How long can you reserve an EC2 Reserved Instance? A: 1 or 3 years
+- Q: When you launch an EC2 instance, what do you actually need, do you search for an ISO and install the OS manually? A: To launch an EC2 instance you need an AMI. The AMI contains the EBS volume which contains the OS.
 
-- Q: You would like to deploy a High-Performance Computing (HPC) application on EC2 instances. Which EC2 instance type should you choose? A: Compute Optimized
+- Q: If you need to customize the install of an EC2 instance, do you use user data or meta data? A: User data.
 
-- Q: Which EC2 Purchasing Option should you use for an application you plan to run on a server continuously for 1 year? A: Reserved Instances
+- Q: If you need to look at the metadata of an EC2 instance, how can you get it? A: Login to the EC2 instance and curl http://169.254.169.254/latest/meta-data
 
-- Q: You are preparing to launch an application that will be hosted on a set of EC2 instances. This application needs some software installation and some OS packages need to be updated during the first launch. What is the best way to achieve this when you launch the EC2 instances? A: Write a bash script that installs the required software and updates to your OS, then use this scrip in EC2 User Data when you launch your EC2 instances
+- Q: If your EC2 instance need to access AWS services, should you use access keys or IAM roles? A: Use roles. Access keys are in clear text and are not secure.
 
-- Q: Which EC2 Instance Type should you choose for a critical application that uses an in-memory database? A: Memory Optimized
+- Q: If you need to perform some kind of large processing job, what can you use in place of launching EC2 instances? A: You can use AWS Batch.
 
-- Q: You have an e-commerce application with an OLTP database hosted on-premises. This application has popularity which results in its database has thousands of requests per second. You want to migrate the database to an EC2 instance. Which EC2 Instance Type should you choose to handle this high-frequency OLTP database? A: Storage Optimized
+- Q: If you need an easy way to launch several EC2 instance to host an application, what can you use? A: Lightsail is an easy way to have AWS create the EC2 instances you need to host your application.
 
-- Q: Security Groups can be attached to only one EC2 instance. A: False
+- Q: If you need computing resources to run docker containers, what can you use besides EC2 instances? A: ECS, or Elastic Container Service, can be used to run docker containers.
 
-- Q: You're planning to migrate on-premises applications to AWS. Your company has strict compliance requirements that require your applications to run on dedicated servers. You also need to use your own server-bound software license to reduce costs. Which EC2 Purchasing Option is suitable for you? A: Dedicated Hosts
+- Q: What are the two launch types that ECS supports? A: ECS supports EC2 launch type and Fargate. With Fargate, AWS will manage the EC2 instances for you. 
 
-- Q: You would like to deploy a database technology on an EC2 instance and the vendor license bills you based on the physical cores and underlying network socket visibility. Which EC2 Purchasing Option allows you to get visibility into them? A:  Dedicated Hosts
+- Q: If you want to publish docker images, what can you use besides Dockerhub? A: AWS ECR or Elastic Container Registry.
 
-- How can you get metadata for an EC2 instance? Answer: At the command prompt in the instance, type ```
-TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
-&& curl -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/
-```.
+## Storage
 
-See https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-retrieval.html#instance-metadata-ex-1
+- Q: If you need to have persistent storage for data attached to EC2 instances, what can you use? A: Use EBS or Elastic Block Store.
 
-- Can you move an EBS volume from one availability zone to another? Answer: No, an EBS volume is created in an availability zone that can't be changed later.
+- Q: True or false: EBS volumes are global so you can attach the volume to EC2 instances regardless of the AZ. A: False, EBS volumes are local to the AZ.
 
-- Where are EBS snapshots created: a region or an availability zone? Answer: a region because it's created in S3.
+- Q: If you need to make a backup of an EC2 instance state, what can you use? A: You can create a snapshot. Incidentally, since snapshots are stored on S3, you can create snapshots in order to migrate instances from one AZ to another.
 
-- Which storage device is physically attached to an EC2 instance: EBS or instance store volume? Answer: Instance store volume (think SSD). Data on an instance store is lost when the instance is powered off. Note: only a few intance types support an instance store volume as the root device.
+- Q: If you need to share data with multiple EC2 instances, what can you use? A: EFS or Elastic File System lets you share data across multiple EC2 instances and uses NFS. For example, you can have an EFS volume to share data across multiple EC2 instances in multiple AZs.
 
-- How does the Elastic Load Balancer (ELB) assist with fault tolerance? Answer: By distributing connections (think traffic) to multiple back-end instances. 
+- Q: What is the maximum file size on S3? A: 5 TB.
 
-- Can the Elastic Load Balancer distribute connections across regions? Answer: no, only across availability zones.
+- Q: If you want to store data in S3 and want to make sure it's immediately available regardless of cost, what should you use? A: Use S3 standard
 
-- Which type of firewall operates at the instance level? Answer: a security group.
+- Q: If you want to use S3 and want to save money over the long term, what can you use? A: You can use S3 Inteligent Tiering
 
-- Which type of public IP address is retained even when the instance is stopped? Answer: An elastic IP address.
+- Q: If you want to use S3 but access the data infrequently, what can you use? A: S3 Standard-IA
 
-- Which of the following is NOT a limitation of scaling vertically? Answer: Requires a load balancer for distributing load
+- Q: If you want to use S3, want to save money, and aren't too concerned if the data is lost, what can you use? A: You can use S3 One Zone IA
 
-- Which services can scale horizontally? Answer: DynamoDB, EC2 Auto Scaling, S3
+- Q: If you want to store data in S3 and want to save as much money as possible, what can you use? A: You can use S3 Glacier or S3 Glacier Deep Archive
 
-- Which pricing model is best suited for a batch computing workload that requires significant compute power and can be stopped at any time? Answer: Spot instances
+- Q: If you need to reduce upload time to S3, what can you use? A: You can use transfer acceleration
 
-- Which storage classes are available for the Amazon Elastic File System? Answer: Standard, Infrequent Access Storage (I don't know what storage classes are available)
+- Q: If you're storing sensitive information in S3, what can you do to ensure that the data is secure? A: You can encrypt the data
 
-## S3
+- Q: If multiple people are uploading data to an S3 bucket, what can you do to get notified? A: You can set up SNS, SQS or Lambda events
 
-- You want to access an s3 bucket from your EC2 instance in a secure fashion. Should you use access keys or roles? Answer: Don't use access keys, as they are stored in plain text on the EC2 instance. Instead, create an IAM role with S3 read only permissions and attach it to the EC2 instance. You do this by first creating the role under IAM, selecting the EC2 instance, going to Security | Modify IAM role, and selecting the role
+- Q: If you're conerned about someone accidentally deleting objects in S3, what can you do? A: You can enable versioning
 
-- What is the most cost-effective storage tier for data that is not often accessed, will be retained for 7 years, and needs to be retrievable within 24 hours? Answer: Amazon S3 Glacier Deep Archive (need to memorize the different glaciers)
+- Q: If you have on prem servers and want them to access S3 buckets seamlessly (for example, to back up data), what can you use? A: You can use AWS Storage Gateway. Tip: see https://aws.amazon.com/blogs/storage/implementing-a-backup-solution-with-aws-storage-gateway/ on how to implement this at home
 
-- With Amazon S3, which of the following are NOT chargeable items? Answer: Inbound data transfer
+## DNS, Elastic Load Balancing, and Auto Scaling
 
-- If you have files that you need to store in S3 and you need to have millisecond retrieval times, but don't expect to retrieve them often, what storage class should you use and why? Answer: Use S3 Standard-IA. It is cheaper than S3 Standard, provides millisecond access, and is stored in multiple availibility zones, so it is useful for storing backups. The minimum storage duration is 30 days.
+- Q: What is Route 53? A: Route 53 is Amazon's DNS service. It provides domain name registration, DNS to IP translation, and health checking to make sure your application can resolve DNS names.
 
-- If you really want to save money storing backups in S3, and you can tolerate retrieval times ranging from minutes to hours (but not days), what storage class should you use? Answer: S3 Glacier.
+- Q: What can Route 53 do to help resolve names to IP addresses based on where users are located? A: Route 53 can provide geolocation and geoproximity routing policies. 
 
-## StorageGateway
+- Q: If you just want Route 53 to return the IP that has the smallest latency to user requests, what can you do? A: Set up lowest latency routing polciy on route 53. 
 
-- What is the difference between AWS Storage Gateway and AWS DataSync? Answer: Storage Gateway is meant for data integration. DataSync, on other hand, is meant for data migration. Storage Gateway uses your on-prem data and moves it to AWS.
+- Q: What is EC2 Auto Scaling? A: EC2 Auto Scaling is a feature in AWS that creates EC2 instances to help scale your deployment. 
 
-## Route 53
+- Q: What autoscaling policy can you use to increase the number of EC2 instances based on a schedule? A: Use scheduled scaling. 
 
-- Which services does Amazon Route 53 provide: Health checking, DNS, IP routing, domain registration, or content distribution? Answer: health checking, DNS, and domain registration. Note that Route 53 provides several types of health checking.
+- Q: What AWS service helps distribute the load on multiple EC2 instances? A: AWS Elastic Load Balancer or ELB.
 
-- In Amazon Route 53, what is the name for the configuration item that holds a collection of records belonging to a domain: DNS record, Alias or Routing Policy? Answer: Hosted zone ???
+- Q: If you need a layer 4 load balancer, what can you do? A: Create a network load balancer (as opposed to an application load balancer). 
 
-## Cloudfront 
+## Application Services
 
-Need to review.
+- Q: What are some advantages of serverless computing? A: With serverless, there are no servers to manage. You don't need to setup an EC2 instance, perform OS-level maintainance such as patching, or worry about capacity planning.
 
-- You are trying to access a Cloudfront distribution but cannot see the web site. What is a possible cause? Answer: Make sure the default root object is set to index.html.
+- Q: What is AWS Fargate and how is it a serverless service? A: AWS Fargate is a service for running containers and there is no EC2 instance that you need to maintain.
 
-- What Cloudfront feature allows you to exchange data securely with S3? Answer: Signed URLs.
+- Q: What is a serverless service for handling message queues? A: Amazon SQS or Simple Queue Service. 
 
-- What Cloudfront feature allows you to restrict access for multiple files? Answer: Cloudfront Signed cookies
+- Q: Does Lambda charge for every function that you create? A: Lambda only charges you when the function is invoked. 
 
-- What feature in Cloudfront allows you to restrict access to a select number of countries? Answer: Cloudfront Geo Restriction
+- Q: What serverless service supports a publisher/subscriber model? A: Amazon SNS or Simple Notification Service. Using SNS you can create distributed applications with low coupling.
 
-- What service has built-in DoS proection: Route 53, Internet Gateway, Cloudfront or AWS Direct Connect? Answer: Cloudfront is a CDN which provides built-in DoS protection. Among these, AWS Direct Connect provides a way to connect on-prem machines to AWS and does not provide DoS protection.
+- Q: What serverless service can you use to respond to events? A: Use EventBridge. 
 
-- What types of Origin does Amazon Cloudfront support? Answer: S3 bucket and EC2 instance
+- Q: What serverless service can you use to publish APIs for users or other services to use? A: Use Amazon API Gateway
 
-- When you're configuring a Cloudfront distribution to use Signed URLs/Cookies, it is recommended to use ............................ signer instead of ................................ signer. Answer: Trusted Key Group (recommended), Trusted signer
+## Networking
 
-## CodeBuild
+- Q: What is a VPC? A: A VPC is a virtual private network dedicated to my account. It's like a network within a data center. 
 
-- Which of the following services combined allow for continuous integration: CodeCommit, CodeBuild, CodeDeploy? CodeCommit and CodeBuild
+- Q: How many VPC can you create per region? A: 5
 
-## RDS
+- Q: What is a security group? A: A security group is like a firewall for EC2 instances. 
 
-- RDS is an example of what type of database: Online transaction processing (OLTP), Online analytics processing (OLAP), NO-SQL, or Data warehouse? Answer: OLTP
+- Q: Do security groups support deny rules? A: No, security groups only support allow rules.
 
-- What AWS service provides OLAP (data warehousing)? Answer: Amazon Redshift (how to remember this?)
+- Q: If you need to create access rules that support allow and deny rules, what can you use? A: you can use network access control lists (NACL)
 
-- Which AWS database service offers seamless horizontal scaling: Amazon RDS, Amazon RedShift, Amazon DynamoDB, or Database on Amazon EC2? Answer: Amazon DynamoDB (how to remember this?)
+- Q: If you need to have a public IP address for an EC2 instance that does not change if the instance is stopped, what can you use? A: Attach an elastic IP or EIP to the instance.
 
-- How can fault tolerance (failover) be added to an Amazon RDS database: By using read replicas, using multi-AZ, using global replicas or using EBS snapshots? Answer: By using Multi-AZ (how to remember this?)
+- Q: If you want your EC2 instance to access the Internet but want to manage the gateway yourself, what can you do? A: Create a NAT instance.
 
-- Why might an organization decide to move an on-premises database to Amazon RDS? Answer: to reduce operational overhead.
+- Q: If you need to route traffic between VPCs, what can you use? A: Use VPC Peering
 
-- How do you increase the capacity of an Amazon RDS database? Answer: changing to a larger instance type
+- Q: If you have servers in a data center and you want them to connect directly to AWS without going through the Internet, what can you use? A: Use AWS DirectConnect.
 
-- A company wants to improve their RDS performance and decrease latency by using an AWS DB caching service. Which of the following would you recommend they use? Answer: ElastiCache, which provides in-memory caching (it is essentially Redis)
+- Q: If you want to connect multiple VPCs and on-prem servers together, what can you use? A: Use AWS Transit Gateway, which simplifies network configuration.
 
-- Which service can be used to migrate an on-premises database to Amazon RDS? Answer: AWS Database Migration Service
+- Q: If you want to extend your VPC to your data center, what can you use? A: Use AWS Outposts
 
-## Lambda
+- Q: True of false: VPC peering routes traffic using private IP addresses: A: True
 
-- If you want to implement serverless cron jobs in AWS, would you use Lambda or S3? Answer: Lambda.
+## Deployment and Automation
 
-## DynamoDB
+- Q: If you want your customer to access content more quickly and provide security against DDoS attacks, what AWS service can you use? A: You can use CloudFront which is a CDN that can cache contnet close to your customers. 
 
-- How can an organization enable microsecond latency for a DynamoDB database: Use Amazon ElastiCache, Using DynamoDB Auto Scaling, using read replicas, or using DynamoDB Accelerator (DAX)? Answer: DAX
+- Q: If you have users in multiple countries and they're experiencing latency when accessing your application, what AWS service can help? A: Use CloudFront
 
-## Aurora
+- Q You are trying to access a Cloudfront distribution but cannot see the web site. What is a possible cause? A: Make sure the default root object is set to index.html.
 
-- What is Amazon Aurora? Answer: a MySQL and PostgreSQL-compatabile relational database.
+- Q: What Cloudfront feature allows you to exchange data securely with S3? A: Signed URLs.
 
-## Redfish
+- Q: What Cloudfront feature allows you to restrict access for multiple files? A:: Cloudfront Signed cookies
 
-- Which AWS database service is a relational data warehouse: Amazon RedShift, Amazon RDS Aurora, Amazon DynamoDB, or Amazon ElastiCache? Answer: Redshift
+- Q: What feature in Cloudfront allows you to restrict access to a select number of countries? A: Cloudfront Geo Restriction
 
-## Athena
+- Q: What service has built-in DoS proection: Route 53, Internet Gateway, Cloudfront or AWS Direct Connect? A: Cloudfront is a CDN which provides built-in DoS protection. Among these, AWS Direct Connect provides a way to connect on-prem machines to AWS and does not provide DoS protection.
 
-- Which service can be used to analyze data on Amazon S3 using serverless SQL queries? Amazon Athena, which is a serverless big data analysis tool.
+- Q: What types of Origin does Amazon Cloudfront support? A: S3 bucket and EC2 instance
 
-- You have a lot of logs that you want to perform a query on. If you want to use AWS Athena, where should you put your logs? Answer: Put it in an S3 bucket.
+- Q: If you have EC2 instances in multiple regions that need fast network connectivity to each other, what can you use? A: AWS Global Accelerator, which uses the AWS global network.
 
-## Kinesis
+- Q: If you're deploying AWS resources by hand and are afraid of human error, what can you use? A: You can use AWS CloudFormation. 
 
-- What is Amazon Kinesis? Answer: A service for analyzing video and data streams in real time.
+- Q: True or false: CloudFormation is powerful but there is a charge to use. A: False, you're only charged for the resources you use.
 
-- If you have lots of video data that you want to process in real-time, what would you use: Amazon Kinesis Streams or Firehose? Answer: It depends. Both are used to do the collection and processing of data in real-time. Streams is the more customizable option and requires that scaling and provision is done manually. Firehose stores the data in other services such as S3, ElasticSearch, etc.
+- Q: If you'd rather create AWS infrastructure using code instead of YAML. what can you use? A: AWS provides a CDK or Cloud Development Kit that allows you to create infrastructure using any of a variety of programming languages.
 
-## DataPipeline
-- A company *moves* data between Amazon S3, RDS, DynamoDB and EMR. Which service can help to process and move data between services? Answer: Amazon DataPipeline
+- Q: If you want to deploy an application to AWS but don't want to get into the details of managing load balancers, databases, ASGs and networking, what service can help? A: Elastic Beanstalk is a managed service for creating all of these.
 
-## Quicksight
+- Q: If you're trying to debug a distributed application on AWS, what service can you use? A: AWS X-Ray.
 
-- A company needs an interactive dashboard for business intelligence. What should they use? Amazon QuickSight
+- Q: What types of Origin does Amazon CloudFront support? A: S3 bucket and EC2 instances can be used as origins for CloudFront.
 
-## Glue
+- Q: What is the name for the configuration item that holds a collection of records belonging to a domain? A: A Hosted Zone is a container for records that map hostnames to IPs.
 
-- A company needs to run ETL jobs on data stored in S3. They are looking for a simple, scalable, and serverless data integration platform. Which service should they use? Answer: AWS Glue
+- If you want to set up continuous integration in AWS, what services can you use? A: AWS CodeCommit and AWS CodeBuild
 
-## Neptune
+- If you want to develop code within AWS, what AWS Service can let you do that? A: AWS CodeStar
 
-- A company is looking for a fully managed graph database service on AWS. What do you recommend? Answer: Amazon Neptune
+## Databases and Analytics
 
-## Organizations
+- Q: If you need a managed OLTP database service, what can AWS provide? A: Use RDS
 
-- AWS Organizations: You use AWS Organizations to manage multiple AWS accounts. You can group accounts into Organizational Units (OUs) like Development and Production. Each organization can be associated with Service Control Policies (SCPs). 
+- Q: How do you increase the capacity of an Amazon RDS database? A: Change the database to use a larger instance type
 
-## ControlTower
+- Q: Will RDS automatically scale for you? A: Since RDS uses EC2 instances, you must choose the family/type at the outset.
 
-- Q: What is ControlTower? A: A service to set up and govern a secure, compliant multi-account environment. It does this by simplifying the process of creating multi-account environments, setting up a landing zone for each user, and uses AWS Organizations to help with ongoing account account management and governance. Control Tower does not manage AWS resources such as EC2, S3, and RDS. That's the purpose of SystemsManager.
+- Q: Why might an organization decide to move an on-premises database to Amazon RDS? A: to reduce operational overhead.
 
-- In regards to AWS Control Tower, the following is NOT true: AWS Control Tower does NOT manage  AWS resources such as EC2, S3, and RDS. Control Tower is for user accounts. AWS Systems Manager does.
+- Q: If you have an RDS database and you need to scale out for reads or queries only, what can you do to tune the database? A: Create a read replica. 
 
-## SystemsManager
+- Q: If you need to ensure that your RDS database is tolerant of failures in your AZ, what option do you have? A: Set up disaster recovery with multi-AZ option. Other features such as replicas and snapshots do not provide fault tolerance.
 
-- Systems Manager is a service to gain operation insight and take action on AWS resources such as S3, EC2, etc. It features something called Session Manager, for example, to securely manage remote resources without using SSH. SystemsManager does not manage the Service Catalog.
+- Q: A company wants to improve their RDS performance and decrease latency by using an AWS DB caching service. Which of the following would you recommend they use? A: ElastiCache, which provides in-memory caching (it is essentially Redis)
 
-## TrustedAdvisor
+- Q: What is Amazon Aurora? A: Aurora is a database provided by RDS that is compatible with MySQL and PostgresSQL and is built for the cloud. 
 
-- AWS TrustedAdvisor does NOT provide advice on which of the following: Cost optimization, Performance, TCO, Security, Fault Tolerance. Answer: TCO (why?)
+- Q: If you need a key-value NoSQL managed database, what can you use? A: Use Amazon DynamoDB, where you create a table and define your key-value entries in it. 
 
-## Personal HealthDashboard
+- Q: Is DynamoDB an example of horizontal scaling or vertical scaling? A: Horizontal Scaling
 
-- A company wishes to determine if there will be any AWS maintenance that could affect their systems over the next few days. Which service should they check: AWS Service health dashboard, AWS personal health dashboard, AWS trusted advisor. Answer: Personal health dashboard. The personal health dashboard provides a personalized view of events that could affect your systems. Service health on the other hand is about services.
+- Q: What is DynamoDB Accelerator or DAX? A: DAX is a fully-managed in-memory cache for DynamoDB that increases performance by reducing latency to microseconds. 
 
-- A company wishes to restrict the applications users can launch to an approved list. Which service should they use: AWS Service Catalog, AWS Systems Manager, AWS OpsWorks. Answer: AWS Service Catalog. This service can be used to provide an approved catalog of services and applications that users can launch.
+- Q: If you want to use DynamoDB and have it replicate to multiple regions, what can you do? A: Use Global Tables, which is a fully managed multi-region, multi-master solution.
 
-## AWS Organizations
+- Q: If you have a lot of data and want to perform analytics on it, would you use DynamoDB or RDS? A: Neither. Amazon has a service called RedShift which is a SQL based data warehouse for this purpose. 
 
-- Which of the following is true about AWS Organizations? Using AWS Organizations you can: Programmatically creating new AWS accounts. AWS Organzations manages user accounts and this provides APIs as well as CLI access.
+- Q: If you want to perform analytics on your Apache Hadoop or Apache Spark database, what can you use? A: Amazon EMR, or Elastic Map Reduce.
 
-## AWS Artifact
+- Q: Besides DynamoDB, what other AWS service provides key/value storage? A: Amazon ElasticCache. You can use it in front of databases like DynamoDB or RDS for better performance.
 
-- Which tool can be used to find compliance information that relates to the AWS Cloud platform? Answer: AWS Artifact
+- Q: If you need to run SQL queries against data in an S3 bucket, what AWS service can you use? A: Use Amazon Athena. It can analyze data in S3 buckets at the petabyte-scale level. It is also serverless so there are no EC2 instances to manage.
 
-- Which service can be used to find reports on Payment Card Industry (PCI) compliance of the AWS cloud? Answer: AWS Artifact
+- Q: If you need an AWS service for ETL jobs on data stored in S3, what can you use? A: AWS Glue is a fully managed ETL service that runs Apache Spark and can be used for running analytics on data.
 
-## Pen Tests
+- Q: If you need an AWS service for processing streaming data, what can you use? A: Use Amazon Kinesis.
 
-- What is AWS' policy regarding penetration testing? Answer: You can now perform penetration testing against several services without approval
+- Q: What is a "shard"? A: A shard is a container for data in Amazon Kinesis. 
 
-## AWS WAF
+- Q: If you need a business intelligent or BI dashboard for machine learning-powered insights, what can you use? A: Use Amazon QuickSight.
 
-- Which service can assist with protecting against common web-based exploits? Answer: AWS WAF
+- Q: If you need to process and move data between different AWS compute and storage services, what can you use? Use AWS Data Pipeline
 
-- In case of account compromise, which of the following actions should you perform? Answer: Open a support case with AWS
+- Q: If you need a fully managed graph database, what AWS service can you use? A: AWS Neptune
 
-## CloudHSM
+- Q: If you need to query and index JSON data, what AWS service can you use? A: Amazon DocumentDB.
 
-- Which service uses a hardware security module to protect encryption keys in the cloud? Answer: AWS CloudHSM
+- Q: How can a company migrate a database running in an EC2 instance to RDS without downtime? A: Migrate using AWS Database Migration Service
 
-## CloudTrail
+- Q: A company needs to migrate several TB of data from an on-premises NAS device to Amazon FSx. Which service can the company use to migrate the data over a VPN connection? A: AWS DataSync
 
-- Which service can be used to record information about API activity in your AWS account? Answer: Cloudtrail
+## Management and Governance
 
-- Does Amazon CloudTrail permanently record all API activity in your account by default? Answer: no
+- Q: What AWS service can you use to consolidate multiple AWS accounts into an organzation? A: AWS Organizations lets you do this. Once you set up an AWS Organization, you can consolidate billing. 
 
-## AWS Billng
+- Q: True or false: AWS Organizations has an API that lets you programatically create user accounts. A: True.
 
-- Which architectural benefit of the AWS Cloud assists with lowering operational cost? Answer: Higher-level managed services (like S3, RDS, Athena).
+- Q: What service simplifies the creation of multiple user accounts? A: AWS Control Tower lets you do this, and sets up governance compliance and security gaurdrails. It integrates with AWS Organizations. 
 
-- What is the best tool for an organization to compare the cost of running on-premises to using the AWS Cloud? Answer: TCO Calculator (there is such a tool?)
+- Q: What service helps you manage many AWS services such as EC2? For example, if you need to run a command on multiple EC2 instances. A: AWS Systems Manager lets you do this. You can use Systems Manager to gather inventory. You can also use Systems Manager to do things like patching, connecting to EC2 instances and storing secrets for EC2 instances.
 
-- Which AWS support plan comes with a Technical Account Manager (TAM) Answer: Enterprise
+- Q: If you are managing an AWS Organization, what service can you use to manage services that users can use? A: The AWS Service Catalog service lets you create a catalog of services that are approved for users.
 
-- Which of the following needs to be considered in a Total Cost of Ownership (TCO) analysis? Answer: Data center operations costs.
+- Q: What AWS service can be used for compliance management? A: AWS Config can be used to audit your AWS infrastructure. For example, you can set up a rule that checks for security groups that allow inbound access beyond what you define as acceptable. 
 
-- Which AWS pricing feature can be used to take advantage of volume pricing discounts across multiple accounts? Answer: Consolidated billing.
+- Q: If you're worried about expenses in the cloud and need help to determine how to reduce cost, increase performance, and improve fault tolerance AND security, what AWS service can help? A: Trusted Advisor can provide real-time guidance on all of these based on best practices. 
 
-- Which tool can an IT manager use to forecast costs over the next 3 months? Answer: AWS Cost Explorer.
+- Q: What AWS service can you use to check the health of your AWS infrastructure? A: Use AWS Health Dashboard. There are actually two features. The first is service health, which shows you the health of AWS services in general The other is called "Your account health", which is personalized. 
 
-- What is AWS Cost Explorer? It is a tool to visualize, understand, and manage your AWS costs and usage over time.
+- Q: What service can help you determine the optimal sizing for EC2 instances that you use to run workloads? A: AWS Compute Optimizer can help you do this. To change the instance type of an EC2 instance, all you have to do is stop the instance, change the type, and start the instance again. 
 
-## AWS Snowmobile
+- Q: What service can provide a guided way to launch EC2 instances for some services by providing recommended sizing and configuration options? A: AWS Launch Wizard can help you create EC2 instances that are optimal to the third-party application you want to deploy on AWS. You are not charged for using Launch Wizard; you are charged for the EC2 instance. 
 
-- Which service can be used to migrate exabytes of data into the AWS Cloud? Answer: AWS Snowmobile
+## AWS Cloud Security and Identity
 
-## AWS Snowball
+- Q: If you want to authenticate users using Active Directory that's fully managed, what can you use? A: You can use AWS Directory Service for Microsoft Active Directory. If you want to use an Active Directory that's running on-prem, then AWS provices an AD Connector. Or if you just want a low scale, low cost active directory that's based on Samba, then use Simple AD. 
 
-- Which service can be used to quickly and affordably migrate 50TB of data to Amazon S3 for a company with a slow Internet connection? Answer: AWS Snowball
+- Q: If you need to store things like passwords, is there an AWS service for this? A: You can use AWS Systems Manager Parameter Store or AWS Secrets Manager. With Secrets Manager, you can rotate keys and have fine-graned permissions.
 
-## AWS Snowcone
+- Q: If you need manage encryption keys used for things like SSH or encrypting data, what service can be used? A: You can use AWS KMS or Key Management Service.
 
-- A company is collecting weather data to send to AWS for analytics. Each collection cycle the data doesn’t exceed 7 TB. Which AWS Snow Family product would you recommend? Answer: Amazon Snowcone
+- Q: If you need a hardware security model, would you use KMS? A: No, AWS provides CloudHSM.
 
-## AWS Database Migration Service
+- Q: If you need to troubleshoot your services at the API level and find out what was happening in the last 90 days, what can you use? A: Use AWS CloudTrail. 
 
-- How can a company migrate a database from Amazon EC2 to RDS without downtime? Answer: Migrate using AWS Database Migration Service
+- Q: If you want to retain CloudTrail logs for more than 90 days, what can you do? A: Configure CloudTrail logs to store logs in
 
-## AWS DataSync
-- A company needs to migrate several TB of data from an on-premises NAS device to Amazon FSx. Which service can the company use to migrate the data over a VPN connection? Answer: AWS DataSync
+- Q: If you're trying to SSH to an EC2 instance and you're having issues, would you use AWS CloudTrail? A: You might want to look at VPC Flow Logs, which capture the network "flow".
 
-## AWS Transcribe
+- Q: If you're trying to troubleshoot an issue with a user going through a load balancer who is trying to get objects from an S3 bucket, what kinds of logs can you look at? A: You could look at load balancer access logs first, and then if those look okay you could look at S3 access logs. 
 
-- A company recorded some support call conversations in mp4 files. How can the company extract the audio into a text document? Answer: AWS Transcribe
+- Q: If you want to use a service to try to identify suspicious activity in your account, what can you use? A: AWS Detective or GaurdDuty
 
-## AWS Rekognition
+- Q: If you want to lock down S3 and make sure your buckets follow security best practices, what can you use? A: AWS Macie.
 
-- An application is being built that needs to identify faces in images. Which service can be used? Answer: AWS Rekognition
+- Q: If you need a web application firewall and you're trying to block common web exploits such as XSS, what can you use? A: AWS WAF is a web application firewall. It would be handy to set this up if you're running any web application that uses ports like 80, 8443, or 8080. Also you sould set up AWS Shield to prevent DDoS.
 
-## AWS Translate
+- Q: If you need to provide compliance reports to auditors. what can you use? A: Use AWS Artifact
 
-- A company is looking to use machine learning to translate a few documents from English to Chinese. Having learned about machine learning services on AWS, which of the following services would you recommend the company to use? Answer: AWS Translate
+- Q: If you need a comprehensive view of security alerts across AWS accounts and services, is there some kind of dashboard for this? A: Use AWS Security Hub.
 
-## Amazon Lex
+- Q: If you need help from AWS to help mitigate a security breach, who coan you contact? A: AWS Trust & Safety Team
 
-- A company is planning on implementing a chatbot into their web application. Which AWS service would best meet their needs? Answer: Amazon Lex
+- Q: What is AWS' policy regarding penetration testing? A: You can perform penetration testing against several services without approval
 
-## AWS SageMaker
-- A company wants to develop their own machine learning application on AWS. Which of the following services would best fit their needs? Answer: Amazon SageMaker
+- Q: If you want to monitor EC2 instances and check that the sizing is correct, what service can you use? A: Amazon CloudWatch can be configured to send out alerts if EC2 intances use high levels of CPU. If you want AWS to provide recommendations for you, AWS Compute Optimizer is a managed service for this.
 
-## AWS Polly
+## Architecting for the Cloud
 
-- Which of the following services offers Text-to-Speech (TTS) services? Answer: Amazon Polly
+- Q: How can AWS lower operational cost? A: By providing high-level managed services, users spend less effort on maintainance. 
 
-## AWS Fargate
+- Q: Does EC2 Auto Scaling Groups provide horizontal or vertical scaling? A: Horizontal scaling by changing the number of EC2 instances based on some criteria. It does not change the instance type. 
 
-- True or false: If you want to deploy containers in AWS, usng serverless solutions like ECS with Fargate is always the best solution. Answer: Using fargate is a good solution if you don't want to manage things like security that's needed with EC2 instances. However, EC2 may be a better solution if you need certain features that are only available with an instance such as machine learning. Also Fargate does not allow you to customize the networking layer.
+- Q: Is an Amazon Read Replica an example of horizontal or vertical scaling? A: Horizontal scaling, since it adds another RDS instance.
 
-## AWS EKS
+- Q: Should you design for failure in the cloud? A: Absolutely
 
-- If you want to deploy containers but don't want to manage servers, and you need certain advanced features such as machine learning, is there any reason not to use EKS? Answer: Using EKS requires expert knowledge of Kubernetes. It can also cost a lot more.
+- Q: Does DynamoDB scale horizontally or vertically? A: Horizontally
 
-## Lightsail
+- Q: If you're trying to reduce interdependence between application components, what is the ultimate goal? A: Loose coupling, so that failure of one service does not cause other services to fail
 
-- What is Lightsail? Answer: It's an easy-to-use virtual private server (VPS) provider that makes it easy to build an application or website.
+ - Q: If you use a load balancer, does this provide horizontal scaling or vertical scaling? A: Horizontal scaling
 
-## Elastic Beanstalk
+## Accounts, Billing and Support 
 
-A key point in understanding Elastic Beanstalk is knowing the deployment options.
+- Q: What is the difference between dedicated instances and dedicated hosts? A: A dedicated instance gives you physical isolation at the host level but you're still using a VM. A dedicated host is where you actually reserve a physical server for your use and is useful when the software you want to use is bound to the hardware. 
 
+- Q: What is the standard (as opposed to expedited or bulk) access time for data in S3: in minutes or hours? A: Hours
 
-### References
+- Q: If you create an EBS volume but it isn't attached to an EC2 instance, are you still charged? A: Yes, EBS volumes are charged regardless.
 
-https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.rolling-version-deploy.html
+- Q: Are EBS snapshots charged? A: Snapshots store data in S3 and they are charged.
 
-### Beanstalk Deployment Options
+- Q: If you have an RDS service that's idle, would you still be charged for it? A: Absolutely, you are billed by the hour but he amount depends on the database engine and the sizing.
 
-- AllAtOnce: Deploys to all instances simultaneously
+- Q: If you have data stored in DynamoDB that you want to just access but not write to, would you still be charged? A: Yes, you are charged for reads and writes.
 
-- Rolling - Update a few instances (bucket) at a time
+- Q: If you want to provision a DynamoDB service that will have a predictable workload, what can you do to reduce cost? A: Set up the DynamoDB service to use provisioned capacity mode instead of on-demand capacity mode. 
 
-- RollingWithAdditionalBatch: Launches an extra batch of instances, before starting the deployment, to maintain full capacity.
+- Q: Does Lambda charge by the hour, minute, or millisecond? A: Millisecond
 
-- Immutable: spins up new instances in a new ASG, deploys the application to it, then swaps all the instances when they are healthy
+- Q: If you have many user accounts, is there anything you can do to reduce cost? A: Use AWS Organizations and get volume pricing
 
-- TrafficSplitting:  Performs traffic-splitting deployments to canary-test your application deployments.
+- Q: If you're trying to reduce cost and want to get an alert if your usage goes above budget, what can you do? A: Set up alerts in AWS budgets.
 
-### Quiz
+- Q: If you want to look at your usage of AWS services over time and look for problem areas, what service can help you do this? A: Use AWS Cost Explorer
 
-Score (8 of 17 correct)
+- Q: If you're only goal is to store data in S3, are you chartged for this? A: No, you are charged for outbound data transfer only.
 
-- Q: You're developing an application and would like to deploy it to Elastic Beanstalk with minimal cost. You should run it in a) Single Instance Mode b) High Availability Mode A: Single Instance Mode
+- Q: What is a key cost advantage of moving to the AWS Cloud? A: You can provision what you need and scale on demand.
 
-- Q: Elastic Beanstalk application versions can be deployed to a) one environment b) many environments A: Many enviornments (wrong, but why?)
+- Q: What is the best tool for an organization to compare the cost of running on-premises to using the AWS Cloud? A: TCO Calculator (there is such a tool?)
 
-- Q: You have been tasked to run an application developed using Rust language on Elastic Beanstalk. After checking, you found that Rust runtime is not currently supported on Elastic Beanstalk. Which of the following is NOT a solution? A: Install scripts and security software using an EC2 User Data script (wrong)
+- Q: Which AWS support plan comes with a Technical Account Manager (TAM) A: Enterprise
 
-- Q: Environments in Elastic Beanstalk must have the following names: dev, test, and prod. A: False
+- Q: Which of the following needs to be considered in a Total Cost of Ownership (TCO) analysis? A: Data center operations costs.
 
-- Q: You are developing a new application that's hosted on Elastic Beanstalk. As you are in the development process you don't mind downtime so you want your application to be deployed as soon as a new version is available. Which Elastic Beanstalk deployment option should you use? A: All at Once (wrong)
+- Q: Which AWS pricing feature can be used to take advantage of volume pricing discounts across multiple accounts? A: Consolidated billing.
 
-- Q: A company hosting their website on AWS Elastic Beanstalk. They want a methodology to continuously release new application versions with the ability to roll back very quickly in case if there're any issues. Also, the application must be running at full capacity while releasing new versions. Which Elastic Beanstalk deployment option do you recommend? A: Immutable (wrong but why?)
+- Q: Which tool can an IT manager use to forecast costs over the next 3 months? A: AWS Cost Explorer.
 
-- Q: You're a DevOps engineer working for a startup company hosting their application on Elastic Beanstalk. The application is in its early phases and it has a lot of new updates every week while being used by a number of users. You want to continuously release new features without application downtime and without incurring extra costs. It's acceptable to temporarily decrease the number of running instances serving users. Which Elastic Beanstalk deployment option should you choose? A: Rolling (wrong)
+- Q: What is AWS Cost Explorer? A: It is a tool to visualize, understand, and manage your AWS costs and usage over time.
 
-- Q: Which Elastic Beanstalk deployment option allows you to release new versions of your application with minimal added cost while maintaining the full capacity to serve the current users? A: RollingWithAdditionalBatch (wrong)
+- Q: Which pricing model is best suited for a batch computing workload that requires significant compute power and can be stopped at any time? A: Spot Instances
 
-- Q: To improve your application performance, you want to add an ElastiCache cluster to your apwplication hosted on Elastic Beanstalk. What should you do? A: Create an elasticache.config file in the .extensions folder in the root of the code zip file and provide appropriate configuration
+- Q: Which storage classes are available for the Amazon Elastic File System? A: In order of cost Standard, Backup, Infrequent Access and Archive. The cost depends on factors such as region.
 
-- Q: Your deployments on Elastic Beanstalk have been painfully slow. After checking the logs, you realize that this is due to the fact that your application dependencies are resolved on each instance each time you deploy. What can you do to speed up the deployment process with minimal impact? A: Resolve the dependencies beforehand and package them in the zip file
+- Q: Do NAT Gateways have a cost? A: They are charged by the hour.
 
-- Q: What AWS service does Elastic Beanstakc use under the hood? A: AWS CloudFormation
+- Q: What does AWS recommend that you do to setting up a cost allocation report? A: Assign tags to your resouces.
 
-- Q: Due to compliance regulations, you have been tasked to enable HTTPS for your application hosted on Elastic Beanstalk. This allows in-flight encryption between your clients and web servers. What must be done to set up HTTPS on Elastic Beanstalk? A: Create an .ebextension/securelistener-alb.config file configure the Application Load Balancer
+## Migration, Machine Learning and More
 
-- Q: Which feature in Elastic Beanstalk allows you to automate deletions of old application versions so that new application versions can be created? A: Use a Lifecycle Policy
+- Q: what appliance in the Snow Family can be used to migrate data in the terabytes: AWS Snowcone or aWS Snowball? A: Both can be used. Snowcone is small and has 8 TB of usable HDD storage while Snowball weighs 50 lbs and has 80 TB of usable HDD storage. 
 
-- Q: You're using Elastic Beanstalk and you would like to schedule tasks to run periodically and asynchronously. These tasks typically take more than 1 hour to complete. Which Elastic Beanstalk environment should you choose? A: Worker environment and cron.yaml file
+- Q: A company recorded some support call conversations in mp4 files. How can the company extract the audio into a text document? A: AWS Transcribe
 
-- Q: You have created a test environment in Elastic Beanstalk and as part of the environment, you have created an RDS DB instance. How can you make sure the database can be used after you delete the environment? A: Make a snapshot of the RDS DB instance before it gets deleted
+- Q: An application is being built that needs to identify faces in images. Which service can be used? A: AWS Rekognition
 
-- Q: You're running an application on Elastic Beanstalk. You have just finished a major update to your application. You want to deploy the new version then direct a small percentage of traffic to the new version so you can test and fall back if there're any issues. Which Elastic Beanstalk deployment option should you choose? A: Traffic Splitting (wrong)
+- Q: A company is looking to use machine learning to translate a few documents from English to Chinese. Having learned about machine learning services on AWS, which of the following services would you recommend the company to use? A: AWS Translate
 
-- Q: You have been hired by a company to run some tests on their application hosted on Elastic Beanstalk. You can't run these tests on the current environment as this is the production environment, so you have to create another environment similar to the one already running. Which Elastic Beanstalk feature allows you to do this? A: Elastic Beanstalk Cloning
+- Q: A company is planning on implementing a chatbot into their web application. Which AWS service would best meet their needs? A: Amazon Lex
 
+- Q: A company wants to develop their own machine learning application on AWS. Which of the following services would best fit their needs? A: Amazon SageMaker
 
+- Q: Which of the following services offers Text-to-Speech (TTS) services? A: Amazon Polly
 
+- Q: If you want to deploy containers but don't want to manage servers, and you need certain advanced features such as machine learning, is there any reason not to use EKS? A: Using EKS requires expert knowledge of Kubernetes. It can also cost a lot more.
 
+- Q: A company needs to migrate several TB of data from an on-premises NAS device to AWS over the network. Which service can the company use to migrate the data over a VPN connection? A: Use AWS DataSync.
+
+- Q: If you're looking for a service to help find experts who can help you deploy or manage or AWS infrastructure, what can you use? A: AWS IQ 
+
+- Q: If you are a startup and you're looking for help to leverage AWS in your operations, what can you use? A: AWS Activate is a program that provides startups with AWS credits, training, and tech support. 
+
+## References
+
+- https://www.udemy.com/course/aws-certified-cloud-practitioner-training-course
+
+- https://d1.awsstatic.com/training-and-certification/docs-cloud-practitioner/AWS-Certified-Cloud-Practitioner_Exam-Guide.pdf 
+
+- https://d1.awsstatic.com/whitepapers/aws-overview.pdf
