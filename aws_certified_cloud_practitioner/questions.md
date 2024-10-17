@@ -105,6 +105,25 @@
 
 - Q: If you have on prem servers and want them to access S3 buckets seamlessly (for example, to back up data), what can you use? A: You can use AWS Storage Gateway. Tip: see https://aws.amazon.com/blogs/storage/implementing-a-backup-solution-with-aws-storage-gateway/ on how to implement this at home
 
+- Q: How does Amazon S3 store objects? A: as key key value pairs.
+
+- Q: For an S3 bucket policy, what is the element in the policy that needs to be updated to grant a user access to the bucket? A: A bucket policy is written in JSON. One of the elements of the policy is called Principal and it refers to users. 
+
+- Q: What is the AWS Storage Gateway? A: A hybrid storage service enables a user’s on-premises applications to seamlessly use AWS cloud storage.
+
+- Q: What are the names of two types of AWS Storage Gateway? (Select TWO.) A: File Gateway and Tape Gateway
+
+- Q: What is S3 Transfer Accleration? A: A Service to speed up content transfers to S3 by taking advantage of CloudFront.
+
+- Q: Which type of AWS Storage Gateway can be used to backup data with popular backup software? A: Gateway Virtual Tape Library
+
+- Q: Which statement is true in relation to data stored in S3 buckets? Answer: Data in S3 buckets is not replicated to other buckets unless you configure it.
+
+- Q: Where are Amazon EBS snapshots stored? A: On Amazon S3
+
+- Q: How much data can you store on Amazon S3? A: Virtually unlimited.
+
+
 ## DNS, Elastic Load Balancing, and Auto Scaling
 
 - Q: What is Route 53? A: Route 53 is Amazon's DNS service. It provides domain name registration, DNS to IP translation, and health checking to make sure your application can resolve DNS names.
@@ -122,6 +141,12 @@
 - Q: If you need a layer 4 load balancer, what can you do? A: Create a network load balancer (as opposed to an application load balancer). 
 
 - Q: What services does Route 53 provide? Answer: Traffic flow management and domain registration
+
+- Q: What are the primary benefits of using AWS Elastic Load Balancer? A: HIgh availability and Elasticity
+
+- Q: What is the relationship between subnets and availability zones? A: An AZ can has multiple subnets.
+
+- Q: What is contained in an Amazon Virtual Private Coud (VPC)? A: When you create a VPC you also create AZs. You need at least one AZ, but the maximum varies per region. You also define a CIDR block; each AZ will be a part of the CIDR block.
 
 ## Application Services
 
@@ -142,7 +167,6 @@
 - Q: Which AWS services form the app-facing services of the AWS serverless infrastructure? (Select TWO.) A: Amazon API Gateway and AWS Lambda
 
 - Q: What is AWS CodeCommit? A: AWS CodeCommit is a source Control service that is highly secure, scalable and managed.
-
 
 ## Networking
 
@@ -175,6 +199,10 @@
 - Q: When do you use a Virtual Private Network? A: To establish a secure network connection between an on-premises network and AWS
 
 - Q: Which AWS service should a Cloud Practitioner use to establish a secure network connection between an on-premises network and AWS? A: Virtual Private Network
+
+- Q: What is a Network Access Control List? Answer: VPCs can have NACs to act as a fireall for inbound and outbound traffic.
+
+- Q: What is an Internet Gateway? An Internet Gateway is a part of a VPC that allows traffic from the VPc to talk to the Internet.
 
 ## Deployment and Automation
 
@@ -220,6 +248,7 @@
 
 - Q: What is Global Accelerator? A: A service that finds the optimal route to your services via edge locations.
 
+- Q: What types of monitoring can Amazon CloudWatch be used for? A: Application performance and operational health, which includes CPU and network utilization. These can be configured for alarms if they exceed a threshold value.
 
 ## Databases and Analytics
 
@@ -279,6 +308,17 @@
 
 - Q: What is RDS? A: Amazon RDS is a relational database service that is compatible with several database engines, including MySQL. A key benefit is that it simplifies database administration by providing automated backups and automated software patching. RDS provides automated backups by default.
 
+- Q: What is AWS Glue? A: AWS Glue is a service used to load data from Amazon S3, transform it, and move it to another destination. It is termed "Serverless data integration".
+
+- Q: An application stores images which will be retrieved infrequently, but must be available for retrieval immediately. Which is the most cost-effective storage option that meets these requirements? A: Amazon S3 Standard-IA for infrequent access.
+
+- Q: What is AWS Athena? A: A service can be used to query data in S3 using standard SQL
+
+- Q: What is Amazon Neptune? A: Amazon Neptune is a graph database service.
+
+- Q: What is DynamoDB? A: A key-value database that scales horizontally.
+
+- Q: Which items are you charged for when using RDS? Answer: Outbound data transfer and multi-AZ.
 
 ## Management and Governance
 
@@ -305,6 +345,11 @@
 - Q: What is AWS Trusted Advisor? A: AWS Trusted Advisor provides real time guidance to help you provision your resource following best practices in the areas of cost optimization, performance, security and fault tolerance. 
 
 - Q: When do you use Trusted Advisor? A: When you need a service to identify if unrestricted access to resources has been allowed by security groups. 
+
+- Q: What is AWS Organizations? A: AWS Organizations is a service that gives you the ability to centrally manage multiple AWS accounts. Some benefits include: you wil receive one bill for all accounts in the organization and 2) the unit pricing may be cheaper.
+
+- What is AWS Systems Manager? Answer: A service to manage and troubleshoot nodes, including Amazon EC2 instances, edge devices, and on-premises servers and virtual machines.
+
 
 ## AWS Cloud Security and Identity
 
@@ -354,8 +399,6 @@
 
 - What service can be used to identify a specific user who terminated an Amazon RDS DB instance? A: AWS CloudTrail, which is used for auditing user actions in AWS. 
 
-- Q: What is Amazon CloudWatch? A: Amazon Cloudwatch is a monitoring service which lets you set alarms on services based on some criteria you provide. 
-
 - Q: What is VPC Flow Logs? A: A service that enables you to capture information about the IP traffic going to and from network interfaces in your VPC. 
 
 - Q: What is Amazon GuardDuty? A: A threat detection service
@@ -369,7 +412,6 @@
 - Q: Your manager has asked you to explain some of the security features available in the AWS cloud. How can you describe the function of Amazon CloudHSM? A: It can be used to generate, use and manage encryption keys in the cloud. It is based on hardware.
 
 - Q: Which of the following are NOT features of AWS IAM?  A: Login in to the console using local user accounts and charging for what you use.
-
 
 ## Architecting for the Cloud
 
@@ -435,9 +477,29 @@
 
 - Q: What does AWS recommend that you do to setting up a cost allocation report? A: Assign cost allocation tags to your resouces.
 
+- Q: Which tasks require the use of the AWS account root user? (Select TWO.) A: Changing the account name and Changing AWS Support plans
+
+- Q: Which of the statements below is correct in relation to Consolidated Billing? A: You receive a single bill for multiple accounts and You can combine usage and share volume pricing discounts
+
+- Q: What is a Technical Account Manager? A: A technical account manager is a point of contact who can provide technical support. It comes with Enterprise Support.
+
+- Q: Which AWS support plans provide 24x7 access to customer service? A: All plans
+
+- Q: A user has an AWS account with a Business-level AWS Support plan and needs assistance with handling a production service disruption. Which action should the user take? A: Open a "production system down support case".
+
+- Q: What is AWS Concierge? Answer: a team to support AWS customers on an Enterprise support plan with account issues.
+
+- Q: Does Developer support plan provide phone support? A: No, only email. Developer support is the only support plan that provides email only support.
+
+- Q: What do APN Consulting Partners do? A: They help organizations design, build and manage workloads on AWS.
+
+- Q: Which support plan is the lowest cost option that allows unlimited cases to be open? A: Developer
+
+- Q: Does the Basic suport plan provide email support? A: No, this starts from Developer.
+
 ## Migration, Machine Learning and More
 
-- Q: what appliance in the Snow Family can be used to migrate data in the terabytes: AWS Snowcone or aWS Snowball? A: Both can be used. Snowcone is small and has 8 TB of usable HDD storage while Snowball weighs 50 lbs and has 80 TB of usable HDD storage. 
+- Q: what appliance in the Snow Family can be used to migrate data in the terabytes: AWS Snowcone or AWS Snowball? A: Both can be used. Snowcone is small and has 8 TB of usable HDD storage while Snowball weighs 50 lbs and has 80 TB of usable HDD storage. 
 
 - Q: A company recorded some support call conversations in mp4 files. How can the company extract the audio into a text document? A: AWS Transcribe
 
@@ -460,6 +522,8 @@
 - Q: If you're looking for a service to help find experts who can help you deploy or manage or AWS infrastructure, what can you use? A: AWS IQ 
 
 - Q: If you are a startup and you're looking for help to leverage AWS in your operations, what can you use? A: AWS Activate is a program that provides startups with AWS credits, training, and tech support. 
+
+- Q: What is AWS Snowball? A: A service used to migrate lots of data from on-premises to the cloud.
 
 ## References
 
