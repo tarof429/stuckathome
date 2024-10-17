@@ -1,3 +1,0 @@
-# Exam
-
-## Billing and Pricing

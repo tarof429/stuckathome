@@ -27,7 +27,6 @@
     * [Part 4: Managing KVM](kvm/part4_managing_kvm.md)
 * [AWS Certified Cloud Practitioner](aws_certified_cloud_practioner/README.md)
     * [Part 1: Questions](aws_certified_cloud_practioner/questions.md)
-    * [Part 2: Exam](aws_certified_cloud_practioner/exam.md)
 * [AWS Certified Solutions Architect](aws_certified_solutions_architect/README.md)
     * [ Part 1: Exam](aws_certified_solutions_architect/Exam.md)
     * [ Part 2: Hands On](aws_certified_solutions_architect/Hands_on.md)
