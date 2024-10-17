@@ -49,6 +49,15 @@
 
     If your IP is set but you cannot ping any hosts, check the default route.
 
+- To update the system, run:
+
+    ```sh
+    freebsd-update fetch
+    freebsd-update install
+    ```
+
+    See https://docs.freebsd.org/en/books/handbook/cutting-edge/. 
+
 ## References
 
 https://www.netbsd.org/docs/guide/en/index.html
