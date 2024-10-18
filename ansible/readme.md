@@ -1,4 +1,25 @@
-# Creating Ansible modules
+# Ansible
+
+## Creating roles
+
+Roles often have a few directories:
+
+- tasks
+- handlers
+- templates
+- files
+- vars
+- defaults
+
+A quick way to create these directories is shown below:
+
+```sh
+mkdir -p myrole/{tasks,handlers,templates files,vars, defaults}
+```
+
+Commas are necessary; you won't be able to create the directories if you use a different delimeter.
+
+## Creating Ansible modules
 
 This example shows how to create a Ansible custom task to query RPMs installed in a KVM guest. It is based on https://gist.github.com/halberom/f4515e6b9d977f64294d but uses playbooks.
 
@@ -26,7 +47,7 @@ ansible-playbook gather_installed.yml
 
 - If you are unable to start the VM at a later time because you get the error: 
   
-  ```
+  ```sh
   error: Cannot access storage file '/tmp/test-centos/cloud-init.iso': No such file or directory
   ```
 
