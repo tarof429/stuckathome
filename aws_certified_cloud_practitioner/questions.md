@@ -168,6 +168,8 @@
 
 - Q: What is AWS CodeCommit? A: AWS CodeCommit is a source Control service that is highly secure, scalable and managed.
 
+- Q: A media company wants to find and subscribe to third-party data sources to enrich their existing datasets with new insights. Which AWS service would be the best fit for this requirement? A: AWS Data Exchange is a service where you can subscribe to existing datasets.
+
 ## Networking
 
 - Q: What is a VPC? A: A VPC is a virtual private network dedicated to my account. It's like a network within a data center. 
@@ -178,7 +180,7 @@
 
 - Q: Do security groups support deny rules? A: No, security groups only support allow rules.
 
-- Q: If you need to create access rules that support allow and deny rules, what can you use? A: you can use network access control lists (NACL)
+- Q: If you need to create access rules that support allow and deny rules for ingress/egress traffic through a VPC, what can you use? A: You can create network access control lists (ACLs) for your VPC, specifically ingress rules.
 
 - Q: If you need to have a public IP address for an EC2 instance that does not change if the instance is stopped, what can you use? A: Attach an elastic IP or EIP to the instance.
 
@@ -203,6 +205,10 @@
 - Q: What is a Network Access Control List? Answer: VPCs can have NACs to act as a fireall for inbound and outbound traffic.
 
 - Q: What is an Internet Gateway? An Internet Gateway is a part of a VPC that allows traffic from the VPc to talk to the Internet.
+
+- Q: Which AWS service or feature can assist with protecting a website that is hosted outside of AWS? A: AWS Web Application Firewall (WAF), if it sits in front of an application load balancer. The key here is "assist" and "protect".
+
+- Q: A company is deploying an application on Amazon EC2 that requires low-latency access to application components in an on-premises data center. Which AWS service or resource can the company use to extend their existing VPC to the on-premises data center? A: AWS Outposts. The keyword here is "extend". Services such as DirectConnect don't extend your VPC, they only give you a private connection between on-premises servers and AWS.
 
 ## Deployment and Automation
 
@@ -250,6 +256,9 @@
 
 - Q: What types of monitoring can Amazon CloudWatch be used for? A: Application performance and operational health, which includes CPU and network utilization. These can be configured for alarms if they exceed a threshold value.
 
+- Q: Can AWS Systems Manager be used to launch a new ElastiCache cluster? A: No, Systems Manager cannot create any AWS services such as ElastiCache for you.
+
+
 ## Databases and Analytics
 
 - Q: If you need a managed OLTP database service, what can AWS provide? A: Use RDS
@@ -262,7 +271,7 @@
 
 - Q: If you have an RDS database and you need to scale out for reads or queries only, what can you do to tune the database? A: Create a read replica. 
 
-- Q: If you need to ensure that your RDS database is tolerant of failures in your AZ, what option do you have? A: Set up disaster recovery with multi-AZ option. Other features such as replicas and snapshots do not provide fault tolerance.
+- Q: If you need to ensure that your RDS database is tolerant of failures in your AZ, what option do you have? A: Set up disaster recovery with multi-AZ option. This falls into the reliability pillar of the Well Architected Framework. Other features such as replicas and snapshots do not provide fault tolerance.
 
 - Q: A company wants to improve their RDS performance and decrease latency by using an AWS DB caching service. Which of the following would you recommend they use? A: ElastiCache, which provides in-memory caching (it is essentially Redis)
 
@@ -319,6 +328,8 @@
 - Q: What is DynamoDB? A: A key-value database that scales horizontally.
 
 - Q: Which items are you charged for when using RDS? Answer: Outbound data transfer and multi-AZ.
+
+- Q: A financial services firm wants to build a real-time analytics platform where data can be streamed and analyzed on the fly. They are looking to use Apache Kafka for this, but they want to avoid the overhead of managing the Kafka infrastructure. Which AWS service would be the best fit for this requirement? A: Amazon MSK (Managed Streaming Service for Kafka). Unlike Kinesis, MSK does not leverage Kafka.
 
 ## Management and Governance
 
