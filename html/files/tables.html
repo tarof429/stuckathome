@@ -14,10 +14,6 @@
             td {
                 padding: 8px;
             }
-
-            td.down {
-                color: red;
-            }
             
             th {
                 padding: 8px;
@@ -40,6 +36,11 @@
               text-decoration: underline;
             }
 
+            img {
+                height: 14px;
+                width: 14px;
+            }
+
         </style>
     </head>
     <body>
@@ -49,31 +50,39 @@
                 <th>IP</th>
                 <th>OS</th>
                 <th>Uptime</th>
+                <th>Status</th>
             </tr>
             <tr>
                 <td><a href="foo">db-01</a></td>
                 <td>10.10.4.1</td>
                 <td>Ubuntu 22</td>
                 <td>23:32:59</td>
+                <td><img src="up.png" alt="Up"></td>
             </tr>
             <tr>
                 <td><a href="foo">db-02</a></td>
                 <td>10.10.4.2</td>
                 <td>Ubuntu 22</td>
                 <td>23:32:59</td>
+                <td><img src="up.png" alt="Up"></td>
             </tr>
             <tr>
                 <td><a href="foo">db-03</a></td>
                 <td>10.10.4.3</td>
                 <td>Ubuntu 22</td>
                 <td>23:32:59</td>
+                <td><img src="up.png" alt="Up"></td>
             </tr>
             <tr>
                 <td><a href="foo">test-server</a></td>
                 <td>10.10.4.4</td>
                 <td>Ubuntu 22</td>
-                <td class="down">Down</td>
+                <td>23:32:59</td>
+                <td><img src="down.png" alt="Down"></td>
             </tr>
         </table>
+        <br/>
+        <a href="https://www.flaticon.com/free-icons/triangle" title="triangle icons">Triangle icons created by Iconpro86 - Flaticon</a>
+
     </body>
 </html>
