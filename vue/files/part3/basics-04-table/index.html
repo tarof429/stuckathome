@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Servers</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div>
+        <ul>
+          <li>Number of servers: {{ numberOfServers() }}</li>
+          <li><button v-on:click=scan()>Scan</button></li>
+        </ul>
+      </div>
+
+        <div>
+            <table>
+                <tr>
+                    <th>Hostname</th>
+                    <th>IP</th>
+                    <th>OS</th>
+                    <th>Uptime</th>
+                    <th>Status</th>
+                </tr>
+                <tr v-for="server in this.servers">
+                  <td>{{ server.hostname }}</td>
+                  <td>{{ server.ip }}</td>
+                  <td>{{ server.os }}</td>
+                  <td>{{ server.uptime }}</td>
+                  <td><span v-html="server.serverStatus"></span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <script src="https://unpkg.com/vue@3.4.9/dist/vue.global.js"></script>
+    <script src="app.js"></script>
+    <a href="https://www.flaticon.com/free-icons/triangle" title="triangle icons">Triangle icons created by Iconpro86 - Flaticon</a>
+
+  </body>
+</html>
