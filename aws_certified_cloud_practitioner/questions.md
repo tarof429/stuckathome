@@ -2,6 +2,8 @@
 
 ## Cloud Computing
 
+- Q: What are the 6 pillars of of the AWS well-architected framework? A: operational excellence, security, reliability, performance efficiency, cost optimization, and sustainability. See https://aws.amazon.com/architecture/well-architected for detailed explanations of the pillars and labs.
+
 - Q: What are the benefits of using AWS cloud? A: 1) The ability to experiment quickly and 2) fast provisioning of IT resources 3) ability to go global quickly 4) Scalable compute capacity
 
 - Q: A company is planning to move a number of legacy applications to the AWS Cloud. The solution must be cost-effective. Which approach should the company take? A: Rehost the applications on Amazon EC2 instances that are right-sized
@@ -13,6 +15,8 @@
 - Q: What are the benefits of using the AWS Managed Services? (Select TWO.) A:  "Alignment with ITIL processes" and  "Baseline integration with ITSM tools" 
 
 - Q: To reward customers for using their services, what are two ways AWS reduce prices? (Select TWO). A: More discount the more services you use and 2) Reduced cost for reserved capacity.
+
+- Q: How does AWS provide access to higher level managed services? A: AWS provides users instant acces to a variety of services such as compute, storage, analytics and deployment. By utilizing these servicves, customers can lower operational complexity and cost.
 
 ## IAM
 
@@ -72,6 +76,11 @@
 
 - Q: Which of the following tasks can a user perform to optimize Amazon EC2 costs? (Select TWO.) A: "Implement Auto Scaling groups to add and remove instances based on demand"  and  "Purchase Amazon EC2 Reserved Instances
 
+- Q: If users are not very technical and don't know very much about AWS, what's an easy alternative to using EC2? A: Lightsail is a compute service that is relatively cheap and is easy to deploy by users with little or no AWS expertise. While Lightsail doesn't have as many configuration options, you do have the ability to access the VPC from within the Lightsail instance and gain access to many services. Amazon calls this a simple cloud server. Note that Lightsail does NOT support RedHat Linux.
+
+- Q: When you create an ECS Cluster, what do you need to create inside of each cluster? A: You need to create a task. A task definition defines what container to run.
+
+- Q: If you want to use EC2 instances with ECS, what must you run inside each EC2 instance? A: An ECS agent. If you don't want to manage an EC2 instance then use Fargate. 
 
 ## Storage
 
@@ -169,6 +178,8 @@
 - Q: What is AWS CodeCommit? A: AWS CodeCommit is a source Control service that is highly secure, scalable and managed.
 
 - Q: A media company wants to find and subscribe to third-party data sources to enrich their existing datasets with new insights. Which AWS service would be the best fit for this requirement? A: AWS Data Exchange is a service where you can subscribe to existing datasets.
+
+- Q: What is Amazon OpenSearch? A: Amazon OpenSearch is a service used to perform queries on data such as logs and text data.
 
 ## Networking
 
@@ -345,7 +356,7 @@
 
 - Q: What AWS service can be used for compliance management? A: AWS Config can be used to audit your AWS infrastructure. For example, you can set up a rule that checks for security groups that allow inbound access beyond what you define as acceptable. 
 
-- Q: If you're worried about expenses in the cloud and need help to determine how to reduce cost, increase performance, and improve fault tolerance AND security, what AWS service can help? A: Trusted Advisor can provide real-time guidance on all of these based on best practices. 
+- Q: If you're worried about expenses in the cloud and need help to determine how to reduce cost, increase performance, and improve fault tolerance AND security, what AWS service can help? A: Trusted Advisor can provide real-time guidance on all of these based on best practices.  Cost Explorer can help you view itemized cost, but you can't use it to check resource utilization. 
 
 - Q: What AWS service can you use to check the health of your AWS infrastructure? A: Use AWS Health Dashboard. There are actually two features. The first is service health, which shows you the health of AWS services in general The other is called "Your account health", which is personalized. 
 
@@ -424,6 +435,8 @@
 
 - Q: Which of the following are NOT features of AWS IAM?  A: Login in to the console using local user accounts and charging for what you use.
 
+- Q: What is Cognito? A: Cognito is an identification platform for web and mobile apps. 
+
 ## Architecting for the Cloud
 
 - Q: How can AWS lower operational cost? A: By providing high-level managed services, users spend less effort on maintainance. 
@@ -485,6 +498,8 @@
 - Q: Which storage classes are available for the Amazon Elastic File System? A: In order of cost Standard, Backup, Infrequent Access and Archive. The cost depends on factors such as region.
 
 - Q: Do NAT Gateways have a cost? A: They are charged by the hour.
+
+- Q: What is the purpose of the NAT gateway? A: A NAT gateway is the primary means by which an EC2 instance launched in a private subnet can talk to the outside world. This can be useful for installing and updating software. In order to access EC2 instances with only private IPs, we could launch a bastion server in the public subnet of the VPC. EC2 instances in the same VPC can talk to each other. You want to configure the security group of the private instances to alllow SSH traffic (port 22) from the bastion host's security group. See https://medium.com/@tejasmane485/aws-bastion-host-secure-remote-access-to-your-private-instances-7012a5a74fb3. 
 
 - Q: What does AWS recommend that you do to setting up a cost allocation report? A: Assign cost allocation tags to your resouces.
 
