@@ -34,7 +34,9 @@
 
 - Q: What is the purpose of access keys? A: Access keys allow programatic access to services.
 
-- Q: What is an SCP? A: An SCP is a Service Control Policy that allows you to define the maximum set of permissions users can have in your organization. It is part of AWS Organizations.
+- Q: What are the components of an access key? A: an access key ID and a secret access key. If the exam gives you the option to choose public or private keys, these are wrong.
+
+- Q: What is an SCP? A: An SCP is a Service Control Policy that allows you to define the maximum set of permissions users can have in your organization. It is part of AWS Organizations. If the exam asks you a question about SCPs, think AWS Organizations.
 
 - Q: Give an example of some best practices for IAM. A: Lock the root account. Create an individual IAM users. Grant least privilege. Configure strong passwords and use MFA. Use roles instead of access keys inside EC2 instances. Use IAM roles to delegate permissions. Don't share access keys. Rotate passwords regularly.
 
@@ -68,7 +70,7 @@
 
 - Q: Will Amazon automatically patch EC2 instances for you? A: no, you must do this yourself.
 
-- Q: What is the minimum term for reserved instances? A: 1 year. The maximum is 3 years.
+- Q: What is the minimum term for reserved instances? A: 1 year. The maximum is 3 years. Purchasing a reserved instance can save users up to 72% in cost.
 
 - Q: If you need an EC2 instance to run software whose license model is tied to the hardware, what instance type should you use? A: Use dedicated hosts
 
@@ -199,7 +201,7 @@
 
 - Q: If you need to route traffic between VPCs, what can you use? A: Use VPC Peering
 
-- Q: If you have servers in a data center and you want them to connect directly to AWS without going through the Internet, what can you use? A: Use AWS DirectConnect.
+- Q: If you have servers in a data center and you want them to connect directly to AWS without going through the Internet, what can you use? A: Use AWS Direct Connect. If VPN is one of the choices, it is not the correct answer because VPN will go through the Internet.
 
 - Q: If you want to connect multiple VPCs and on-prem servers together, what can you use? A: Use AWS Transit Gateway, which simplifies network configuration.
 
@@ -269,6 +271,7 @@
 
 - Q: Can AWS Systems Manager be used to launch a new ElastiCache cluster? A: No, Systems Manager cannot create any AWS services such as ElastiCache for you.
 
+- Q: A new e-commerce company is looking for an AWS service to send transactional emails, such as order confirmations and password resets, to their customers. What can they use? A: Amazon Simple Email Service or SES lets you both send and receive email.
 
 ## Databases and Analytics
 
@@ -304,7 +307,7 @@
 
 - Q: If you need to run SQL queries against data in an S3 bucket, what AWS service can you use? A: Use Amazon Athena. It can analyze data in S3 buckets at the petabyte-scale level. It is also serverless so there are no EC2 instances to manage.
 
-- Q: If you need an AWS service for ETL jobs on data stored in S3, what can you use? A: AWS Glue is a fully managed ETL service that runs Apache Spark and can be used for running analytics on data.
+- Q: If you need an AWS service for ETL jobs on data stored in S3, what can you use? A: AWS Glue is a fully managed ETL service that runs Apache Spark and can be used for running analytics on data. Any time the exam asks for a service that provides ETL, think Glue (think glue Loads data).
 
 - Q: If you need an AWS service for processing streaming data, what can you use? A: Use Amazon Kinesis.
 
@@ -342,6 +345,8 @@
 
 - Q: A financial services firm wants to build a real-time analytics platform where data can be streamed and analyzed on the fly. They are looking to use Apache Kafka for this, but they want to avoid the overhead of managing the Kafka infrastructure. Which AWS service would be the best fit for this requirement? A: Amazon MSK (Managed Streaming Service for Kafka). Unlike Kinesis, MSK does not leverage Kafka.
 
+- Q: Can S3 be used to host dynamic content such as videos? A: Yes. You may also want to use Amazon CloudFront to help your users get access to videos with low latency.
+
 ## Management and Governance
 
 - Q: What AWS service can you use to consolidate multiple AWS accounts into an organzation? A: AWS Organizations lets you do this. Once you set up an AWS Organization, you can consolidate billing. 
@@ -359,6 +364,8 @@
 - Q: If you're worried about expenses in the cloud and need help to determine how to reduce cost, increase performance, and improve fault tolerance AND security, what AWS service can help? A: Trusted Advisor can provide real-time guidance on all of these based on best practices.  Cost Explorer can help you view itemized cost, but you can't use it to check resource utilization. 
 
 - Q: What AWS service can you use to check the health of your AWS infrastructure? A: Use AWS Health Dashboard. There are actually two features. The first is service health, which shows you the health of AWS services in general The other is called "Your account health", which is personalized. 
+
+- Q: Which AWS dashboard displays relevant and timely information to help users manage events in progress, and provides proactive notifications to help plan for scheduled activities: Pesonal Health Dashboard or Service Health Dashboard? A: Personal Health Dashboard is the answer. Service Health Dashboard doesn't provide proactive notification.
 
 - Q: What service can help you determine the optimal sizing for EC2 instances that you use to run workloads? A: AWS Compute Optimizer can help you do this. To change the instance type of an EC2 instance, all you have to do is stop the instance, change the type, and start the instance again. 
 
@@ -385,9 +392,9 @@
 
 - Q: If you need to troubleshoot your services at the API level and find out what was happening in the last 90 days, what can you use? A: Use AWS CloudTrail. 
 
-- Q: If you want to retain CloudTrail logs for more than 90 days, what can you do? A: Configure CloudTrail logs to store logs in
+- Q: If you want to retain CloudTrail logs for more than 90 days, what can you do? A: Create a trail in CloudTrail to store logs for longer than 90 days.
 
-- Q: If you're trying to SSH to an EC2 instance and you're having issues, would you use AWS CloudTrail? A: You might want to look at VPC Flow Logs, which capture the network "flow".
+- Q: If you're trying to SSH to an EC2 instance and you're having issues, would you use AWS CloudTrail? A: You might want to look at VPC Flow Logs, which capture the network "flow". If you're worried about unauthorized access to your EC2 instances and you want to check security groups, don't use Flow Logs, use Trusted Advisor instead.
 
 - Q: If you're trying to troubleshoot an issue with a user going through a load balancer who is trying to get objects from an S3 bucket, what kinds of logs can you look at? A: You could look at load balancer access logs first, and then if those look okay you could look at S3 access logs. 
 
@@ -436,6 +443,12 @@
 - Q: Which of the following are NOT features of AWS IAM?  A: Login in to the console using local user accounts and charging for what you use.
 
 - Q: What is Cognito? A: Cognito is an identification platform for web and mobile apps. 
+
+- Q: What can be used to allow an application running on an Amazon EC2 instance to securely store data in an Amazon S3 bucket without using long-term credentials: AWS IAM role or AWS IAM access key? A: Use a role, which is a short term means to gain acess to data in a bucket. AN IAM access key would be long term.
+
+- Q: According to the shared responsibility mode, which security and compliance task is AWS responsible for: updating Amazon EC2 host firmware or encrypting data at rest? A: AWS would be responsible for updating firmware. Encrypting data at rest is the customer's responsibility.
+
+- Q: What is AWS Inspector? This is a service that does vulnerability scanning. If the exam gives you the option to choose AWS Config, this is wrong, as AWS Config only audits the configurations of your AWS resources.
 
 ## Architecting for the Cloud
 
@@ -523,6 +536,10 @@
 
 - Q: Does the Basic suport plan provide email support? A: No, this starts from Developer.
 
+- Q: If you need a service to customize billing, what service can you use? A: Billing Conductor. The normal Billing and Cost Management doesn't allow you to customize billing. Whenever the exam asks for customized billing, think Conductor. It is one of 3 services in billing, the other two are Billing and Cost Management and AWS Marketplace.
+
+- Q: A company needs to use third-party software for its workload on AWS. What feature or service of AWS that the company can use to purchase the software: AWS Marketplace or AWS License Manager? A: AWS Marketplace. It's more than just operating systems, they feature many appliances. The License Manager is not a good answer because it just provides a way to manage licenses.
+
 ## Migration, Machine Learning and More
 
 - Q: what appliance in the Snow Family can be used to migrate data in the terabytes: AWS Snowcone or AWS Snowball? A: Both can be used. Snowcone is small and has 8 TB of usable HDD storage while Snowball weighs 50 lbs and has 80 TB of usable HDD storage. 
@@ -549,7 +566,9 @@
 
 - Q: If you are a startup and you're looking for help to leverage AWS in your operations, what can you use? A: AWS Activate is a program that provides startups with AWS credits, training, and tech support. 
 
-- Q: What is AWS Snowball? A: A service used to migrate lots of data from on-premises to the cloud.
+- Q: What is AWS Snowball? A: A service used to migrate lots of data from on-premises to the cloud. It's primary use is to transfer data to AWS when the Internet connection is slow and unreliable. So if the exam asks for a service that can transfer data over an reliable network, think Snowball.
+
+- Q: Which AWS service should a Cloud Practitioner use to establish a secure network connection between an on-premises network and AWS: Virtual Private Network or AWS Web Application Firewall? A: VPN which is part of the VPC service.
 
 ## References
 
