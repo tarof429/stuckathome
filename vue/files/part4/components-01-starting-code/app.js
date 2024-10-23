@@ -1,7 +1,7 @@
 const app = Vue.createApp({
     data() {
         return {
-            // detailsAreVisible: false,
+            detailsAreVisible: false,
 
             friends: [
                 {
@@ -20,12 +20,12 @@ const app = Vue.createApp({
         };
     },
 
-    // methods: {
-    //     toggleDetails() {
-    //         console.log('Toggling details')
-    //         this.detailsAreVisible = !this.detailsAreVisible;
-    //     }
-    // }
+    methods: {
+        toggleDetails() {
+            console.log('Toggling details');
+            this.detailsAreVisible = !this.detailsAreVisible;
+        }
+    }
 });
 
 

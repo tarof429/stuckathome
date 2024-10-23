@@ -2,7 +2,7 @@
 
 ## Introduction
 
-We know have a basic grasp of Vue. For example, if we have a list of items that we want to manage using Vue, our tasks are:
+We know have a basic grasp of Vue. Now lets look at a problem where we want to do something like hide and show details for items in a list. Below are the steps for how we might implement this, but as we'll see it has limitations.
 
 1. Create a Vue app and mount it to the DOM using an ID.
 2. Define data that returns something:
@@ -59,7 +59,7 @@ app.mount('#app');
 </ul>
 ```
 
-But what if we want to add a feature where we can toggle friend details? We could try to add another method called `toggleDetails()` like this:
+We then add a method called `toggleDetails()`:
 
 ```javascript
 ...
@@ -73,11 +73,11 @@ methods: {
 
 However, this button does not work as expected. It does not hide or show individual friends, but rather hides and shows all friends. The toggleDetails method just does not know which friend details to toggle. 
 
-To fix this, we next look at components.
+To fix this, we need to look at components.
 
 ## Components
 
-> Components allow us to split the UI into independent and reusable pieces, and think about each piece in isolation. It's common for an app to be organized into a tree of nested components.
+Components allow us to split the UI into independent and reusable pieces, and think about each piece in isolation. It's common for an app to be organized into a tree of nested components.
 
 To create a component, we write:
 
@@ -111,7 +111,7 @@ app.component('friend-contact', {
 
 And now to get interpolation to work, we'll remove the `v-for` property and for now add it to our component like this:
 
-```
+```javascript
 friend: 
 {
     id: 'manual',
