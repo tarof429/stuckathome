@@ -384,7 +384,7 @@
 
 - Q: What service can help you determine the optimal sizing for EC2 instances that you use to run workloads? A: AWS Compute Optimizer can help you do this. To change the instance type of an EC2 instance, all you have to do is stop the instance, change the type, and start the instance again. 
 
-- Q: What service can provide a guided way to launch EC2 instances for some services by providing recommended sizing and configuration options? A: AWS Launch Wizard can help you create EC2 instances that are optimal to the third-party application you want to deploy on AWS. You are not charged for using Launch Wizard; you are charged for the EC2 instance. 
+- Q: What service can provide a guided way to launch EC2 instances for some services by providing recommended sizing and configuration options? A: AWS Launch Wizard can help you create EC2 instances that are optimal to the third-party application you want to deploy on AWS. You are not charged for using Launch Wizard; you are charged for the EC2 instance. If you answered Elastic Beanstalk, this is not correct as Elastic Beanstalk is not a guided service.
 
 - Q: What is AWS Trusted Advisor? A: AWS Trusted Advisor provides real time guidance to help you provision your resource following best practices in the areas of cost optimization, performance, security and fault tolerance. 
 
@@ -462,9 +462,11 @@
 
 - Q: According to the shared responsibility mode, which security and compliance task is AWS responsible for: updating Amazon EC2 host firmware or encrypting data at rest? A: AWS would be responsible for updating firmware. Encrypting data at rest is the customer's responsibility.
 
-- Q: What is AWS Inspector? This is a service that does vulnerability scanning. If the exam gives you the option to choose AWS Config, this is wrong, as AWS Config only audits the configurations of your AWS resources.
+- Q: What is AWS Inspector? This is a service that does vulnerability scanning (this service has a magnifying glass icon). If the exam gives you the option to choose AWS Config, this is wrong, as AWS Config only audits the configurations of your AWS resources.
 
 - Q: What AWS services can be used to identify and search for externally shared AWS resources? A: AWS IAM Access Analyzer.
+
+- Q: Which AWS service helps you continuously audit your AWS usage to simplify how you assess risk and compliance with regulations and industry standards: AWS Artifact or AWS Audit Manager? A: AWS Audit Manager. Artifact provides access to on-demand compliance reports.
 
 ## Architecting for the Cloud
 
@@ -498,7 +500,7 @@
 
 - Q: If you want to provision a DynamoDB service that will have a predictable workload, what can you do to reduce cost? A: Set up the DynamoDB service to use provisioned capacity mode instead of on-demand capacity mode. 
 
-- Q: Does Lambda charge by the hour, minute, or millisecond? A: Millisecond
+- Q: Does Lambda charge by the hour, minute, or millisecond? A: Millisecond. In contrast, EC2 charges by the second.
 
 - Q: If you have many user accounts, is there anything you can do to reduce cost? A: Use AWS Organizations and get volume pricing
 
@@ -506,7 +508,7 @@
 
 - Q: If you want to look at your usage of AWS services over time and look for problem areas, what service can help you do this? A: Use AWS Cost Explorer
 
-- Q: If you're only goal is to store data in S3, are you chartged for this? A: No, you are charged for outbound data transfer only.
+- Q: If you're only goal is to store data in S3, are you charged for this? A: No, you are charged for outbound data transfer only.
 
 - Q: What is a key cost advantage of moving to the AWS Cloud? A: You can provision what you need and scale on demand.
 
@@ -542,7 +544,7 @@
 
 - Q: A user has an AWS account with a Business-level AWS Support plan and needs assistance with handling a production service disruption. Which action should the user take? A: Open a "production system down support case".
 
-- Q: What is AWS Concierge? Answer: a team to support AWS customers on an Enterprise support plan with account issues.
+- Q: What is AWS Concierge? Answer: a team to support AWS customers on an Enterprise support plan with account issues. In hotels, a concierge works at the front desk.
 
 - Q: Does Developer support plan provide phone support? A: No, only email. Developer support is the only support plan that provides email only support.
 
@@ -568,7 +570,7 @@
 
 - Q: A company is looking to use machine learning to translate a few documents from English to Chinese. Having learned about machine learning services on AWS, which of the following services would you recommend the company to use? A: AWS Translate
 
-- Q: A company is planning on implementing a chatbot into their web application. Which AWS service would best meet their needs? A: Amazon Lex
+- Q: A company is planning on implementing a chatbot into their web application. Which AWS service would best meet their needs? A: Amazon Lex. In AWS, Lex is represented by chat bubbles.
 
 - Q: A company wants to develop their own machine learning application on AWS. Which of the following services would best fit their needs? A: Amazon SageMaker
 
@@ -578,13 +580,15 @@
 
 - Q: A company needs to migrate several TB of data from an on-premises NAS device to AWS over the network. Which service can the company use to migrate the data over a VPN connection? A: Use AWS DataSync.
 
-- Q: If you're looking for a service to help find experts who can help you deploy or manage or AWS infrastructure, what can you use? A: AWS IQ 
+- Q: If you're looking for a service to help find experts who can help you deploy or manage or AWS infrastructure, what can you use? A: AWS IQ. The consultants here are supposed to have a high IQ in regards to AWS.
 
 - Q: If you are a startup and you're looking for help to leverage AWS in your operations, what can you use? A: AWS Activate is a program that provides startups with AWS credits, training, and tech support. 
 
 - Q: What is AWS Snowball? A: A service used to migrate lots of data from on-premises to the cloud. It's primary use is to transfer data to AWS when the Internet connection is slow and unreliable. So if the exam asks for a service that can transfer data over an reliable network, think Snowball.
 
 - Q: Which AWS service should a Cloud Practitioner use to establish a secure network connection between an on-premises network and AWS: Virtual Private Network or AWS Web Application Firewall? A: VPN which is part of the VPC service.
+
+- Q: Which AWS service uses machine learning to enable natural language search capabilities in your applications, making it easier to find the precise answer to your questions within a large set of documents? A: Amazon Kendra (which is identified by a magnifying glass).
 
 ## References
 
