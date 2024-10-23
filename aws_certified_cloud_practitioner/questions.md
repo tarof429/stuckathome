@@ -18,6 +18,8 @@
 
 - Q: How does AWS provide access to higher level managed services? A: AWS provides users instant acces to a variety of services such as compute, storage, analytics and deployment. By utilizing these servicves, customers can lower operational complexity and cost.
 
+- Q: Which AWS service provides a cloud-based integrated development environment (IDE) that lets you write, run, and debug your code with just a browser, without needing to install any software or configure servers? A: Cloud 9. CodeStar doesn't provide an IDE.
+
 ## IAM
 
 - Q: What is IAM? Answer: IAM is a service that controls who gets access to AWS services, and what they can do with those services.
@@ -43,6 +45,8 @@
 - Q: A company must provide access to AWS resources for their employees. Which security practices should they follow? A: 1) Enable multi-factor authentication for users and 2) create IAM policies based on least privilege principles.
 
 - Q: Which of the following is a valid best practices for using the AWS Identity and Access Management (IAM) service? (Select TWO.) A: Create individual IAM users (don't share) and use groups to assign permissions to multiple IAM users.
+
+- Q: Which AWS service or feature can be used to restrict the individual API actions that users and roles in each member account can access: AWS IAM or AWS Organizations? A: AWS Organizations. The keyword here is `API`. 
 
 ## EC2
 
@@ -83,6 +87,10 @@
 - Q: When you create an ECS Cluster, what do you need to create inside of each cluster? A: You need to create a task. A task definition defines what container to run.
 
 - Q: If you want to use EC2 instances with ECS, what must you run inside each EC2 instance? A: An ECS agent. If you don't want to manage an EC2 instance then use Fargate. 
+
+- Q: What EC2 instance type is the most cost effective for mission critical applications? A: on-demand capacity reservation with savings plan.
+
+- Q: Are EC2 instances billed per second, per hour or per day? A: Per second. 
 
 ## Storage
 
@@ -134,6 +142,7 @@
 
 - Q: How much data can you store on Amazon S3? A: Virtually unlimited.
 
+- Q: What AWS service can be used for backup/restore: EFS or S3? Amazon wants you to choose S3.
 
 ## DNS, Elastic Load Balancing, and Auto Scaling
 
@@ -191,7 +200,7 @@
 
 - Q: What is a security group? A: A security group is like a firewall for EC2 instances. 
 
-- Q: Do security groups support deny rules? A: No, security groups only support allow rules.
+- Q: Do security groups support deny rules? A: No, security groups only support allow rules. This means you cannot block IPs using security groups; use network ACLs instead.
 
 - Q: If you need to create access rules that support allow and deny rules for ingress/egress traffic through a VPC, what can you use? A: You can create network access control lists (ACLs) for your VPC, specifically ingress rules.
 
@@ -203,7 +212,7 @@
 
 - Q: If you have servers in a data center and you want them to connect directly to AWS without going through the Internet, what can you use? A: Use AWS Direct Connect. If VPN is one of the choices, it is not the correct answer because VPN will go through the Internet.
 
-- Q: If you want to connect multiple VPCs and on-prem servers together, what can you use? A: Use AWS Transit Gateway, which simplifies network configuration.
+- Q: If you want to connect multiple VPCs and on-prem servers together across regions, what can you use? A: Use AWS Transit Gateway, which simplifies network configuration. The keyword here is `regions`. 
 
 - Q: If you want to extend your VPC to your data center, what can you use? A: Use AWS Outposts
 
@@ -250,6 +259,8 @@
 - Q: If you'd rather create AWS infrastructure using code instead of YAML. what can you use? A: AWS provides a CDK or Cloud Development Kit that allows you to create infrastructure using any of a variety of programming languages.
 
 - Q: If you want to deploy an application to AWS but don't want to get into the details of managing load balancers, databases, ASGs and networking, what service can help? A: Elastic Beanstalk is a managed service for creating all of these.
+
+- Q: Elastic Beanstalk uses CloudFormation to create resources. Is this a form of automation? A: Yes
 
 - Q: If you're trying to debug a distributed application on AWS, what service can you use? A: AWS X-Ray.
 
@@ -329,6 +340,8 @@
 
 - Q: How are Amazon EC2 instances billed, by the hour? Second? A: It depends. EC2 instances running Linux or Windows are biled by the second. Others are billed by the hour. Any partial hours are billed as a full hour for these other instance types.
 
+- Q: You have been running an on-demand Amazon EC2 instance running Linux for 4hrs, 5 minutes and 6 seconds. How much time will you be billed for? A: 4hrs, 5 minutes and 6 seconds
+
 - Q: What is RDS? A: Amazon RDS is a relational database service that is compatible with several database engines, including MySQL. A key benefit is that it simplifies database administration by providing automated backups and automated software patching. RDS provides automated backups by default.
 
 - Q: What is AWS Glue? A: AWS Glue is a service used to load data from Amazon S3, transform it, and move it to another destination. It is termed "Serverless data integration".
@@ -346,6 +359,8 @@
 - Q: A financial services firm wants to build a real-time analytics platform where data can be streamed and analyzed on the fly. They are looking to use Apache Kafka for this, but they want to avoid the overhead of managing the Kafka infrastructure. Which AWS service would be the best fit for this requirement? A: Amazon MSK (Managed Streaming Service for Kafka). Unlike Kinesis, MSK does not leverage Kafka.
 
 - Q: Can S3 be used to host dynamic content such as videos? A: Yes. You may also want to use Amazon CloudFront to help your users get access to videos with low latency.
+
+- Q: Which AWS service supports an in-memory data structure store, compatible with Redis, that delivers sub-millisecond latency for use cases such as caching, session stores, and real-time analytics?: DynamoDB or MemoryDB? A: MemoryDB. 
 
 ## Management and Governance
 
@@ -378,7 +393,6 @@
 - Q: What is AWS Organizations? A: AWS Organizations is a service that gives you the ability to centrally manage multiple AWS accounts. Some benefits include: you wil receive one bill for all accounts in the organization and 2) the unit pricing may be cheaper.
 
 - What is AWS Systems Manager? Answer: A service to manage and troubleshoot nodes, including Amazon EC2 instances, edge devices, and on-premises servers and virtual machines.
-
 
 ## AWS Cloud Security and Identity
 
@@ -449,6 +463,8 @@
 - Q: According to the shared responsibility mode, which security and compliance task is AWS responsible for: updating Amazon EC2 host firmware or encrypting data at rest? A: AWS would be responsible for updating firmware. Encrypting data at rest is the customer's responsibility.
 
 - Q: What is AWS Inspector? This is a service that does vulnerability scanning. If the exam gives you the option to choose AWS Config, this is wrong, as AWS Config only audits the configurations of your AWS resources.
+
+- Q: What AWS services can be used to identify and search for externally shared AWS resources? A: AWS IAM Access Analyzer.
 
 ## Architecting for the Cloud
 
