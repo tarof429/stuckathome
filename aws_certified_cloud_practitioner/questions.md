@@ -178,7 +178,7 @@
 
 - Q: Does Lambda charge for every function that you create? A: Lambda only charges you when the function is invoked. 
 
-- Q: What serverless service supports a publisher/subscriber model? A: Amazon SNS or Simple Notification Service. Using SNS you can create distributed applications with low coupling.
+- Q: What serverless service supports a publisher/subscriber model? A: Amazon SNS or Simple Notification Service. Using SNS you can push messages to thousands of subscribers simultaneously.
 
 - Q: What serverless service can you use to respond to events? A: Use EventBridge. 
 
@@ -286,11 +286,11 @@
 
 ## Databases and Analytics
 
-- Q: If you need a managed OLTP database service, what can AWS provide? A: Use RDS
+- Q: If you need a managed OLTP database service, what service can you use? A: Use RDS
 
 - Q: How do you increase the capacity of an Amazon RDS database? A: Change the database to use a larger instance type
 
-- Q: Will RDS automatically scale for you? A: Since RDS uses EC2 instances, you must choose the family/type at the outset.
+- Q: Will RDS automatically scale for you? A: Since RDS uses EC2 instances, you must choose the family/type.
 
 - Q: Why might an organization decide to move an on-premises database to Amazon RDS? A: to reduce operational overhead.
 
@@ -316,21 +316,21 @@
 
 - Q: Besides DynamoDB, what other AWS service provides key/value storage? A: Amazon ElasticCache. You can use it in front of databases like DynamoDB or RDS for better performance.
 
-- Q: If you need to run SQL queries against data in an S3 bucket, what AWS service can you use? A: Use Amazon Athena. It can analyze data in S3 buckets at the petabyte-scale level. It is also serverless so there are no EC2 instances to manage.
+- Q: If you need to run SQL queries against data in an S3 bucket, what AWS service can you use? A: Use Amazon Athena. It can analyze data in S3 buckets at the petabyte-scale level. It is also serverless so there are no EC2 instances to manage. For example, you could store CSV files in an S3 bucket and use Athena to query the file using SQL statements.
 
-- Q: If you need an AWS service for ETL jobs on data stored in S3, what can you use? A: AWS Glue is a fully managed ETL service that runs Apache Spark and can be used for running analytics on data. Any time the exam asks for a service that provides ETL, think Glue (think glue Loads data).
+- Q: If you need an AWS service for ETL jobs on data stored in S3, what can you use? A: AWS Glue is a fully managed ETL service that runs Apache Spark and can be used for running analytics on data. Any time the exam asks for a service that provides ETL, think Glue (think Glue Loads data).
 
 - Q: If you need an AWS service for processing streaming data, what can you use? A: Use Amazon Kinesis.
 
 - Q: What is a "shard"? A: A shard is a container for data in Amazon Kinesis. 
 
-- Q: If you need a business intelligent or BI dashboard for machine learning-powered insights, what can you use? A: Use Amazon QuickSight.
+- Q: If you need a business intelligent or BI dashboard for machine learning-powered insights what can you use? A: Use Amazon QuickSight.
 
-- Q: If you need to process and move data between different AWS compute and storage services, what can you use? Use AWS Data Pipeline
+- Q: If you need to process and move data between different AWS compute and storage services what can you use? Use AWS Data Pipeline
 
-- Q: If you need a fully managed graph database, what AWS service can you use? A: AWS Neptune
+- Q: If you need a fully managed graph database, what AWS service can you use? A: AWS Neptune.
 
-- Q: If you need to query and index JSON data, what AWS service can you use? A: Amazon DocumentDB.
+- Q: If you need to query and index JSON data what AWS service can you use? A: Amazon DocumentDB.
 
 - Q: How can a company migrate a database running in an EC2 instance to RDS without downtime? A: Migrate using AWS Database Migration Service
 
@@ -370,7 +370,7 @@
 
 - Q: What service simplifies the creation of multiple user accounts? A: AWS Control Tower lets you do this, and sets up governance compliance and security gaurdrails. It integrates with AWS Organizations. 
 
-- Q: What service helps you manage many AWS services such as EC2? For example, if you need to run a command on multiple EC2 instances. A: AWS Systems Manager lets you do this. You can use Systems Manager to gather inventory. You can also use Systems Manager to do things like patching, connecting to EC2 instances and storing secrets for EC2 instances.
+- Q: What service helps you run a command on multiple EC2 instances? A: AWS Systems Manager lets you do this. You can use Systems Manager to gather inventory. You can also use Systems Manager to do things like patching, connecting to EC2 instances and storing secrets for EC2 instances.
 
 - Q: If you are managing an AWS Organization, what service can you use to manage services that users can use? A: The AWS Service Catalog service lets you create a catalog of services that are approved for users.
 
@@ -466,7 +466,7 @@
 
 - Q: What AWS services can be used to identify and search for externally shared AWS resources? A: AWS IAM Access Analyzer.
 
-- Q: Which AWS service helps you continuously audit your AWS usage to simplify how you assess risk and compliance with regulations and industry standards: AWS Artifact or AWS Audit Manager? A: AWS Audit Manager. Artifact provides access to on-demand compliance reports.
+- Q: Which AWS service helps you continuously audit your AWS usage to simplify how you assess risk and compliance with regulations and industry standards: AWS Artifact or AWS Audit Manager? A: Only AWS Audit Manager provides continuous auditing. Artifact provides on-deman access to compliance reports.
 
 ## Architecting for the Cloud
 
@@ -566,7 +566,7 @@
 
 - Q: What is Amazon Elastic Transcoder? A: A service to transcode (convert) media files like movies into a format that client devices can use.
 
-- Q: An application is being built that needs to identify faces in images. Which service can be used? A: AWS Rekognition
+- Q: An application is being built that needs to identify faces in images. Which service can be used? A: AWS Rekognition. This service can recognize many parts in a photo.
 
 - Q: A company is looking to use machine learning to translate a few documents from English to Chinese. Having learned about machine learning services on AWS, which of the following services would you recommend the company to use? A: AWS Translate
 
