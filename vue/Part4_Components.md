@@ -77,7 +77,7 @@ To fix this, we need to look at components.
 
 ## Components
 
-Components allow us to split the UI into independent and reusable pieces, and think about each piece in isolation. It's common for an app to be organized into a tree of nested components.
+Components allow us to split the UI into independent and reusable pieces. It allows us to thich about each piece in isolation. It's common for an app to be organized into a tree of nested components.
 
 To create a component, we write:
 
@@ -85,11 +85,11 @@ To create a component, we write:
 app.component('friend-contact');
 ```
 
-It's important to include a `-` in the id of the component so that it's isolated from Vue's own components. We do not want to name our component `h2` for example because Vue already has such a component.
+It's important to include a `-` in the id of the component so that it's isolated from Vue's own components. Also we don't want to name our component `h2` for example because Vue already has such a component.
 
-The second argument to a component is a config object that is essentially a Vue app! 
+The second argument to a component is a config object that is essentially a Vue app. 
 
-Now we can move a chunk of our Javascript code from the main app to our component, so that our code now looks like this:
+Now we can move a chunk of our Javascript code from the main app to our component, so that our Javascript code now looks like this:
 
 ```javascript
 app.component('friend-contact', {
@@ -109,7 +109,7 @@ app.component('friend-contact', {
 
 ```
 
-And now to get interpolation to work, we'll remove the `v-for` property and for now add it to our component like this:
+And now to get interpolation to work, we'll remove the `v-for` property and add it to our component like this:
 
 ```javascript
 friend: 
@@ -145,10 +145,10 @@ app.component('friend-contact', {
 ```
 
 {% hint style="info" %}
-You must create the component before you mount the app!
+You must create the component before you mount the app.
 {% endhint %}
 
-Now when we refresh the page we are able to expand contact details. We still don't know how to do this for multiple contacts; this will be covered later.
+Now when we refresh the page we are able to expand contact details. But we stil have a problem. We still don't know how to do this for a list of contacts.
 
 ## Conclusion and next steps
 
