@@ -66,28 +66,9 @@ To install abcde, you need to build the aur from https://aur.archlinux.org/abcde
 
 You also need to install a configuration file for abcde. For example, see http://andrews-corner.org/abcde.html and https://bbs.archlinux.org/viewtopic.php?id=202331 and copy it to ~/.abcde.conf. 
 
-Also install python-eyed3 from aur.
-
-Also to encode music to m4a instead of mp3, install fdkaac.
-
-If you use cantata to play music, install mpd first. A player that doesn't require mpd is musickube. 
-
-Install screen. Below are some common commands:
-
-```sh
-Ctrl+a c Create a new window (with shell).
-Ctrl+a " List all windows.
-Ctrl+a 0 Switch to window 0 (by number).
-Ctrl+a A Rename the current window.
-Ctrl+a S Split current region horizontally into two regions.
-Ctrl+a | Split current region vertically into two regions.
-Ctrl+a tab Switch the input focus to the next region.
-Ctrl+a Ctrl+a Toggle between the current and previous windows
-Ctrl+a Q Close all regions but the current one.
-Ctrl+a X Close the current region.
-```
-
 - Get bluetooth audio working. See https://www.jeremymorgan.com/tutorials/linux/how-to-bluetooth-arch-linux/.
+
+- To configure ufw, see https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu
 
 # References
 
