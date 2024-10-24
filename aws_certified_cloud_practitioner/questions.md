@@ -326,7 +326,7 @@
 
 - Q: If you need a business intelligent or BI dashboard for machine learning-powered insights what can you use? A: Use Amazon QuickSight.
 
-- Q: If you need to process and move data between different AWS compute and storage services what can you use? Use AWS Data Pipeline
+- Q: If you need to process and move data between different AWS compute and storage services what can you use? Use AWS Data Pipeline. This service is now deprecated and AWS wants you to use AWS Glue instead.
 
 - Q: If you need a fully managed graph database, what AWS service can you use? A: AWS Neptune.
 
@@ -348,7 +348,7 @@
 
 - Q: An application stores images which will be retrieved infrequently, but must be available for retrieval immediately. Which is the most cost-effective storage option that meets these requirements? A: Amazon S3 Standard-IA for infrequent access.
 
-- Q: What is AWS Athena? A: A service can be used to query data in S3 using standard SQL
+- Q: What is AWS Athena? A: A service can be used to query data in S3 using standard SQL. 
 
 - Q: What is Amazon Neptune? A: Amazon Neptune is a graph database service.
 
