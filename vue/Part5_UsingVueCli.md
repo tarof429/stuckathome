@@ -32,3 +32,4 @@ So far, we've been using a single HTML file and a single Javascript file to writ
 
 In VS Code, you should install the `vetur` extension which will help writing code for Vue.
 
+Tip: If you remove the node_modules directory, you can recreate it by running `npm install`.
