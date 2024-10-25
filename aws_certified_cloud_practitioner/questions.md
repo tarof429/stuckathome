@@ -46,7 +46,9 @@
 
 - Q: Which of the following is a valid best practices for using the AWS Identity and Access Management (IAM) service? (Select TWO.) A: Create individual IAM users (don't share) and use groups to assign permissions to multiple IAM users.
 
-- Q: Which AWS service or feature can be used to restrict the individual API actions that users and roles in each member account can access: AWS IAM or AWS Organizations? A: AWS Organizations. The keyword here is `API`. 
+- Q: Which AWS service or feature can be used to restrict the individual API actions that users and roles in each member account can access: AWS IAM or AWS Organizations? A: AWS Organizations. The keyword here is `API`.
+
+- Q: Is there a charge to use IAM? A: No
 
 ## EC2
 
@@ -60,7 +62,7 @@
 
 - Q: If you need to look at the metadata of an EC2 instance, how can you get it? A: Login to the EC2 instance and curl http://169.254.169.254/latest/meta-data
 
-- Q: If your EC2 instance need to access AWS services, should you use access keys or IAM roles? A: Use roles. Access keys are in clear text and are not secure.
+- Q: If your EC2 instance needs to access AWS services, should you use access keys or IAM roles? A: Use roles. Access keys are in clear text and are not secure.
 
 - Q: If you need to perform some kind of large processing job, what can you use in place of launching EC2 instances? A: You can use AWS Batch.
 
@@ -68,7 +70,7 @@
 
 - Q: If you need computing resources to run docker containers, what can you use besides EC2 instances? A: ECS, or Elastic Container Service, can be used to run docker containers.
 
-- Q: What are the two launch types that ECS supports? A: ECS supports EC2 launch type and Fargate. With Fargate, AWS will manage the EC2 instances for you. 
+- Q: What are the two launch types that ECS supports? A: ECS supports the EC2 launch type and Fargate. With Fargate, AWS will manage the EC2 instances for you. 
 
 - Q: If you want to publish docker images, what can you use besides Dockerhub? A: AWS ECR or Elastic Container Registry.
 
@@ -195,6 +197,8 @@
 - Q: What is Amazon OpenSearch? A: Amazon OpenSearch is a service used to perform queries on data such as logs and text data.
 
 - Q: Which AWS service lets connected devices easily and securely interact with cloud applications and other devices? A: AWS IoT Core. They keyword here is "devices".
+
+- Q: Which AWS service can assist with coordinating tasks across distributed application components? A: Amazon SWF, or Simple Workflow Service, can be used to coordinate tasks in AWS.
 
 ## Networking
 
@@ -372,6 +376,8 @@
 
 - Q: If you have an RDS instance that somehow fails and you have automated point-in-time recovery configured, what is the latest restorable time you can recover? A: 5 minutes. RDS transaction logs are written to an S3 bucket every 5 minutes and you can go back to up to 30 minutes by default or up to 35 days if you configure it.
 
+- Q:  What database service is best for performing analytics using SQL queries? A: Amazon Redshift.
+
 ## Management and Governance
 
 - Q: What AWS service can you use to consolidate multiple AWS accounts into an organzation? A: AWS Organizations lets you do this. Once you set up an AWS Organization, you can consolidate billing. 
@@ -424,7 +430,7 @@
 
 - Q: If you want to use a service to try to identify suspicious activity in your account, what can you use? A: AWS Detective or GaurdDuty
 
-- Q: If you want to lock down S3 and make sure your buckets follow security best practices, what can you use? A: AWS Macie is a service that can be used to discover and protect sensitive data in AWS. It only scans S3 buckets.
+- Q: If you want to lock down S3 and make sure your buckets follow security best practices, what can you use? A: AWS Macie is a service that can be used to discover and protect sensitive data (including PII) in AWS. It only scans S3 buckets.
 
 - Q: If you need a web application firewall and you're trying to block common web exploits such as XSS, what can you use? A: AWS WAF is a web application firewall service. It would be handy to set this up if you're running any web application that uses ports like 80, 8443, or 8080. Also you sould set up AWS Shield to prevent DDoS.
 
@@ -550,7 +556,7 @@
 
 - Q: What is a Technical Account Manager? A: A technical account manager is a point of contact who can provide technical support. It comes with Enterprise Support.
 
-- Q: Which AWS support plans provide 24x7 access to customer service? A: All plans
+- Q: Which AWS support plans provide 24x7 access to customer service? A: All plans.
 
 - Q: A user has an AWS account with a Business-level AWS Support plan and needs assistance with handling a production service disruption. Which action should the user take? A: Open a "production system down support case".
 
