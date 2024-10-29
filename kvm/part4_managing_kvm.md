@@ -117,16 +117,22 @@ sudo virsh pool-undefine <pool>
 
 If you happen to create a VM with a name you don't like, you can rename it.
 
-```
+```sh
 virsh domrename oldname newname
 ```
 
 ## Creating snapshots
 
-```
+```sh
 virsh snapshot-create-as --domain <vm> --name <snapshot name>
-
 ```
+
+For example:
+
+```sh
+sudo virsh snapshot-create-as --domain rocky9-test --name before-createrepo
+```
+
 ## Listing snapshots
 
 ```
