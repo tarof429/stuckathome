@@ -171,6 +171,29 @@ This doesn't remove the backing store for the VM however. To do that:
 sudo virsh undefine <vm> --remove-all-storage
 ```
 
+
+## Adding disks
+
+Here's how to create  a disk in the qcow2 format. If you don't specify `preallocation=full` the disk creation will be faster but will occupy less space on the host.
+
+```sh
+sudo qemu-img create -f qcow2 /data/libvirt/default/images/rocky9-test-data.qcow2 5G -o preallocation=full
+Formatting '/data/libvirt/default/images/rocky9-test-data.qcow2', fmt=qcow2 cluster_size=65536 extended_l2=off compression_type=zlib size=5368709120 lazy_refcounts=off refcount_bits=16
+```
+
+Next, we'll attach the disk to the VM. 
+
+
+```sh
+sudo virsh attach-disk --domain rocky9-test /data/libvirt/default/images/rocky9-test-data.qcow2 vdb --persistent --config
+```
+
+To detach:
+
+```sh
+sudo virsh detach-disk --domain rocky9-test /data/libvirt/default/images/rocky9-test-data.qcow2 --persistent --config
+```
+
 ## References
 
 https://computingforgeeks.com/how-to-extend-increase-kvm-virtual-machine-disk-size/
@@ -178,3 +201,5 @@ https://computingforgeeks.com/how-to-extend-increase-kvm-virtual-machine-disk-si
 https://computingforgeeks.com/resize-ext-and-xfs-root-partition-without-lvm/
 
 https://blog.wirelessmoves.com/2022/08/proper-shutdown-of-vms-on-host-reboot.html
+
+https://bgstack15.wordpress.com/2017/09/22/create-attach-detach-disk-to-vm-in-kvm-on-command-line/
