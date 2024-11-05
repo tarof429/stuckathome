@@ -417,7 +417,7 @@ It is posible to use --args and --remove-args simultaneously.
 
 ### Creating LVM
 
-Given a disk, use `fdisk` to create a new partition of type LVM. The LVM type is `8e`. 
+Given a disk, first use `fdisk` to create a new partition of type LVM. The LVM type is `8e`. 
 
 Once this is created, use `pvcreate` to create a physical volume. 
 
@@ -441,10 +441,10 @@ To verify, use `vgdisplay`
 vgdisplay data_vg
 ```
 
-Next we can create logical volumes.
+Next we can create logical volumes. See the manpage for lvcreate for other options.
 
 ```sh
-lvcreate -n data_lv --size 5110M data_vg
+lvcreate --name data_lv --size 2042M data_vg
 ```
 
 To verify, run lvdisplay.
@@ -453,17 +453,23 @@ To verify, run lvdisplay.
 lvdisplay
 ```
 
-Now we can go ahead and create and mount a filesystem.
+Now we can go ahead and create the filesystem.
 
 ```sh
 mkfs.xfs /dev/data_vg/data_lv
 ```
 
+Afterwards we need to mount it. Remember that we need to mount the logical volume. 
+
+```sh
+sudo mount /dev/data_vg/data_lv /data
+```
+
 Somet things to note:
 
-- lvcreate's -s option does not stand for size, that option is -L
-- You can skip the name of the logical volume if you want
-- You can use lvremove to remove logical volumes, but you need to give the path to the logical volume. Example: sudo lvremove  /dev/data_vg/lvol0
+- lvcreate's -s option does not stand for size, that option is -L. Using --size might be easier.
+- You can skip the name of the logical volume if you want, but it's a good practice to provide a name.
+- You can use lvremove to remove logical volumes, but you need to give the path to the logical volume. Example: `sudo lvremove /dev/data_vg/lvol0`
 
 Let's say vdb ran out of disk space and we need to extend it. 
 
@@ -484,7 +490,7 @@ Afterwards, create a physical volume using pvcreate.
 sudo pvcreate /dev/vdc1
 ```
 
-Next extend the volume group.
+Next, extend the volume group.
 
 ```sh
 $ sudo vgs
@@ -494,34 +500,69 @@ $ sudo vgs
 sudo vgextend  data_vg /dev/vdc1
 ```
 
-Next extend the logical volume.
+You can run `vgdisplay data_vg` to confirm the new size of the volume group.
+
+Next, we need to extend the logical volume.
 
 ```sh
-$ sudo lvextend -L+1024M /dev/mapper/data_vg-data_lv 
-  Size of logical volume data_vg/data_lv changed from 4.99 GiB (1278 extents) to 5.99 GiB (1534 extents).
+sudo lvextend --size +2G /dev/data_vg/data_lv
+Size of logical volume data_vg/data_lv changed from 4.99 GiB (1278 extents) to 5.99 GiB (1534 extents).
+Logical volume data_vg/data_lv successfully resized.
+```
+
+Alternatively, we can extend extents.
+
+```sh
+$ sudo lvextend --extents +100%FREE /dev/data_vg/data_lv /dev/vdc1 
+  Size of logical volume data_vg/data_lv changed from <2.00 GiB (511 extents) to 3.99 GiB (1022 extents).
   Logical volume data_vg/data_lv successfully resized.
 ```
+
 
 Next we need to grow the file system.
 
 ```sh
 $ sudo xfs_growfs /dev/mapper/data_vg-data_lv 
-meta-data=/dev/mapper/data_vg-data_lv isize=512    agcount=4, agsize=327168 blks
+meta-data=/dev/mapper/data_vg-data_lv isize=512    agcount=4, agsize=130816 blks
          =                       sectsz=512   attr=2, projid32bit=1
          =                       crc=1        finobt=1, sparse=1, rmapbt=0
          =                       reflink=1    bigtime=1 inobtcount=1 nrext64=0
-data     =                       bsize=4096   blocks=1308672, imaxpct=25
+data     =                       bsize=4096   blocks=523264, imaxpct=25
          =                       sunit=0      swidth=0 blks
 naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
 log      =internal log           bsize=4096   blocks=16384, version=2
          =                       sectsz=512   sunit=0 blks, lazy-count=1
-realtime =none                   extsz=4096   blocks=0, rtextents=
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+data blocks changed from 523264 to 1046528
 ```
 
+If you want to start over, remove the volume group.
 
+```sh
+vgremove data_vg
+```
+
+You can then remove the physical volumes.
+
+```sh
+pvremove /dev/vdb1
+pvremove /dev/vdc1
+```
+
+You can create multiple physical volumes at once; example: 
+
+```sh
+$ sudo pvcreate /dev/vdb1 /dev/vdc1
+  Physical volume "/dev/vdb1" successfully created.
+  Physical volume "/dev/vdc1" successfully created.
+```
+
+In case it's difficult to remember the order of the commands, see the manpage for lvm and scroll to the very bottom.
 
 ## References
 
 - https://www.redhat.com/en/blog/linux-at-command
 
 - https://www.sandervanvugt.com/red-hat-rhcsa-9-cert-guide-ex200/ 
+
+- https://repost.aws/knowledge-center/create-lv-on-ebs-partition
