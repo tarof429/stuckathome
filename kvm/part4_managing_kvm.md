@@ -2,13 +2,13 @@
 
 ## Increase the disk size
 
-### Step 1: Shutdown the VM
+Step 1: Shutdown the VM
 
 ```sh
 sudo virsh shutdown test
 ```
 
-## Extend the disk
+Step 2. Extend the disk
 
 Locate the disk path
 
@@ -20,21 +20,21 @@ Locate the disk path
  sda      -
 ```
 
-Resize the disk
+Step 3. Resize the disk
 
 ```sh
 sudo qemu-img resize /data/libvirt/default/boot/snapshot-test-cloudimg.qcow2 +5G
 Image resized.
 ```
 
-Start the VM
+Step 4. Start the VM
 
 ```sh
 sudo virsh start test
 Domain 'test' started
 ```
 
-Check the new layout
+Step 5. Check the new layout
 
 ```sh
 # lsblk
@@ -44,7 +44,7 @@ vda    253:0    0   30G  0 disk
 └─vda1 253:1    0   25G  0 part /
 ```
 
-Extend the partition within the guest.
+Step 6. Extend the partition within the guest.
 
 ```sh
 lsblk
@@ -63,7 +63,7 @@ vda    253:0    0   30G  0 disk
 └─vda1 253:1    0   30G  0 part /
 ```
 
-Finally resize /
+Step 7. Finally resize /
 
 ```sh
 root@localhost ~]# sudo xfs_growfs /
