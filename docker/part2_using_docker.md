@@ -8,7 +8,7 @@ To run a docker image, use the `run` command.
 docker run hello-world
 ```
 
-If the image is not availabe locally in your image cache, the docker client will pull the image from docker hub.
+If the image is not available locally in your image cache, the docker client will pull the image from docker hub.
 
 Now if you run the docker run command again, the docker client will run the hello-world image from the local image cache.
 
@@ -61,32 +61,40 @@ Containers and images are made possible through namespacing and control groups (
 
 ## Listing containers
 
-Let's first run a container indefinitely:
+Let's first run a container and attach a pseudo-TTY to it:
 
-```
+```sh
 docker run -t busybox /bin/sh
 / #
 ```
 
-Open a container and see running containers.
+Now if we run `docker ps` we should see the running container.
 
-```
+```sh
 $ docker ps
-CONTAINER ID   IMAGE     COMMAND     CREATED          STATUS          PORTS     NAMES
-db5b95f431e1   busybox   "/
+CONTAINER ID   IMAGE     COMMAND     CREATED              STATUS              PORTS     NAMES
+4ef45376f084   busybox   "/bin/sh"   About a minute ago   Up About a minute             unruffled_chaum
+```
+
+## Stopping containers
+
+Sometimes there's a rogue container that we need to forceabily stop. In that case, we can stop it by pasing in the container ID.
+
+```sh
+sudo docker stop 4e
 ```
 
 ## Starting stopped containers
 
-If you run docker ps -a, you may see a long list of containers that have stopped. To run these containers again, use the `run` command. You should also use the -`a` option to see the output. The following session shows an example:
+If you run docker ps -a, you may see a long list of containers that have stopped. To run these containers again, use the `run` command. You should also use the `-a` option to see the output. The following session shows an example:
 
-```
+```sh
 $ docker run busybox echo hello
 hello
 $ docker ps -a |grep busybox
 ffc6429b0b40   busybox        "echo hello"             8 seconds ago   Exited (0) 7 seconds ago              loving_beaver
 
-docker start -a ffc6429b0b40
+docker start ffc6429b0b40
 hello
 ```
 
@@ -122,17 +130,3 @@ PING google.com (142.251.46.174): 56 data bytes
 ```
 
 The `-a` option used here is used to attach the terminal to the container output.
-
-## Additional Topics
-
-See the tutorial at https://docs.docker.com/get-started/02_our_app/. This covers:
-
-- Using Dockerfile
-- Volumes
-- Bind mounts
-- Networks
-- Using Docker Compose
-
-## References
-
-https://docs.docker.com/reference/
