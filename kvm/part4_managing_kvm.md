@@ -177,8 +177,8 @@ sudo virsh undefine <vm> --remove-all-storage
 Here's how to create  a disk in the qcow2 format. If you don't specify `preallocation=full` the disk creation will be faster but will occupy less space on the host.
 
 ```sh
-sudo qemu-img create -f qcow2 /data/libvirt/default/images/rocky9-test-data.qcow2 5G -o preallocation=full
-Formatting '/data/libvirt/default/images/rocky9-test-data.qcow2', fmt=qcow2 cluster_size=65536 extended_l2=off compression_type=zlib size=5368709120 lazy_refcounts=off refcount_bits=16
+$ sudo qemu-img create -f qcow2 /data/libvirt/default/images/rocky9-test-data.qcow2 2G -o preallocation=full
+Formatting '/data/libvirt/default/images/rocky9-test-data.qcow2', fmt=qcow size=2147483648 preallocation=full
 ```
 
 Next, we'll attach the disk to the VM. 
@@ -188,7 +188,7 @@ Next, we'll attach the disk to the VM.
 sudo virsh attach-disk --domain rocky9-test /data/libvirt/default/images/rocky9-test-data.qcow2 vdb --persistent --config
 ```
 
-To detach:
+To detach a disk:
 
 ```sh
 sudo virsh detach-disk --domain rocky9-test /data/libvirt/default/images/rocky9-test-data.qcow2 --persistent --config
