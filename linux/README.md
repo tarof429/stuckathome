@@ -119,7 +119,7 @@ A VM running Rocky 9 was used as the training environment.
 
 - A useful tool you can use to troubleshoot DNS issues is nslookup. Install it using bind-utils. 
 
-- Configure firewalls using firewall-cmd, which is available from the firewalld package. If you look at the man page for firewall-cmd, you can see some basic examples at the very bottom. 
+- Configure firewalls using firewall-cmd, which is available from the firewalld package. If you look at the man page for firewall-cmd, you can see some basic examples at the very bottom (it can help to search for `Example`).
 
 ## Packages
 
@@ -323,11 +323,33 @@ job 10 at Thu Oct 31 13:21:00 2024
 
 ## Performance Tuning
 
-- The `tuned` package has a service that can be used to automatically tune performance. This package has a CLI called `tuned-adm` which can be used to list available profiles, see the current profile, and change to a different profile. The profiles are stored in /usr/lib/tuned.
+The `tuned` package has a service that can be used to automatically tune performance. This package has a CLI called `tuned-adm` which can be used to list available profiles, see the current profile, and change to a different profile. The profiles are stored in /usr/lib/tuned.
 
-- From the cockpit GUI, you can change the profile by going to Overview | Configuration | Performance profile. 
+To use tuned, install the `tuned` package.
 
-- Use `renice` to change the nice value of proceses.
+```sh
+sudo dnf install tuned
+```
+
+Start the service.
+
+```sh
+sudo systemctl enable tuned
+sudo systemctl start tuned
+```
+
+Run `tuned-adm active` to see the currently active profile.
+
+```sh
+$ sudo tuned-adm active
+Current active profile: virtual-guest
+```
+
+You can switch to a different profile using the `profile` option.
+
+From the cockpit GUI, you can change the profile by going to Overview | Configuration | Performance profile. 
+
+Use `renice` to change the nice value of proceses.
 
 ## Access Control lists
 
@@ -559,10 +581,95 @@ $ sudo pvcreate /dev/vdb1 /dev/vdc1
 
 In case it's difficult to remember the order of the commands, see the manpage for lvm and scroll to the very bottom.
 
+### Using Stratis
+
+Stratis provides streamlined volume management of storage in RedHat Linux. Using Stratis, disk are added to a storage pool and logical volumes are extended automatically. 
+
+To use stratis, first install stratis-cli and stratisd. 
+
+```sh
+$ sudo dnf install stratis-cli stratisd
+```
+
+Next, start and enable the stratisd service.
+
+```sh
+$ sudo systemctl enable stratisd
+$ sudo systemctl start stratisd
+$ sudo systemctl status stratisd
+● stratisd.service - Stratis daemon
+     Loaded: loaded (/usr/lib/systemd/system/stratisd.service; enabled; preset: en>
+     Active: active (running) since Tue 2024-11-05 12:14:43 PST; 3s ago
+       Docs: man:stratisd(8)
+   Main PID: 2582 (stratisd)
+      Tasks: 8 (limit: 23165)
+     Memory: 2.3M
+        CPU: 11ms
+     CGroup: /system.slice/stratisd.service
+             └─2582 /usr/libexec/stratisd --log-level debug
+
+Nov 05 12:14:43 rocky9-test systemd[1]: Starting Stratis daemon...
+Nov 05 12:14:43 rocky9-test stratisd[2582]: [2024-11-05T20:14:43Z INFO  stratisd::>
+Nov 05 12:14:43 rocky9-test stratisd[2582]: [2024-11-05T20:14:43Z INFO  stratisd::>
+Nov 05 12:14:43 rocky9-test stratisd[2582]: [2024-11-05T20:14:43Z INFO  stratisd::>
+Nov 05 12:14:43 rocky9-test systemd[1]: Started Stratis daemon.
+Nov 05 12:14:43 rocky9-test stratisd[2582]: [2024-11-05T20:14:43Z INFO  stratisd::>
+```
+
+If you look at the man page for stratis, the first thing it discusses is how to create a pool. To create a pool:
+
+```sh
+$ sudo stratis pool create data_pool /dev/vdb
+```
+
+If you get an error saying the block device appears to be owned, then you need to wipe the filesystem first.
+
+```sh
+$ sudo wipefs --all /dev/vdb
+/dev/vdb: 2 bytes were erased at offset 0x000001fe (dos): 55 aa
+/dev/vdb: calling ioctl to re-read partition table: Success
+```
+
+After creating the pool, we can extend it.
+
+```sh
+$  sudo stratis pool add-data data_pool /dev/vdc
+```
+
+Afterwards if we list the pool we should see the new size.
+
+```sh
+$ sudo stratis pool list
+Name                  Total / Used / Free    Properties                                   UUID   Alerts
+data_pool   4.00 GiB / 530 MiB / 3.48 GiB   ~Ca,~Cr, Op   bcbf4ea0-e7ac-4b55-b47a-c5c89edd084a  
+```
+
+Next, we can go ahead and create a filesystem on our pool.
+
+```sh
+$ sudo stratis filesystem create data_pool data_fs 
+```
+
+If we list the filesystem, we can see:
+
+```sh
+$ sudo stratis filesystem list
+Pool        Filesystem   Total / Used / Free / Limit            Created             Device                           UUID                                
+data_pool   data_fs      1 TiB / 546 MiB / 1023.47 GiB / None   Nov 05 2024 12:55   /dev/stratis/data_pool/data_fs   a07a51eb-f1ec-46dc-98cd-37633fd4ecfa
+```
+
+Afterwards, we just need to mount the filesystem.
+
+```sh
+$ sudo mount /dev/stratis/data_pool/data_fs /data/
+```
+
+To add the stratis filesystem to /etc/fstab, run `stratis filesystem list` to get the UUID. Then add the entry with the `xfs` filesystem type. Make sure you also specify that the stratisd needs to be started before the filesystem is mounted.
+
+```sh
+UUID=a07a51eb-f1ec-46dc-98cd-37633fd4ecfa /data	xfs	defaults,x-systemd.requires=stratisd.service 0 0
+```
+
 ## References
 
-- https://www.redhat.com/en/blog/linux-at-command
-
-- https://www.sandervanvugt.com/red-hat-rhcsa-9-cert-guide-ex200/ 
-
-- https://repost.aws/knowledge-center/create-lv-on-ebs-partition
+- https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam?section=objectives
