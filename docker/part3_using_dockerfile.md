@@ -28,6 +28,22 @@ Each `RUN` command in the Dockerfile will be added as a layer in the docker imag
 
 If the order of the RUN statements change, Docker cannot leverage the cache.
 
+## Using Node in a docker image
+
+The simpleweb example runs a web application built with nodejs. To build it, run:
+
+```sh
+docker build -t simpleweb .
+```
+
+Then to run it:
+
+```sh
+docker run -d -p 8080:8080 simpleweb:latest
+```
+
+Note that in this Dockerfile we have two COPY statements. This can vastly improve the image build speed so IF we know that the application has a part that does not change very often if it is good to take advantage of multiple COPY statements.
+
 ## References
 
 https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide
