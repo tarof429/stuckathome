@@ -8,6 +8,12 @@ This section covers a variety of topics related to Linux administration and was 
 
 A VM running Rocky 9 was used as the training environment.
 
+## Users
+
+Use chage to change the password expirary per user.\
+
+Defaults are stored in /etc/login.defs.
+
 ## Files and Processes
 
 - To see what files are consuming the most space in a directory such as /var, run: `du -k /var | sort -nr | more`.
@@ -670,6 +676,301 @@ To add the stratis filesystem to /etc/fstab, run `stratis filesystem list` to ge
 UUID=a07a51eb-f1ec-46dc-98cd-37633fd4ecfa /data	xfs	defaults,x-systemd.requires=stratisd.service 0 0
 ```
 
+## NFS Service
+
+To setup NFS, install the `nfs-utils` package on both Linux workstations and the NFS server.
+
+```sh
+sudo dnf install nfs-utils
+```
+
+On your NFS host, enable and start the NFS service.
+
+```sh
+sudo systemctl enable --now nfs-server
+```
+
+You must also start the rpcbind service, which NFS uses for port mapping.
+
+```sh
+sudo systemctl enable --now rpcbind
+```
+
+Afterwards add a line in `/etc/exports` to give access to a directory such as `/shared`.
+
+```sh
+$ sudo cat /etc/exports
+/shared            192.168.1.200(ro,insecure,all_squash)
+```
+
+If unsure of the syntax, see the manpage for exports.
+
+To export this directory, use `exportfs`.
+
+```sh
+$ sudo exportfs -av
+exporting 192.168.1.200:/shared
+```
+
+You can also use the `-r` option to re-export the NFS directory. Below, we allow anyone in the 192.168.1.0/24 subnet to access this directory.
+
+```sh
+$ sudo cat /etc/exports
+/shared            192.168.1.0/24(ro,insecure,all_squash)
+$ sudo exportfs -rv
+exporting 192.168.1.0/24:/shared
+```
+
+On the client, we should enable and start the rpcbind service.
+
+```sh
+```sh
+sudo systemctl enable --now rpcbind
+```
+
+You should and disable the firewalld service.
+
+```sh
+$ sudo systemctl stop firewalld
+$ sudo systemctl disable firewalld
+Removed "/etc/systemd/system/multi-user.target.wants/firewalld.service".
+Removed "/etc/systemd/system/dbus-org.fedoraproject.FirewallD1.service".
+```
+
+Next, we can use `showmount` to see what directories are shared by the NFS server.
+
+```sh
+sudo showmount -e 192.168.1.40
+Export list for 192.168.1.40:
+/shared 192.168.1.0/24
+```
+
+Afterwards, we can mount the NFS directory.
+
+```sh
+$ sudo mkdir /shared
+$ sudo mount 192.168.1.40:/shared /shared
+```
+
+You can add the entry to /etc/fstab:
+
+```sh
+192.168.1.40:/shared   /shared nfs     defaults 0
+```
+
+## Boot Processes
+
+Besides the commands `/sbin/shutdown`, you can use `systemctl` to reboot or shutdown your server.
+
+To shutdown a server:
+
+```sh
+systemctl poweroff
+```
+
+To reboot a server:
+
+```sh
+systemctl reboot
+```
+
+The shutdown and reboot commands are actually symlinks to systemctl.
+
+To get the current runlevel, use `systemctl`.
+
+```sh
+systemctl get-default
+```
+
+You can also get the run level by using `who`.
+
+```sh
+$ who -r
+         run-level 3  2024-11-06 09:19
+```
+
+You can list the dependencies of each target using systemctl.
+
+```sh
+systemctl list-dependencies multi-user.target
+```
+
+You can see the different runlevels as softlinks in the filesystem.
+
+```sh
+$ ls -l /lib/systemd/system/runlevel*
+lrwxrwxrwx. 1 root root 15 Sep  3 11:41 /lib/systemd/system/runlevel0.target -> poweroff.target
+lrwxrwxrwx. 1 root root 13 Sep  3 11:41 /lib/systemd/system/runlevel1.target -> rescue.target
+lrwxrwxrwx. 1 root root 17 Sep  3 11:41 /lib/systemd/system/runlevel2.target -> multi-user.target
+lrwxrwxrwx. 1 root root 17 Sep  3 11:41 /lib/systemd/system/runlevel3.target -> multi-user.target
+lrwxrwxrwx. 1 root root 17 Sep  3 11:41 /lib/systemd/system/runlevel4.target -> multi-user.target
+lrwxrwxrwx. 1 root root 16 Sep  3 11:41 /lib/systemd/system/runlevel5.target -> graphical.target
+lrwxrwxrwx. 1 root root 13 Sep  3 11:41 /lib/systemd/system/runlevel6.target -> reboot.target
+```
+
+A better way to get a list of targets is shown below:
+
+```sh
+sudo systemctl list-units --type target
+```
+
+Just as we can use systemctl get the current target, we can set it too.
+
+```sh
+systemctl get-default
+systemctl set-default rescue
+```
+
+## Managing Firewalls
+
+Firewalls in RedHat Linux are managed using the firewalld service and the firewall-cmd CLI. The CLI has many command-line switches and they are not easy to look up. This is true when you use the --help option or look up the options in the man page. So you do need to memorize how to use firewall-cmd.
+
+To enable and start the firewall:
+
+```sh
+sudo systemctl enable --now firewalld
+```
+
+The first command you should know is to list the rules using  `list-all`.
+
+```sh
+$ sudo firewall-cmd --list-all
+public (active)
+  target: default
+  icmp-block-inversion: no
+  interfaces: enp1s0
+  sources: 
+  services: cockpit dhcpv6-client ssh
+  ports: 
+  protocols: 
+  forward: yes
+  masquerade: no
+  forward-ports: 
+  source-ports: 
+  icmp-blocks: 
+  rich rules: 
+```
+
+To get a list of all the services known to firewalld, use the --get-services option.
+
+```sh
+$ sudo firewall-cmd --get-services
+RH-Satellite-6 RH-Satellite-6-capsule afp amanda-client amanda-k5-client amqp amqps apcupsd audit ausweisapp2 bacula bacula-client bareos-director bareos-filedaemon bareos-storage bb bgp bitcoin bitcoin-rpc bitcoin-testnet bitcoin-testnet-rpc bittorrent-lsd ceph ceph-exporter ceph-mon cfengine checkmk-agent cockpit collectd condor-collector cratedb ctdb dds dds-multicast dds-unicast dhcp dhcpv6 dhcpv6-client distcc dns dns-over-tls docker-registry docker-swarm dropbox-lansync elasticsearch etcd-client etcd-server finger foreman foreman-proxy freeipa-4 freeipa-ldap freeipa-ldaps freeipa-replication freeipa-trust ftp galera ganglia-client ganglia-master git gpsd grafana gre high-availability http http3 https ident imap imaps ipfs ipp ipp-client ipsec irc ircs iscsi-target isns jenkins kadmin kdeconnect kerberos kibana klogin kpasswd kprop kshell kube-api kube-apiserver kube-control-plane kube-control-plane-secure kube-controller-manager kube-controller-manager-secure kube-nodeport-services kube-scheduler kube-scheduler-secure kube-worker kubelet kubelet-readonly kubelet-worker ldap ldaps libvirt libvirt-tls lightning-network llmnr llmnr-client llmnr-tcp llmnr-udp managesieve matrix mdns memcache minidlna mongodb mosh mountd mqtt mqtt-tls ms-wbt mssql murmur mysql nbd nebula netbios-ns netdata-dashboard nfs nfs3 nmea-0183 nrpe ntp nut openvpn ovirt-imageio ovirt-storageconsole ovirt-vmconsole plex pmcd pmproxy pmwebapi pmwebapis pop3 pop3s postgresql privoxy prometheus prometheus-node-exporter proxy-dhcp ps2link ps3netsrv ptp pulseaudio puppetmaster quassel radius rdp redis redis-sentinel rpc-bind rquotad rsh rsyncd rtsp salt-master samba samba-client samba-dc sane sip sips slp smtp smtp-submission smtps snmp snmptls snmptls-trap snmptrap spideroak-lansync spotify-sync squid ssdp ssh steam-streaming svdrp svn syncthing syncthing-gui syncthing-relay synergy syslog syslog-tls telnet tentacle tftp tile38 tinc tor-socks transmission-client upnp-client vdsm vnc-server warpinator wbem-http wbem-https wireguard ws-discovery ws-discovery-client ws-discovery-tcp ws-discovery-udp wsman wsmans xdmcp xmpp-bosh xmpp-client xmpp-local xmpp-server zabbix-agent zabbix-server zerotier
+```
+
+The firewalld has multiple zones. To see all the zones:
+
+```sh
+$ sudo firewall-cmd --get-zones
+block dmz drop external home internal nm-shared public trusted work
+```
+
+To see the current zone:
+
+```sh
+$ sudo firewall-cmd --get-active-zones
+public
+  interfaces: enp1s0
+```
+
+The default zone for RedHat Linux is `public`.
+
+To change the zone:
+
+```sh
+$ sudo firewall-cmd --set-default=public
+```
+
+To see the rules for the `external` zone:
+
+```sh
+$ sudo firewall-cmd --zone=external --list-all
+external
+  target: default
+  icmp-block-inversion: no
+  interfaces: 
+  sources: 
+  services: ssh
+  ports: 
+  protocols: 
+  forward: yes
+  masquerade: yes
+  forward-ports: 
+  source-ports: 
+  icmp-blocks: 
+  rich rules: 
+```
+
+To add a service to a zone:
+
+```sh
+$ sudo firewall-cmd --zone=external --add-service=http --permanent
+success
+```
+
+Afterwards we need to reload the firewall rules.
+
+```sh
+$ sudo firewall-cmd --reload
+```
+
+To add custom services, copy one of the XML files in /usr/lib/firewalld/services to /etc/firewalld/services, edit the file, and restart the firewalld service. You might want to make sure it does not refer to any helpers.
+
+You can also add custom ports directly to the firewall instead of defining services.
+
+You can also add rich rules to block incoming traffic. It is best to look up examples in the firewalld.richlanguage man page. For example:
+
+```sh
+$ sudo firewall-cmd --add-rich-rule='rule family="ipv4" source address="192.168.1.9" reject'
+```
+
+To block all ICMP incoming traffic:
+
+```sh
+$ sudo firewall-cmd --add-icmp-block-inversion
+```
+
+It is difficult to find this option from the manpage, but if you run `firewall-cmd --list-all` it will be listed for the current zone.
+
+To block outgoing traffic to google.com, you could do:
+
+```sh
+firewall-cmd --direct --add-rule ipv4 filter OUTPUT 0 -d google.com -j DROP
+success
+```
+
+## Containers
+
+In RedHat, containers are managed using podman. It needs to be installed on the system.
+
+```sh
+dnf install podman
+```
+
+To run a container:
+
+```sh
+sudo podman run -d -p 8080:80 docker.io/library/httpd
+```
+
+Podman wants you to create system services.
+
+To manage containers through systemd, first generate a unit file.
+
+```sh
+sudo podman generate systemd --new --files --name ecstatic_jennings
+```
+
+Copy it to the systemd directory.
+
+```sh
+cp container-ecstatic_jennings.service /etc/systemd/system
+```
+
+See the man page for podman-generate.
+
+
 ## References
 
 - https://www.redhat.com/en/services/training/ex200-red-hat-certified-system-administrator-rhcsa-exam?section=objectives
+- https://access.redhat.com/solutions/7013886
