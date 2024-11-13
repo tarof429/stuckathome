@@ -10,9 +10,13 @@ A VM running Rocky 9 was used as the training environment.
 
 ## Users
 
-Use chage to change the password expirary per user.\
+Use `chage` to change the password expirary per user.
 
 Defaults are stored in /etc/login.defs.
+
+## History
+
+To remove an item from user's history, run history -d <history item>.
 
 ## Files and Processes
 
@@ -161,7 +165,9 @@ Defaults are stored in /etc/login.defs.
 
 - A handy CLI command to know is `dnf config-manager`. For example, to enable a yum repo, run `dnf config-manager --set-enabled baseos`.
 
-- To remove an old kernel, you can use `dnf erase <package.of.kernel.to.remove>. Then use `dnf autoremove` to delete anything you don't need.
+- To remove an old kernel, you can use `dnf remove kernel-core-<version.of.kernel.to.remove>`. Then use `dnf autoremove` to delete anything you don't need. The `erase` option is deprecated. Since we only need to explictly remove one package, it is not very helpful to create a variable for the kernel version to remove.
+
+- To see what packages were installed, run `dnf history`. You can undo package installs this way by running `dnf history undo <id>.
 
 ## Shells
 
@@ -326,6 +332,17 @@ sh ./myscript.sh  | batch
 warning: commands will be executed using /bin/sh
 job 10 at Thu Oct 31 13:21:00 2024
 ```
+
+## Logging
+
+By deault, system journals are not persisted across reboots. To keep system journals after a reboot, do the following:
+
+```sh
+mkdir -p /var/log/journal
+systemd-tmpfiles --create --prefix /var/log/journal
+```
+
+These steps are described in the manpage for systemd-journald.
 
 ## Performance Tuning
 
@@ -700,7 +717,7 @@ Afterwards add a line in `/etc/exports` to give access to a directory such as `/
 
 ```sh
 $ sudo cat /etc/exports
-/shared            192.168.1.200(ro,insecure,all_squash)
+/shared 192.168.1.0/24(rw)
 ```
 
 If unsure of the syntax, see the manpage for exports.
@@ -709,26 +726,21 @@ To export this directory, use `exportfs`.
 
 ```sh
 $ sudo exportfs -av
-exporting 192.168.1.200:/shared
+exporting 192.168.1.0/24:/shared
 ```
 
-You can also use the `-r` option to re-export the NFS directory. Below, we allow anyone in the 192.168.1.0/24 subnet to access this directory.
+You might also want to set permissions on /shared.
 
-```sh
-$ sudo cat /etc/exports
-/shared            192.168.1.0/24(ro,insecure,all_squash)
-$ sudo exportfs -rv
-exporting 192.168.1.0/24:/shared
+You can also use the `-r` option to re-export the NFS directory.
 ```
 
 On the client, we should enable and start the rpcbind service.
 
 ```sh
-```sh
 sudo systemctl enable --now rpcbind
 ```
 
-You should and disable the firewalld service.
+You should also either disable the firewalld service or configure the firewall for NFS access. Below we disable firewalld.
 
 ```sh
 $ sudo systemctl stop firewalld
@@ -749,7 +761,7 @@ Afterwards, we can mount the NFS directory.
 
 ```sh
 $ sudo mkdir /shared
-$ sudo mount 192.168.1.40:/shared /shared
+$ sudo mount -t nfs 192.168.1.40:/shared /shared
 ```
 
 You can add the entry to /etc/fstab:
@@ -758,7 +770,7 @@ You can add the entry to /etc/fstab:
 192.168.1.40:/shared   /shared nfs     defaults 0
 ```
 
-## Boot Processes
+## Boot Targets
 
 Besides the commands `/sbin/shutdown`, you can use `systemctl` to reboot or shutdown your server.
 
@@ -950,25 +962,24 @@ dnf install podman
 To run a container:
 
 ```sh
-sudo podman run -d -p 8080:80 docker.io/library/httpd
+sudo podman run -d -p 8080:80 --name httpd docker.io/library/httpd
 ```
 
-Podman wants you to create system services.
-
-To manage containers through systemd, first generate a unit file.
+To manage containers through systemd, generate a unit file. In the previous step, you should give a proper name to the container because it will be used for the name of the service and CANNOT be changed later.
 
 ```sh
-sudo podman generate systemd --new --files --name ecstatic_jennings
+sudo podman generate systemd --new --files --name httpd
 ```
+
+You can see an example in the man page for podman-generate-systemd.
 
 Copy it to the systemd directory.
 
 ```sh
-cp container-ecstatic_jennings.service /etc/systemd/system
+cp container-httpd.service /etc/systemd/system
 ```
 
-See the man page for podman-generate.
-
+Afterwards you should be able enable/start the service. You do not need to run systemctl daemon-reload. 
 
 ## References
 
