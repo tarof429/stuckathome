@@ -1,0 +1,9 @@
+version: '3'
+services:
+  visits-app:
+    build: .
+    ports:
+      - "4001:8081"
+    restart: on-failure
+  redis-server:
+    image: "redis:alpine"
