@@ -18,7 +18,7 @@ Minimum password lengths are managed in /etc/security/pwquality.conf.
 
 ## History
 
-To remove an item from user's history, run history -d <history item>.
+To remove an item from user's history, run `history -d <history item>`. To remove all items, run `history -c`.
 
 ## Files and Processes
 
@@ -28,7 +28,7 @@ To remove an item from user's history, run history -d <history item>.
 
 - The `free` command is not very human-friendly by default, but you can change the units easily buy using `m` or simply `-h` for human-readable.
 
-- The `lsof` command can be used to list open files. With no arguments, it's not very helpful. If you know a user is logged into a system, you can find what files he has opened by running `lsof -u <user>`. Or what if you find a process from top and you want to find what files it has opened. For example, if top lists a process called `Isolated Web Co` with PID 16068, then run `lsof -p 16068` will give you a list of files that process has opeened. See https://www.redhat.com/en/blog/analyze-processes-lsof. 
+- The `lsof` command can be used to list open files (lsof stands for `list open files`). With no arguments, it's not very helpful. If you know a user is logged into a system, you can find what files he has opened by running `lsof -u <user>`. Or what if you find a process from top and you want to find what files it has opened. For example, if top lists a process called `Isolated Web Co` with PID 16068, then run `lsof -p 16068` will give you a list of files that process has opeened. See https://www.redhat.com/en/blog/analyze-processes-lsof. 
 
 - The `tcpdump` command can be used to troubleshoot networking issues. For example, on host A, run tcpdump -i <interface> host <source IP>. Then from the source IP machine, run ping <ip.of.host.A>. You should see some output on host A indicating that the ping was successful. See https://hackertarget.com/tcpdump-examples/. Note that if you want to monitor port 22, you should login to the server from the console and not from an SSH session.
 
@@ -669,8 +669,17 @@ In case it's difficult to remember the order of the commands, see the manpage fo
 Key points to remember in adding more disk space:
 
 1. Create PV and add it to the volume group that needs to be expanded.
-2. Next we need to extend the LV that is using the VG.
+2. Next we need to extend the LV that is using the VG (use lvextend).
 3. Finally we need to run xfs_growfs or resize2fs. 
+
+The commands used are:
+
+- pvcreate <device>
+- vgextend <vg> <pv>
+- lvextend -l +100%FREE <lv>
+- xfs_growfs <xfs.filesystem>
+
+If you run xfs_growfs without running lvextend first, then the size wont' change.
 
 ### Using Stratis
 
