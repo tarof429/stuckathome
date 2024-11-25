@@ -481,113 +481,371 @@ Use `renice` to change the nice value of proceses.
 
 ## Managing Grub
 
-To list all kernel entries, type `grubby --info=ALL`.
+The `grubby` CLI tool is used to manage grub options.
 
-Let's say we have a problem with our KVM in that we don't see the console output. We want to redirect the console output to our terminal. Once we SSH to the server, what we can do is add default arguments to all the kernels.
 
-```sh
-grubby --args="console=ttyS0,115200" --update-kernel=ALL
-```
+The man page for grubby does not have any examples and is not easy to read in a pinch. It is best to memorize the commands most often used.
 
-Let's say we don't want this argument for the rescue kernel. To remove it, run
+The first of these is used to list the arguments for all the kernels.:
 
 ```sh
-sudo grubby --remove-args="console=ttyS0,115200" --update-kernel="/boot/vmlinuz-0-rescue-e116e6f8824d49d49b3779b59df050c9"
+grubby --info=ALL`
 ```
 
-It is posible to use --args and --remove-args simultaneously. 
+To add arguments, use the format:
+
+```sh 
+grubby --args=<arguments> --update-kernel=ALL
+```
+
+To remove arguments:
+
+```sh
+grubby --remove-args --update-kernel=ALL
+```
+
+To see the current kernel, run:
+
+```sh
+grubby --default-kernel
+```
 
 ## Managing Disks
 
-### Creating partitions
+### Partition Tables
 
-If the exam doesn't mention creating LVM volumes, then don't create LVM volumes, create primary and secondary partitions instead.
+For any disk to be usable, it must have a partition table. There are two main types that you can work with on Linux: MBR and GPT. 
 
-Don't assume the exam will always ask you to create xfs partitions; ext3, ext4 and vfat are all legitimate partition types. For example, if the exam asks you to create a VFAT partition, using fdisk create a partition of type FAT32. 
+The MBR partition type is a legacy partiton type. Partition sizes are limited to 2TB and you can only create up to 4 partitions. You can also create extended partitions for a total of 15 partitions. 
 
-Partition labels can be used to identify partitions instead of UUIDs. There are a few command-line tools to set the label. The `e2label` command can be used to set the label for ext3 and ext4 partitions while `fatlabel` can be used to set the label for MS-DOS partitions. These are mentioned in the man page for fstab.
+The GPT partition type solves many of the limitations of MBR. Unless you are required to use MBR, use GPT. 
 
-### Creating LVM
+Concerning tools, `fdisk` is the legacy tool and `gdisk` is the newer tool. When starting `fisk`, it will assume you want to use MBR. When using `gdisk`, it will assume you want to use GPT. However, in practice `fdisk` is easier to use.
 
-Given a new disk, first use `fdisk` to create a new partition of type LVM. 
+### Using gdisk to create primary partitions
 
-The first task is to create a GPT partition table. In `fdisk` this is option `g` and you can verify afterwards by running 1fdisk`.
-
-Next, we can create an LVM partition. The LVM type is `8e`. By default, fdisk will want to use the entire disk. If the exam asks to create a disk of a specfic size, specify the size here, such as +2G. You can type `lvm` to set the type. Aftewards, type `w` to write the changes.
-
-Once this is done, use `pvcreate` to create a physical volume. You can run `pvs` to verify the existing physical volumes. Then run:
+The first step is to find the disk you want to modify. You can use `lsblk` to do this. Afterwards, you can create primary partitions by just typing `n`.
 
 ```sh
-pvcreate /dev/vdb1
+[root@rocky-server ~]# lsblk
+NAME                      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda                         8:0    0   20G  0 disk 
+├─sda1                      8:1    0    1G  0 part /boot
+└─sda2                      8:2    0   19G  0 part 
+  ├─rl_rocky--server-root 253:0    0   17G  0 lvm  /
+  └─rl_rocky--server-swap 253:1    0    2G  0 lvm  [SWAP]
+sr0                        11:0    1 1024M  0 rom  
+sr1                        11:1    1 10.2G  0 rom  /run/media/root/Rocky-9-4-x86_64-dvd
+vda                       252:0    0   20G  0 disk 
+[root@rocky-server ~]# gdisk /dev/vda
+GPT fdisk (gdisk) version 1.0.7
+
+Partition table scan:
+  MBR: not present
+  BSD: not present
+  APM: not present
+  GPT: not present
+
+Creating new GPT entries in memory.
+
+Command (? for help): n
+Partition number (1-128, default 1): 
+First sector (34-41949918, default = 2048) or {+-}size{KMGTP}: 
+Last sector (2048-41949918, default = 41949918) or {+-}size{KMGTP}: +1G
+Current type is 8300 (Linux filesystem)
+Hex code or GUID (L to show codes, Enter = 8300): 
+Changed type of partition to 'Linux filesystem'
+
+Command (? for help): p
+Disk /dev/vda: 41949952 sectors, 20.0 GiB
+Sector size (logical/physical): 512/512 bytes
+Disk identifier (GUID): EFF1C91F-EB00-4E51-8CA3-72D43CC905EB
+Partition table holds up to 128 entries
+Main partition table begins at sector 2 and ends at sector 33
+First usable sector is 34, last usable sector is 41949918
+Partitions will be aligned on 2048-sector boundaries
+Total free space is 39852733 sectors (19.0 GiB)
+
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1            2048         2099199   1024.0 MiB  8300  Linux filesystem
+
+Command (? for help): w
+
+Final checks complete. About to write GPT data. THIS WILL OVERWRITE EXISTING
+PARTITIONS!!
+
+Do you want to proceed? (Y/N): Y
+OK; writing new GUID partition table (GPT) to /dev/vda.
+The operation has completed successfully.
 ```
 
-Run `pvs` again to verify the changes, or use `pvdisplay` for more detailed output.
+### Using fdisk to create primary partitions
 
-Next, we'll create the volume group. Below is the syntax:
+To do the same with fdisk:
 
 ```sh
-vgcreate <volume.group.name> <physical.volume.name>
-```
-You might just want to run `vgcreate` to get a short usage tip.
+[rocky@rocky-server ~]$ lsblk
+NAME                      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+sda                         8:0    0   20G  0 disk 
+├─sda1                      8:1    0    1G  0 part /boot
+└─sda2                      8:2    0   19G  0 part 
+  ├─rl_rocky--server-root 253:0    0   17G  0 lvm  /
+  └─rl_rocky--server-swap 253:1    0    2G  0 lvm  [SWAP]
+sr0                        11:0    1 1024M  0 rom  
+sr1                        11:1    1 10.2G  0 rom  /run/media/root/Rocky-9-4-x86_64-dvd
+vda                       252:0    0   20G  0 disk 
+[rocky@rocky-server ~]$ fdisk /dev/vda
 
-The following volume group uses the entire disk. 
+Welcome to fdisk (util-linux 2.37.4).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+Command (m for help): m
+
+Help:
+
+  GPT
+   M   enter protective/hybrid MBR
+
+  Generic
+   d   delete a partition
+   F   list free unpartitioned space
+   l   list known partition types
+   n   add a new partition
+   p   print the partition table
+   t   change a partition type
+   v   verify the partition table
+   i   print information about a partition
+
+  Misc
+   m   print this menu
+   x   extra functionality (experts only)
+
+  Script
+   I   load disk layout from sfdisk script file
+   O   dump disk layout to sfdisk script file
+
+  Save & Exit
+   w   write table to disk and exit
+   q   quit without saving changes
+
+  Create a new label
+   g   create a new empty GPT partition table
+   G   create a new empty SGI (IRIX) partition table
+   o   create a new empty DOS partition table
+   s   create a new empty Sun partition table
+
+
+Command (m for help): g
+Created a new GPT disklabel (GUID: 930315E4-05E6-0147-891C-D09C4F7B969F).
+
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+[rocky@rocky-server ~]$ sudo fdisk /dev/vda
+
+Welcome to fdisk (util-linux 2.37.4).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+
+Command (m for help): n
+Partition number (1-128, default 1): 
+First sector (2048-41949918, default 2048): +1G
+Value out of range.
+First sector (2048-41949918, default 2048): 
+Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-41949918, default 41949918): +1G
+
+Created a new partition 1 of type 'Linux filesystem' and of size 1 GiB.
+
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+```
+
+### Create partitions
+
+Afterwards you need to create a filesystem. Partitions need filesystems or they aren't usable to Linux.
+
+How do you know if a partition has a fileystem or not? Run `lsblk -lf`. Below, you can see that vda1, the GPT partiton we just created, has no partitions.
 
 ```sh
-vgcreate data_vg /dev/vdb1
-  Volume group "data_vg" successfully create
+[root@rocky-server rocky]# lsblk -lf
+NAME FSTYPE  FSVER    LABEL                UUID                                   FSAVAIL FSUSE% MOUNTPOINTS
+sda                                                                                              
+sda1 xfs                                   6002c4fd-7572-4a1f-b1ea-fb344afd3b2a    656.9M    32% /boot
+sda2 LVM2_me LVM2 001                      P8yXn2-MbFN-Lt0L-lDHN-RTHA-i0zW-pCEWBL                
+sr0                                                                                              
+sr1  iso9660 Joliet E Rocky-9-4-x86_64-dvd 2024-05-05-01-12-25-00                       0   100% /run/media/root/Rocky-9-4-x86_64-dvd
+vda                                                                                              
+vda1                                                                                             
+rl_rocky--server-root
+     xfs                                   8e4b7245-2259-4fa9-bc85-39436a8f4d37     11.7G    31% /
+rl_rocky--server-swap
+     swap    1                             2a2230cb-b0a6-43a0-bc8b-77c229ab2398                  [SWAP]
 ```
 
-To create a volume group with an extents size, use the -s option.
+After we run `mkfs.ext4` and run `lsblk -lf` again, we should see the filesystem type. In this case, it's ext4.
+
+```sh
+[root@rocky-server rocky]# mkfs.ext4 /dev/vda1
+mke2fs 1.46.5 (30-Dec-2021)
+Discarding device blocks: done                            
+Creating filesystem with 262144 4k blocks and 65536 inodes
+Filesystem UUID: 089b3290-053a-4ede-9ffa-f915b130d1fd
+Superblock backups stored on blocks: 
+	32768, 98304, 163840, 229376
+
+Allocating group tables: done                            
+Writing inode tables: done                            
+Creating journal (8192 blocks): done
+Writing superblocks and filesystem accounting information: done
+
+[root@rocky-server rocky]# lsblk -lf
+NAME FSTYPE  FSVER    LABEL                UUID                                   FSAVAIL FSUSE% MOUNTPOINTS
+sda                                                                                              
+sda1 xfs                                   6002c4fd-7572-4a1f-b1ea-fb344afd3b2a    656.9M    32% /boot
+sda2 LVM2_me LVM2 001                      P8yXn2-MbFN-Lt0L-lDHN-RTHA-i0zW-pCEWBL                
+sr0                                                                                              
+sr1  iso9660 Joliet E Rocky-9-4-x86_64-dvd 2024-05-05-01-12-25-00                       0   100% /run/media/root/Rocky-9-4-x86_64-dvd
+vda                                                                                              
+vda1 ext4    1.0                           089b3290-053a-4ede-9ffa-f915b130d1fd                  
+rl_rocky--server-root
+     xfs                                   8e4b7245-2259-4fa9-bc85-39436a8f4d37     11.7G    31% /
+rl_rocky--server-swap
+     swap    1                             2a2230cb-b0a6-43a0-bc8b-77c229ab2398                  [SWAP]
+```
+
+If we want an XFS filesystem, then we can use `mkfs.xfs`. 
+
+```sh
+[root@rocky-server rocky]# mkfs.xfs /dev/vda1
+meta-data=/dev/vda1              isize=512    agcount=4, agsize=65536 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=1, sparse=1, rmapbt=0
+         =                       reflink=1    bigtime=1 inobtcount=1 nrext64=0
+data     =                       bsize=4096   blocks=262144, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+log      =internal log           bsize=4096   blocks=16384, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+Discarding blocks...Done.
+[root@rocky-server rocky]# lsblk -lf
+NAME FSTYPE  FSVER    LABEL                UUID                                   FSAVAIL FSUSE% MOUNTPOINTS
+sda                                                                                              
+sda1 xfs                                   6002c4fd-7572-4a1f-b1ea-fb344afd3b2a    656.9M    32% /boot
+sda2 LVM2_me LVM2 001                      P8yXn2-MbFN-Lt0L-lDHN-RTHA-i0zW-pCEWBL                
+sr0                                                                                              
+sr1  iso9660 Joliet E Rocky-9-4-x86_64-dvd 2024-05-05-01-12-25-00                       0   100% /run/media/root/Rocky-9-4-x86_64-dvd
+vda                                                                                              
+vda1 xfs                                   3fca7653-5a81-440e-b36a-66c179286c7e                  
+rl_rocky--server-root
+     xfs                                   8e4b7245-2259-4fa9-bc85-39436a8f4d37     11.7G    31% /
+rl_rocky--server-swap
+     swap    1                             2a2230cb-b0a6-43a0-bc8b-77c229ab2398                  [SWAP]
+```
+
+### Creating physical volumes with pvcreate
+
+To use a disk with LVM, you must have a physical disk. To create a physical disk, use `pvcreate`. You can run `pvs` to verify the existing physical volumes. Use `pvs` to verify the state of physical volumes.
+
+```sh
+[root@rocky-server rocky]# lsblk -lf
+NAME FSTYPE  FSVER    LABEL                UUID                                   FSAVAIL FSUSE% MOUNTPOINTS
+sda                                                                                              
+sda1 xfs                                   6002c4fd-7572-4a1f-b1ea-fb344afd3b2a    656.9M    32% /boot
+sda2 LVM2_me LVM2 001                      P8yXn2-MbFN-Lt0L-lDHN-RTHA-i0zW-pCEWBL                
+sr0                                                                                              
+sr1  iso9660 Joliet E Rocky-9-4-x86_64-dvd 2024-05-05-01-12-25-00                       0   100% /run/media/root/Rocky-9-4-x86_64-dvd
+vda                                                                                              
+vda1                                                                                             
+vda2                                                                                             
+rl_rocky--server-root
+     xfs                                   8e4b7245-2259-4fa9-bc85-39436a8f4d37     11.7G    31% /
+rl_rocky--server-swap
+     swap    1                             2a2230cb-b0a6-43a0-bc8b-77c229ab2398                  [SWAP]
+[root@rocky-server rocky]# pvs
+  PV         VG              Fmt  Attr PSize   PFree
+  /dev/sda2  rl_rocky-server lvm2 a--  <19.00g    0 
+[root@rocky-server rocky]# pvcreate /dev/vda2
+  Physical volume "/dev/vda2" successfully created.
+[root@rocky-server rocky]# pvs
+  PV         VG              Fmt  Attr PSize   PFree
+  /dev/sda2  rl_rocky-server lvm2 a--  <19.00g    0 
+  /dev/vda2                  lvm2 ---    1.00g 1.00g
+```
+
+### Using Volume groups
+
+Next, we need to associate physical volumes with a volume group. We can either use an existing volume group or create a new one. If we use add a physical volume to an existing volume group, then we can extend a filesystem. If we create a new volume group, then we can dedicate it to a new filesystem. The tool used to manage volume groups include `vgcreate`, `vgs` and `vgdisplay`.
+
+In example below, we create a new volume group.
+
+```sh
+root@rocky-server rocky]# vgcreate 
+  No command with matching syntax recognised.  Run 'vgcreate --help' for more information.
+  Correct command syntax is:
+  vgcreate VG_new PV ...
+
+[root@rocky-server rocky]# pvs
+  PV         VG              Fmt  Attr PSize   PFree
+  /dev/sda2  rl_rocky-server lvm2 a--  <19.00g    0 
+  /dev/vda2                  lvm2 ---    1.00g 1.00g
+[root@rocky-server rocky]# vgcreate data_vg /dev/vda2
+  Volume group "data_vg" successfully created
+[root@rocky-server rocky]# pvs
+  PV         VG              Fmt  Attr PSize    PFree   
+  /dev/sda2  rl_rocky-server lvm2 a--   <19.00g       0 
+  /dev/vda2  data_vg         lvm2 a--  1020.00m 1020.00m
+[root@rocky-server rocky]# vgs
+  VG              #PV #LV #SN Attr   VSize    VFree   
+  data_vg           1   0   0 wz--n- 1020.00m 1020.00m
+  rl_rocky-server   1   2   0 wz--n-  <19.00g      
+```
+
+The `vgcreate` tool has a few command line options. For example, we can specify the extents size using the -s option.
 
 ```sh
 vgcreate -s 8 data_vg /dev/vdb1 
 ```
 
-It might be easier to start the command as `vgcreate <volume.group> <physical.volume>` and then go back and add any options.
-
-To verify, use `vgs` or `vgdisplay`.
+### Using logical volumes
 
 Next we can create logical volumes. 
 
 ```sh
-lvcreate --name data_lv --size 500M data_vg
-```
-This command is not well documented in the man page. Instead of looking at the man page, you might want to run `lvcreate -h | more`. Also the order of the arguments doesn't matter. The above could be invoked as:
-
-```sh
-lvcreate -L 500M data_vg --name data_lv
-```
-
-Here, `--name` is one of the `COMMON_OPTIONS`. This invocation  might be easier.
-
-Make sure you create the logical volume with the correct volume group.  If the volume group is in use, for example, you can get an error saying that the volume group has insufficient free space. 
-
-To verify, run lvdisplay.
-
-```sh
-lvdisplay
+[root@rocky-server rocky]# vgs
+  VG              #PV #LV #SN Attr   VSize    VFree   
+  data_vg           1   0   0 wz--n- 1020.00m 1020.00m
+  rl_rocky-server   1   2   0 wz--n-  <19.00g       0 
+[root@rocky-server rocky]# lvcreate -L 500M --name data_lv data_vg 
+  Logical volume "data_lv" created.
+[root@rocky-server rocky]# lvs
+  LV      VG              Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  data_lv data_vg         -wi-a----- 500.00m                                                    
+  root    rl_rocky-server -wi-ao---- <17.00g                                                    
+  swap    rl_rocky-server -wi-ao----   2.00g                                                    
 ```
 
-Now we can go ahead and create the filesystem.
+Finally, we must remember to create a filesystem on the logical volume.
 
 ```sh
 mkfs.xfs /dev/data_vg/data_lv
 ```
 
-Afterwards we need to mount it. Remember that we need to mount the logical volume. 
+Afterwards we need to mount it. The path to the logical volume is the one we used when creating the file system.
 
 ```sh
 sudo mount /dev/data_vg/data_lv /data
 ```
 
-Some things to note:
+### Extending an LVM volume
 
-- lvcreate's -s option does not stand for size, that option is -L. Using --size might be easier.
-- You can skip the name of the logical volume if you want, but it's a good practice to provide a name.
-- You can use lvremove to remove logical volumes, but you need to give the path to the logical volume. Example: `sudo lvremove /dev/data_vg/lvol0`
-- PVs can be used to increase the size of a VG. For example, vgextend rl /dev/vdb1, where /dev/vdb1 is an LVM volume created on a spare disk using fdisk. Next, we need to extend the volume group; for example, `lvextend -l +100%FREE /dev/rl/root`. Finally, we can extend the size of the root partition; for example, `resize2fs /dev/mapper/rl-root`. If we run df before and after running resize2fs we should see the diference.
-
-Below is another example. Let's say vdb ran out of disk space and we need to extend it. 
+Let's say vdb ran out of disk space and we need to extend it. 
 
 First we use fdisk to create another Linux partition.
 
@@ -617,7 +875,7 @@ Size of logical volume data_vg/data_lv changed from 4.99 GiB (1278 extents) to 5
 Logical volume data_vg/data_lv successfully resized.
 ```
 
-Alternatively, we can extend extents.
+Alternatively, we can extend extents. Below we extend it 100% so it fills all the available space in the volume group.
 
 ```sh
 $ sudo lvextend --extents +100%FREE /dev/data_vg/data_lv /dev/vdc1 
@@ -625,8 +883,7 @@ $ sudo lvextend --extents +100%FREE /dev/data_vg/data_lv /dev/vdc1
   Logical volume data_vg/data_lv successfully resized.
 ```
 
-
-At this point, lvdisplay should show the expanded storage but df -Th will not. What we need to do next is run `xfs_growfs` on the root partition. If this was a ext4 partition, them we would use `resize2fs`.
+At this point, lvdisplay should show the expanded storage but `df -Th` will not. What we need to do next is run `xfs_growfs` on the root partition. If this was a ext4 partition, them we would use `resize2fs`.
 
 ```sh
 $ sudo xfs_growfs /dev/mapper/data_vg-data_lv 
@@ -643,43 +900,67 @@ realtime =none                   extsz=4096   blocks=0, rtextents=0
 data blocks changed from 523264 to 1046528
 ```
 
-If you want to start over, remove the volume group.
+### Renaming LVM
+
+ You can skip the name of the logical volume if you want, but it's a good practice to provide a name or lvcreate will assign one for you. If you forgot and don't like the name of the logical volume, use lvrename.
 
 ```sh
-vgremove data_vg
+[root@rocky-server rocky]# lvs
+  LV      VG              Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  data_lv data_vg         -wi-a----- 500.00m                                                    
+  root    rl_rocky-server -wi-ao---- <17.00g                                                    
+  swap    rl_rocky-server -wi-ao----   2.00g                                                    
+[root@rocky-server rocky]# lvrename data_vg data_lv new_data_lv
+  Renamed "data_lv" to "new_data_lv" in volume group "data_vg"
+[root@rocky-server rocky]# lvs
+  LV          VG              Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  new_data_lv data_vg         -wi-a----- 500.00m                                                    
+  root        rl_rocky-server -wi-ao---- <17.00g                                                    
+  swap        rl_rocky-server -wi-ao----   2.00g                                              
 ```
 
-You can then remove the physical volumes.
+### Removing LV
+
+You can use `lvremove` to remove logical volumes. 
 
 ```sh
-pvremove /dev/vdb1
-pvremove /dev/vdc1
+sudo lvremove /dev/data_vg/lvol0
 ```
 
-You can create multiple physical volumes at once; example: 
+### Creating RAID with LVM
+
+LVM can create RAID devices. Below is an example where we create a RAID 1 (mirroring) device from 2 virtual disks:
 
 ```sh
-$ sudo pvcreate /dev/vdb1 /dev/vdc1
-  Physical volume "/dev/vdb1" successfully created.
-  Physical volume "/dev/vdc1" successfully created.
+[root@rocky-server ~]# lvcreate -m 1 --type raid1 --name home_raid   -l +100%FREE home_vg
+  Logical volume "home_raid" created.
+[root@rocky-server ~]# lvs
+  LV        VG              Attr       LSize Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  home_raid home_vg         rwi-a-r--- 4.99g                                    6.25            
+  root      rl_rocky-server -wi-ao---- 6.99g                                                    
+  swap      rl_rocky-server -wi-ao---- 2.00g     
+[root@rocky-server ~]# lvdisplay /dev/home_vg/home_raid 
+  --- Logical volume ---
+  LV Path                /dev/home_vg/home_raid
+  LV Name                home_raid
+  VG Name                home_vg
+  LV UUID                3q9h5d-NckU-aQmu-Cead-ELfG-2c4O-I5jZCP
+  LV Write Access        read/write
+  LV Creation host, time rocky-server, 2024-11-24 15:21:01 -0800
+  LV Status              available
+  # open                 1
+  LV Size                4.99 GiB
+  Current LE             1278
+  Mirrored volumes       2
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:6
+
 ```
 
-In case it's difficult to remember the order of the commands, see the manpage for lvm and scroll to the very bottom.
 
-Key points to remember in adding more disk space:
-
-1. Create PV and add it to the volume group that needs to be expanded.
-2. Next we need to extend the LV that is using the VG (use lvextend).
-3. Finally we need to run xfs_growfs or resize2fs. 
-
-The commands used are:
-
-- pvcreate <device>
-- vgextend <vg> <pv>
-- lvextend -l +100%FREE <lv>
-- xfs_growfs <xfs.filesystem>
-
-If you run xfs_growfs without running lvextend first, then the size wont' change.
 
 ### Using Stratis
 
@@ -877,6 +1158,32 @@ After restarting autofs, then users should be able to cd to /home/users/linda an
 - To mount an ISO automatically, you can use the `auto` file system type in /etc/fstab.
 - You can run `mount -a` to mount all partitions (except swap) that aren't mounted currently.
 - The reason why `systemd daemon-reload` needs to be run after changing /etc/fstab is because in RedHat Linux, /etc/fstab is used to generate services in /run/systemd/generator that are used to mount filesystems.
+
+## Web Servers
+
+The easiest way to run a web server is to install httpd and run it as a service. Alternatively, Python has a built-in web server.
+
+```sh
+python3 -m http.server -d /tmp/webserver 8081
+```
+
+You can easily create a service to start it.
+
+```sh
+[Unit]
+Description=Web service
+
+[Service]
+ExecStart=python3 -m http.server -d /tmp/webserver 8081
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=on-failure
+RestartSec=42s
+
+[Install]
+```
+
+The source code is located in /usr/lib64/python3.9/http, but it's probably best to just memorize the module name.
 
 ## NFS Service
 
