@@ -487,6 +487,10 @@ while True:
         print('Calling cleanup')
 ```
 
+## Builtin-help
+
+If you want to read the help for a Python module, get into the interactive shell and type `help('module.name'). The quotes are important.
+
 ## Quiz
 
 Q: What is the maximum value of an integer? Answer: Actually, Python doesn't have a limit and is said to be - unbounded. 
