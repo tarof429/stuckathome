@@ -3025,6 +3025,8 @@ func main() {
 }
 ```
 
+For structs, only exported fields will be encoded/decoded in JSON. Fields must start with capital letters to be exported.
+
 ### [Commands](#commands)
 
 The *os* package has functions for executing commands and dealing with their input and output. Note that the *Command()* function takes a variable number of strings as arguments.
