@@ -14,7 +14,9 @@ Use `chage` to change the password expirary per user.
 
 Defaults are stored in /etc/login.defs. For example, there are a few login-related variables related to passwords here. If the exam asks you to set default values for new users like password expirary and the first UUID, set it in /etc/login.defs.
 
-Minimum password lengths are managed in /etc/security/pwquality.conf.
+Minimum password lengths are managed in /etc/security/pwquality.conf NOT /etc/login.defs.
+
+If you need to require at least one digit, set dcredit to -1 in /etc/security/pwquality.conf. 
 
 ## History
 
@@ -22,25 +24,31 @@ To remove an item from user's history, run `history -d <history item>`. To remov
 
 ## Files and Processes
 
-- To see what files are consuming the most space in a directory such as /var, run: `du -k /var | sort -nr | more`.
+To see what files are consuming the most space in a directory such as /var, run: `du -k /var | sort -nr | more`.
 
-- It can be handy to find out the filesystem when running df. To do this, run `df -T`. 
+It can be handy to find out the filesystem when running df. To do this, run `df -T`. 
 
-- The `free` command is not very human-friendly by default, but you can change the units easily buy using `m` or simply `-h` for human-readable.
+The `free` command is not very human-friendly by default, but you can change the units easily buy using `m` or simply `-h` for human-readable.
 
-- The `lsof` command can be used to list open files (lsof stands for `list open files`). With no arguments, it's not very helpful. If you know a user is logged into a system, you can find what files he has opened by running `lsof -u <user>`. Or what if you find a process from top and you want to find what files it has opened. For example, if top lists a process called `Isolated Web Co` with PID 16068, then run `lsof -p 16068` will give you a list of files that process has opeened. See https://www.redhat.com/en/blog/analyze-processes-lsof. 
+The `lsof` command can be used to list open files (lsof stands for `list open files`). With no arguments, it's not very helpful. If you know a user is logged into a system, you can find what files he has opened by running `lsof -u <user>`. Or what if you find a process from top and you want to find what files it has opened. For example, if top lists a process called `Isolated Web Co` with PID 16068, then run `lsof -p 16068` will give you a list of files that process has opeened. See https://www.redhat.com/en/blog/analyze-processes-lsof. 
 
-- The `tcpdump` command can be used to troubleshoot networking issues. For example, on host A, run tcpdump -i <interface> host <source IP>. Then from the source IP machine, run ping <ip.of.host.A>. You should see some output on host A indicating that the ping was successful. See https://hackertarget.com/tcpdump-examples/. Note that if you want to monitor port 22, you should login to the server from the console and not from an SSH session.
+The `tcpdump` command can be used to troubleshoot networking issues. For example, on host A, run tcpdump -i <interface> host <source IP>. Then from the source IP machine, run ping <ip.of.host.A>. You should see some output on host A indicating that the ping was successful. See https://hackertarget.com/tcpdump-examples/. Note that if you want to monitor port 22, you should login to the server from the console and not from an SSH session.
 
-- A command that shows what gateway traffic is flowing through is netstat. For example, `netstat -nrv`. If you run `netstat -t` you can see the list of outgoing TCP connections.
+A command that shows what gateway traffic is flowing through is netstat. For example, `netstat -nrv`. If you run `netstat -t` you can see the list of outgoing TCP connections.
 
-- Other commands are: vmstat, iostat, iftop.
+Other commands are: vmstat, iostat, iftop.
 
-- To find out detailed information on a file creation time, use `stat <file>`.
+To find out detailed information on a file creation time, use `stat <file>`.
+
+To see processes in a hierarchical chart, run `ps fax`.
 
 ## Devices
 
 Devices are monitored by systemd-udevd. Run `udevadm monitor` and unplugin a USB device to see some output from this daemon.
+
+## kernels
+
+https://www.baeldung.com/linux/remove-old-kernels
 
 ## Kernel Modules
 
@@ -60,13 +68,15 @@ To unload a kernel module, run `modprobe -r <module>`.
 
 ## SSH
 
-- To make SSH more secure, it is good to set the `ClientAliveInterval` to a value such as 600 or 10 minutes to automatically logout idle SSH sessions. 
+To make SSH more secure, it is good to set the `ClientAliveInterval` to a value such as 600 or 10 minutes to automatically logout idle SSH sessions. 
 
-- A hidden property is `AllowUsers`. This lets you restrict who can SSH to the server.
+A hidden property is `AllowUsers`. This lets you restrict who can SSH to the server.
+
+The SSH service listener port can be customized. SSH service configuration is in /etc/ssh/sshd_config. If you want to change the listener port, find the line that specifies a port, uncomment and change it to a different port (such as 22), and run `semanage port -m -t ssh_port_t -p tcp 2022`. If you want to ADD a port, then uncomment `PORT 22` and add another line with `PORT 2022` (for example). Then run `semanage port -a -t ssh_port_t -p tcp 2022`. Afterwards restart the SSH service. You may also need to update the firewall rules.
 
 ## Timezone
 
-- To change the timezone, run `timezonectl list-timezones` to get a list of timezones and then run `timezonectl set-timezone=<timezone>`. 
+- To change the timezone, run `timedatectl list-timezones` to get a list of timezones and then run `timedatectl set-timezone=<timezone>`. 
 
 ## Networking
 
@@ -147,43 +157,45 @@ To unload a kernel module, run `modprobe -r <module>`.
 
 ## Packages
 
-- To find what package provides a binary, use `dns provides **/<package name>.
+To find what package provides a binary, use `dns provides **/<package name>`.
 
-- To see the list of configuration files for a package, use `rpm -qp <package name>.
+To see the list of configuration files for a package, use `rpm -qp <package name>`.
 
-- To see what package provides a file , use `rpm -qf <path.to.file>`. For example, 
-    ```sh
-    $ which ssh
-    /usr/bin/ssh
-    $ sudo rpm -qf /usr/bin/ssh
-    openssh-clients-8.7p1-38.el9_4.4.x86_64
-    ```
-- To create a local YUM repo, follow these steps (for AlmaLinux 9):
+To see what package provides a file , use `rpm -qf <path.to.file>`. For example, 
 
-    - Install createrepo package
-    - Create a directory called /iso
-    - Mount the AlmaLinux 9 ISO to /iso
-    - Create a directory called /localrepo
-    - Create a directory called /localrepo/BaseOS
-    - Copy /iso/BaseOS/Packages to /localrepo/BaseOS/Packages
-    - Run `createrepo Packages -o`.
-    - Create a directory called /localrepo/AppStream
-    - Copy /iso/AppStream/Packages to /localrepo/AppStream/Packages
-    - Run `createrepo Packages -o .`
-    - Go to /etc/yum.repos.d
-    - Create a directory called old
-    - Move all the *.repo files to old
-    - Copy old/rocky.repo to the parent directory
-    - Edit this file and point baseurl for the BaseOS and AppStream repositories
-    - Finally verify the repostories by running `dnf repolist -v`
+```sh
+$ which ssh
+/usr/bin/ssh
+$ sudo rpm -qf /usr/bin/ssh
+openssh-clients-8.7p1-38.el9_4.4.x86_64
+```
 
-- A handy CLI command to know is `dnf config-manager`. For example, to enable a yum repo, run `dnf config-manager --set-enabled baseos`.
+To create a local YUM repo, follow these steps (for AlmaLinux 9):
 
-- To remove an old kernel, you can use `dnf remove kernel-core-<version.of.kernel.to.remove>`. Then use `dnf autoremove` to delete anything you don't need. The `erase` option is deprecated. Since we only need to explictly remove one package, it is not very helpful to create a variable for the kernel version to remove.
+- Install createrepo package
+- Create a directory called /iso
+- Mount the AlmaLinux 9 ISO to /iso
+- Create a directory called /localrepo
+- Create a directory called /localrepo/BaseOS
+- Copy /iso/BaseOS/Packages to /localrepo/BaseOS/Packages
+- Run `createrepo Packages -o`.
+- Create a directory called /localrepo/AppStream
+- Copy /iso/AppStream/Packages to /localrepo/AppStream/Packages
+- Run `createrepo Packages -o .`
+- Go to /etc/yum.repos.d
+- Create a directory called old
+- Move all the *.repo files to old
+- Copy old/rocky.repo to the parent directory
+- Edit this file and point baseurl for the BaseOS and AppStream repositories
+- Finally verify the repostories by running `dnf repolist -v`
 
-- To see what packages were installed, run `dnf history`. You can undo package installs this way by running `dnf history undo <id>.
+A handy CLI command to know is `dnf config-manager`. For example, to enable a yum repo, run `dnf config-manager --set-enabled baseos`.
 
-To check if there are any package updates, run `checkupdates`.
+To remove an old kernel, you can use `dnf remove kernel-core-<version.of.kernel.to.remove>`. Then use `dnf autoremove` to delete anything you don't need. The `erase` option is deprecated. Since we only need to explictly remove one package, it is not very helpful to create a variable for the kernel version to remove.
+
+To see what packages were installed, run `dnf history`. You can undo package installs this way by running `dnf history undo <id>.
+
+To check if there are any package updates, run `dnf check-update`. This command is NOT easy to find in the man page, but if you want to search for it, search for `check`. 
 
 ## Shells
 
@@ -300,7 +312,7 @@ $ sudo grep -c -vi error /var/log/messages
 14462
 ```
 
-The `egrep` command has a nifty feature that allows you to search for multiple occurences of a string. For example:
+The `egrep` command has a nifty feature that allows you to search for occurences of multiple strings in a file. For example:
 
 ```sh
 $ sudo egrep -ci "error|fail" /var/log/messages
@@ -384,6 +396,19 @@ systemd-tmpfiles --create --prefix /var/log/journal
 
 These steps are described in the manpage for systemd-journald.
 
+You can use `rsyslog` to log messages to a specific log file. To do this, create a file under /etc/rsyslog.d with a syntax borrowed from /etc/rsyslog.conf. For example: 
+
+```sh
+# cat /etc/rsyslog.d/messages.conf
+*.info                /var/log/message.info
+```
+
+will log info messages in /var/log/message.info. 
+
+After writing the configuration file, restart rsyslogd.
+
+To test, run `logger -p daemon.debug "Test"`.
+
 ## Performance Tuning
 
 The `tuned` package has a service that can be used to automatically tune performance. This package has a CLI called `tuned-adm` which can be used to list available profiles, see the current profile, and change to a different profile. The profiles are stored in /usr/lib/tuned.
@@ -416,7 +441,7 @@ Use `renice` to change the nice value of proceses.
 
 ## Access Control lists
 
-- Use `setfacl` to set access control lists for a file, and `getfacl` to get the ACL for a file. For example:
+Use `setfacl` to set access control lists for a file, and `getfacl` to get the ACL for a file. For example:
 
   ```sh
   $ setfacl -m u:taro:r anaconda-ks.cfg # Grants taro read access to this file
@@ -424,20 +449,23 @@ Use `renice` to change the nice value of proceses.
   $ setfacl -mR u:john:rw /home/taro # Recorsively grants rw access to /home/taro to john
   ```
 
-- For example, one use case is to give unprivileged users read access to log files in /var/log.
-  - Copy /var/log/secure to /tmp (just for testing)
-  - Run `setfacl -m u:taro:r /tmp/secure`
-  - Now as user taro I should be able to read /tmp/secure.
+For example, one use case is to give unprivileged users read access to log files in /var/log. First, copy /var/log/secure to /tmp (just for testing). Next, run `setfacl -m u:taro:r /tmp/secure`. Now as user `taro` I should be able to read /`tmp/secure`.
+
+To remove all extended ACL entries, use -b.
+
+```sh
+setfacl -b /var/log/secure
+```
 
 ## SELinux
 
-- To change the SELinux policy, edit `/etc/selinux/config`.
+To change the SELinux policy, edit `/etc/selinux/config`.
 
-- To check the SELinux for a file, use `ls -lZ <file>`.
+To check the SELinux for a file, use `ls -lZ <file>`.
 
-- To check the SELinux for a file, use `ls -DZ <directory>`.
+To check the SELinux for a directory, use `ls -DZ <directory>`.
 
-- You can check the SELinux label for a process by running `ps-axZ`. For example:
+You can check the SELinux label for a process by running `ps-axZ`. For example:
 
   ```sh
   $ ps -axZ |grep sshd
@@ -447,7 +475,7 @@ Use `renice` to change the nice value of proceses.
   unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023 1394 pts/0 S+   0:00 grep --color=auto ss
   ```
 
-- You can check the SELinux label for a socket by running `netstat -tlpnZ`. For example:
+You can check the SELinux label for a socket by running `netstat -tlpnZ`. For example:
 
   ```sh
   $ sudo netstat -tlpnZ | grep sshd
@@ -455,13 +483,13 @@ Use `renice` to change the nice value of proceses.
   tcp6       0      0 :::22                   :::*                    LISTEN      780/sshd: /usr/sbin  system_u:system_r:sshd_t:s0-s0:c0.c1023         
   ```
 
-- To see the list of SELinux labels that are on, run `getsebool -a`.
+To see the list of SELinux labels that are on, run `getsebool -a`.
 
-- To set an SELinux label, run `setsebool`.
+To set an SELinux label, run `setsebool`.
 
-- The `semanage` tool can also manage labels.
+The `semanage` tool can also manage labels.
 
-- For example, SELinux does not allow HTTP services to connect to FTP servers by default.
+For example, SELinux does not allow HTTP services to connect to FTP servers by default.
 
   ```sh
   $ getsebool -a | grep httpd_can_connect_ftp
@@ -471,20 +499,23 @@ Use `renice` to change the nice value of proceses.
   httpd_can_connect_ftp --> on
   ```
 
-  You may want to run setsetbool with the `-P` option so that the setting is fixed across reboots.
+You may want to run setsetbool with the `-P` option so that the setting is fixed across reboots.
+
+Use `semanage export` to see the current settings.
 
 ## How to Break into RedHat Linux
 
-1. Reboot the system. If this is a KVM, run `virsh restart <domain>`.
+Reboot the system. If this is a KVM, run `virsh restart <domain>` When you see the list of kernels, select one and type `e` for edit. Then go to the end of the kernel arguments and add `rd.break`. If there is any mention of redirecting output to the console, remove it.
 
-2. When you see the list of kernels, select one and type `e` for edit. Then go to the end of the kernel arguments and add `rd.break`. If there is any mention of redirecting output to the console, remove it.
+If `rd.break` does not work, then you can use `init=/bin/bash`. This may be needed for RHEL 9.0.
+
+Adding `emergency` to grub mounts the root partition automatically.
 
 ## Managing Grub
 
 The `grubby` CLI tool is used to manage grub options.
 
-
-The man page for grubby does not have any examples and is not easy to read in a pinch. It is best to memorize the commands most often used.
+The man page for grubby does not have any examples and is not easy to read in a pinch. It is best to memorize the commands most often used. However, the general idea is to specify `--args` and `--update-kernel`.
 
 The first of these is used to list the arguments for all the kernels.:
 
@@ -957,10 +988,15 @@ LVM can create RAID devices. Below is an example where we create a RAID 1 (mirro
   Read ahead sectors     auto
   - currently set to     256
   Block device           253:6
-
 ```
 
+### Labeling partitions
 
+Partition labels can be used to identify partitions instead of UUIDs. There are a few command-line tools to set the label. The `e2label` command can be used to set the label for ext3 and ext4 partitions while `fatlabel` can be used to set the label for MS-DOS partitions. These are mentioned in the man page for fstab. For XFS filesystems, use `xfs_admin`. 
+
+### Changing the UUID
+
+Use `uuidgen` to generate a UUID, then use `xfs_admin` to set it on a file system.
 
 ### Using Stratis
 
@@ -1079,7 +1115,7 @@ Run `systemctl daemon-reload` after making a change to /etc/fstab.
 
 ### Creating swap files
 
-First create the swap file as mentioned in the man page for mkswap. For example, 
+First create the swap file as mentioned in the man page for `mkswap`. For example, 
 
 ```sh
 dd if=/dev/zero of=/swapfile bs=GiB count=2
@@ -1127,7 +1163,7 @@ Next, we create /etc/auto.nfsdata with the following content:
 files -rw localhost:/nfsdata
 ```
 
-Retart autofs service. Then type `cd /data/files/ to access the NFS mount.
+Restart autofs service. Then type `cd /data/files/ to access the NFS mount.
 
 autofs can also handle wildcards in case we don't want to specify multiple directories. For example, let's say linda and anna have their home directories set to /home/users/linda and /home/users/anna. We want to make sure that while these users access their home directory, autofs is used to mount the NFS shares /users/linda and /users/anna from the same server.
 
@@ -1152,12 +1188,26 @@ The content of /etc/users.misc
 
 After restarting autofs, then users should be able to cd to /home/users/linda and /home/users/anna.
 
-### Notes
+For automounting local filesystems, there is a better way using `systemd`. In /etc/fstab, configure the partition with `systemd.automount`. For example:
+
+```sh
+UUID="2cb71861-c294-4ed7-8489-cfa7a97c8db7"	/backup	xfs	noauto,x-systemd.automount 0 2
+```
+
+The /backup directory would have to be created beforehand. Afterwards, you need to restart one or both services:
+
+```sh
+systemctl restart local-fs.target
+systemctl restart remote-fs.target
+```
+
+### Tips
 
 - To get the UUID of a partition, use `blkid`.
 - To mount an ISO automatically, you can use the `auto` file system type in /etc/fstab.
 - You can run `mount -a` to mount all partitions (except swap) that aren't mounted currently.
 - The reason why `systemd daemon-reload` needs to be run after changing /etc/fstab is because in RedHat Linux, /etc/fstab is used to generate services in /run/systemd/generator that are used to mount filesystems.
+- You can use `findmnt -s` to verify the contents of /etc/fstab. Check that the columns have the correct information.
 
 ## Web Servers
 
@@ -1167,7 +1217,7 @@ The easiest way to run a web server is to install httpd and run it as a service.
 python3 -m http.server -d /tmp/webserver 8081
 ```
 
-You can easily create a service to start it.
+You can create a service to start it.
 
 ```sh
 [Unit]
@@ -1179,11 +1229,16 @@ ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=on-failure
 RestartSec=42s
-
-[Install]
 ```
 
 The source code is located in /usr/lib64/python3.9/http, but it's probably best to just memorize the module name.
+
+If the system has SELinux enabled, then you also need to run:
+
+```sh
+semanage fcontext -a -t httpd_sys_content_t "/webserver(/.*)?"
+restorecon -Rv /webserver
+```
 
 ## NFS Service
 
@@ -1298,13 +1353,13 @@ systemctl reboot
 
 The shutdown and reboot commands are actually symlinks to systemctl.
 
-To get the current runlevel, use `systemctl`.
+To get the current target, use `systemctl`.
 
 ```sh
 systemctl get-default
 ```
 
-You can also get the run level by using `who`.
+You can get the run level by using `who`.
 
 ```sh
 $ who -r
@@ -1396,7 +1451,9 @@ $ sudo firewall-cmd --get-services
 RH-Satellite-6 RH-Satellite-6-capsule afp amanda-client amanda-k5-client amqp amqps apcupsd audit ausweisapp2 bacula bacula-client bareos-director bareos-filedaemon bareos-storage bb bgp bitcoin bitcoin-rpc bitcoin-testnet bitcoin-testnet-rpc bittorrent-lsd ceph ceph-exporter ceph-mon cfengine checkmk-agent cockpit collectd condor-collector cratedb ctdb dds dds-multicast dds-unicast dhcp dhcpv6 dhcpv6-client distcc dns dns-over-tls docker-registry docker-swarm dropbox-lansync elasticsearch etcd-client etcd-server finger foreman foreman-proxy freeipa-4 freeipa-ldap freeipa-ldaps freeipa-replication freeipa-trust ftp galera ganglia-client ganglia-master git gpsd grafana gre high-availability http http3 https ident imap imaps ipfs ipp ipp-client ipsec irc ircs iscsi-target isns jenkins kadmin kdeconnect kerberos kibana klogin kpasswd kprop kshell kube-api kube-apiserver kube-control-plane kube-control-plane-secure kube-controller-manager kube-controller-manager-secure kube-nodeport-services kube-scheduler kube-scheduler-secure kube-worker kubelet kubelet-readonly kubelet-worker ldap ldaps libvirt libvirt-tls lightning-network llmnr llmnr-client llmnr-tcp llmnr-udp managesieve matrix mdns memcache minidlna mongodb mosh mountd mqtt mqtt-tls ms-wbt mssql murmur mysql nbd nebula netbios-ns netdata-dashboard nfs nfs3 nmea-0183 nrpe ntp nut openvpn ovirt-imageio ovirt-storageconsole ovirt-vmconsole plex pmcd pmproxy pmwebapi pmwebapis pop3 pop3s postgresql privoxy prometheus prometheus-node-exporter proxy-dhcp ps2link ps3netsrv ptp pulseaudio puppetmaster quassel radius rdp redis redis-sentinel rpc-bind rquotad rsh rsyncd rtsp salt-master samba samba-client samba-dc sane sip sips slp smtp smtp-submission smtps snmp snmptls snmptls-trap snmptrap spideroak-lansync spotify-sync squid ssdp ssh steam-streaming svdrp svn syncthing syncthing-gui syncthing-relay synergy syslog syslog-tls telnet tentacle tftp tile38 tinc tor-socks transmission-client upnp-client vdsm vnc-server warpinator wbem-http wbem-https wireguard ws-discovery ws-discovery-client ws-discovery-tcp ws-discovery-udp wsman wsmans xdmcp xmpp-bosh xmpp-client xmpp-local xmpp-server zabbix-agent zabbix-server zerotier
 ```
 
-The firewalld has multiple zones. To see all the zones:
+It can be eaiser just to go to /usr/lib/firewalld/services to see the list.
+
+The `firewalld` service has multiple zones. To see all the zones:
 
 ```sh
 $ sudo firewall-cmd --get-zones
@@ -1514,6 +1571,14 @@ cp container-httpd.service /etc/systemd/system
 ```
 
 Afterwards you should be able enable/start the service. You do not need to run systemctl daemon-reload. 
+
+## Troubleshooting
+
+To boot from the rescue disk, hit ESC after POST and select the ISO. Next, choose Troubleshooting | Rescue | 1) Continue. At the shell, type `chroot /mnt/sysroot`. Relabeling will happen automatically. 
+
+If the system does not boot, it might be because grub is corrupted. After booting into the Rescue Disk, regenerate grubby running `grub2-install <device.path>`. For example, `grub2-install /dev/sda`. This should recreate /boot/grub2. 
+
+There are some CLI tools written by Karel Zak in the util-linux github project that can be useful for troubleshooting disks. These include `findmnt` and `findfs`. In particular, `findmnt -s` can be used to parse /etc/fstab and can help spot formatting issues.
 
 ## References
 
