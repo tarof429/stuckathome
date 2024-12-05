@@ -1123,6 +1123,8 @@ dd if=/dev/zero of=/swapfile bs=GiB count=2
 
 Will create a 2GiB swap file.
 
+You can create the swap file by copying and pasting the instructions from the man page for `mkswap`.
+
 Next, we need to enable the swap file by using mkswap.
 
 ```sh
