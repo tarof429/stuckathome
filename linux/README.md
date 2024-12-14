@@ -42,6 +42,9 @@ To find out detailed information on a file creation time, use `stat <file>`.
 
 To see processes in a hierarchical chart, run `ps fax`.
 
+You should know how to iterate through files from the `find` command. For example, `find . -type f -exec grep main {} \;` lists all the files in the current directory with the word `main`.
+
+
 ## Devices
 
 Devices are monitored by systemd-udevd. Run `udevadm monitor` and unplugin a USB device to see some output from this daemon.
@@ -76,84 +79,63 @@ The SSH service listener port can be customized. SSH service configuration is in
 
 ## Timezone
 
-- To change the timezone, run `timedatectl list-timezones` to get a list of timezones and then run `timedatectl set-timezone=<timezone>`. 
+To change the timezone, run `timedatectl list-timezones` to get a list of timezones and then run `timedatectl set-timezone=<timezone>`. 
+
+## NTP 
+
+Make sure timedatectl says that NTP synchronization is enabled.
+
+```sh
+timedatectl set-ntp true
+```
+
+The restart chrony, the NTP client used on Redhat.
+
+```sh
+systemctl restart chronyd
+```
+
+To configure chrony, edit /etc/chrony.conf. You can change the pool to pool.ntp.org. Afterwards, restart chronyd and run `chronyc sources`. 
 
 ## Networking
 
-- To get a list of network interfaces, run `nmcli connection`.
+The CLI tool for configuring networking in RedHat Linux is `nmcli`.
 
-- To list all the parameters you can pass to nmcli:
+To get a list of network interfaces, run `nmcli connection`. A shorthand is `nmcli con` or `nmcli con show`.
 
-    ```sh
-    nmcli connection show # To get the list of interfaces using nmcli
-    ```
+In the exam, you need to modify some parameters. to see all of the parameters for an IPv4 address, run:
 
-- To list all the ipv4 parameters you can configure for an interface:
+```sh
+nmcli con show enp1s0 | grep ipv4
+```
 
-    ```sh
-    nmcli connection show enp1s0 | grep ipv4
-    ```
 
-- To configure a static IP with nmcli:
+The VM may be using DHCP by default, and most likely it needs to be configured with a static IP. First, make sure we disable autoconnect.
 
-    ```sh
-    nmcli connection modify enp1s0 ipv4.addresses 192.168.1.201/24
-    nmcli connection modify enp1s0 ipv4.gateway 192.168.1.1
-    nmcli connection modify enp1s0 ipv4.method manual
-    nmcli conneciton modify enp1s0 ipv4.dns 8.8.8.8
-    nmcli connection down enp1s0 && nmcli connection up enp1s0
-    ip addr show enp1s0
-    ```
+```sh
+nmcli con mod enps1s0 connection.autoconnect no
+```
 
-- It can be handy to just modify all  the settings at once:
+Next, configure ipv4:
 
-  ```sh
-   nmcli con modify enp1s0 ipv4.addresses 192.168.1.200/24 ipv4.gateway 192.168.1.1 ipv4.dns "192.168.1.1 1.1.1.1" ipv4.method manual
-  ```
+```sh
+nmcli con mod enp1s0 ipv4.addresses 192.168.1.201/24 ipv4.gateway 192.168.1.1 ipv4.method manual ipv4.dns 8.8.8.8
+```
 
-  Some key things to remember are:
+To add multiple DNS servers, use quotes and spaces around each server IP.
 
-  - All the variables that need to be modified begin with ipv4.
-  - Don't use `=`
-  - Don't forget subnet mask
-  - Don't forget to specify which interface you want to modify
-  - The command can be shortened to `nmcli con mod <interface>`
+```sh
+nmcli con mod enp1s0 ipv4.dns "1.1.1.1 8.8.8.8"
+```
 
-- To check if the interface is dynamic or static:
+Finally, bounce the interface.
 
-    ```sh
-    nmcli connection show enp1s0 | grep method
-    ```
+```sh
+nmcli con down enp1s0
+nmcli con up enp1s0
+```
 
-- To add multiple DNS servers, use quotes and spaces around each server IP.
-
-    ```sh
-    nmcli con modify enp1s0 ipv4.dns "1.1.1.1 8.8.8.8"
-    ```
-
-- To add a secondary IP:
-
-    ```sh
-    nmcli con modify enp1s0 +ipv4.addresses 192.168.1.201/24
-    ```
-
-- To reload the configuration (you can do this instead of stop/starting the interface).
-
-    ```sh
-    nmcli con reload
-    ```
-
-- To remove the secondary IP:
-
-    ```sh
-    nmcli con modify enp1s0 -ipv4.addresses 192.168.1.201/24
-    ```
-
-- To troubleshoot network connectivity you can use tcpdump.
-
-- A useful tool you can use to troubleshoot DNS issues is nslookup. Install it using bind-utils. 
-
-- Configure firewalls using firewall-cmd, which is available from the firewalld package. If you look at the man page for firewall-cmd, you can see some basic examples at the very bottom (it can help to search for `Example`).
+You should validate the network settings by running `ip a`, `ip route` and checking the contents of /etc/resolv.conf.
 
 ## Packages
 
@@ -846,7 +828,7 @@ vgcreate -s 8 data_vg /dev/vdb1
 
 ### Using logical volumes
 
-Next we can create logical volumes. 
+Next we can create logical volumes. One thing to remember, logical volumes are ALWAYS created out of volume groups. If you don't provide the name of the logical volume, lvcreate will create one for you.
 
 ```sh
 [root@rocky-server rocky]# vgs
@@ -914,7 +896,7 @@ $ sudo lvextend --extents +100%FREE /dev/data_vg/data_lv /dev/vdc1
   Logical volume data_vg/data_lv successfully resized.
 ```
 
-At this point, lvdisplay should show the expanded storage but `df -Th` will not. What we need to do next is run `xfs_growfs` on the root partition. If this was a ext4 partition, them we would use `resize2fs`.
+At this point, lvdisplay should show the expanded storage but `df -Th` will not. What we need to do next is run `xfs_growfs` on the root partition. If this was a ext4 partition, them we should use `resize2fs`.
 
 ```sh
 $ sudo xfs_growfs /dev/mapper/data_vg-data_lv 
@@ -1213,34 +1195,16 @@ systemctl restart remote-fs.target
 
 ## Web Servers
 
-The easiest way to run a web server is to install httpd and run it as a service. Alternatively, Python has a built-in web server.
+What you have to remember about configuring web servers for the exam is that they may want you to configure the system so that a web site can be accessed on a non-standard port AND with SELinux enabled.
 
-```sh
-python3 -m http.server -d /tmp/webserver 8081
-```
+To do this:
 
-You can create a service to start it.
+- Make sure httpd is running and /etc/httpd/httpd.conf has the port configured. Check to see if the website is accessible or not by using curl.
+- If it's not accesible, try disabling SELinux by running `setenforce 0` and restart httpd.
+- You want to look up the manage page for semanage, specifically, semanage-port. It will have an example of what command to run to open up a port. For example, `semanage port -a -t http_port_t -p tcp 81`. 
+- Run `setenforce 1`, restart httpd, and check that the website is accesible.
+- For troubleshooting, run `semanage port -l | grep http`. 
 
-```sh
-[Unit]
-Description=Web service
-
-[Service]
-ExecStart=python3 -m http.server -d /tmp/webserver 8081
-ExecReload=/bin/kill -HUP $MAINPID
-KillMode=process
-Restart=on-failure
-RestartSec=42s
-```
-
-The source code is located in /usr/lib64/python3.9/http, but it's probably best to just memorize the module name.
-
-If the system has SELinux enabled, then you also need to run:
-
-```sh
-semanage fcontext -a -t httpd_sys_content_t "/webserver(/.*)?"
-restorecon -Rv /webserver
-```
 
 ## NFS Service
 
