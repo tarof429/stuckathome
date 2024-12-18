@@ -10,9 +10,9 @@ A VM running Rocky 9 was used as the training environment.
 
 ## Users
 
-Use `chage` to change the password expirary per user.
+Use `chage` to change the password expirary per user. Although technically `passwd` can do all of the same things, it's preferable to just use `chage`. If you need to expire a user's password, run `chage -E 1 <user>`. By default, it is set to -1 so it will never expire.
 
-Defaults are stored in /etc/login.defs. For example, there are a few login-related variables related to passwords here. If the exam asks you to set default values for new users like password expirary and the first UUID, set it in /etc/login.defs.
+Defaults password policies are stored in /etc/login.defs. For example, there are a few login-related variables related to passwords here. If the exam asks you to set default values for new users like password expirary and the first UUID, set it in /etc/login.defs.
 
 Minimum password lengths are managed in /etc/security/pwquality.conf NOT /etc/login.defs.
 
@@ -36,13 +36,23 @@ The `tcpdump` command can be used to troubleshoot networking issues. For example
 
 A command that shows what gateway traffic is flowing through is netstat. For example, `netstat -nrv`. If you run `netstat -t` you can see the list of outgoing TCP connections.
 
-Other commands are: vmstat, iostat, iftop.
-
 To find out detailed information on a file creation time, use `stat <file>`.
 
 To see processes in a hierarchical chart, run `ps fax`.
 
 You should know how to iterate through files from the `find` command. For example, `find . -type f -exec grep main {} \;` lists all the files in the current directory with the word `main`.
+
+There are two options when using find with permissions. 
+
+The use of `-` option means "at least this permission level is set, and any higher permissions.
+
+The use of `/` mans "any of the permissions listed are set.
+
+Special permissions are configured using a fourth bit (leftmost):
+
+- SUID = 4
+- SGID = 2
+- Sticky Bit = 1
 
 
 ## Devices
@@ -913,6 +923,8 @@ realtime =none                   extsz=4096   blocks=0, rtextents=0
 data blocks changed from 523264 to 1046528
 ```
 
+How are the two tools different? With XFS, filesystems can only be expanded; with ext3 or ext4, filesystems can grow or shrink. That's why `xfs_growfs` will only grow a filesystem while `resize2fs` can either shrink or grow a filesystem.
+
 ### Renaming LVM
 
  You can skip the name of the logical volume if you want, but it's a good practice to provide a name or lvcreate will assign one for you. If you forgot and don't like the name of the logical volume, use lvrename.
@@ -934,10 +946,28 @@ data blocks changed from 523264 to 1046528
 
 ### Removing LV
 
-You can use `lvremove` to remove logical volumes. 
+You can remove a logical volume to create a new filesystem on it. First you shoudl deactivate the volume.
 
 ```sh
-sudo lvremove /dev/data_vg/lvol0
+lvchange -an /dev/data_vg/data_lv
+```
+
+Next use `lvremove` to remove the logical volume.
+
+```sh
+lvremove /dev/data_vg/data_lv
+```
+
+It might be easier just to run lvremove with the `-f` option so that lvremove will deactivate the logical volume automatically.
+
+```sh
+lvremove -f /dev/data_vg/data_lv
+```
+
+Next remove the physical volume from the volume group.
+
+```sh
+vgreduce data_vg /dev/vdb2
 ```
 
 ### Creating RAID with LVM
@@ -1205,102 +1235,160 @@ To do this:
 - Run `setenforce 1`, restart httpd, and check that the website is accesible.
 - For troubleshooting, run `semanage port -l | grep http`. 
 
-
 ## NFS Service
 
-To setup NFS, install the `nfs-utils` package on both Linux workstations and the NFS server.
+For the RHCSA exam, NFS is often combined with autofs so both will be discussed below.
+
+On the NFS server, install the `nfs-utils` package. 
 
 ```sh
 sudo dnf install nfs-utils
 ```
 
-On your NFS host, enable and start the NFS service.
+Start the nfs-server service.
+
 
 ```sh
 sudo systemctl enable --now nfs-server
 ```
 
-You must also start the rpcbind service (if it's not running already), which NFS uses for port mapping.
+Afterwards add a line in `/etc/exports` to give other servers access to a directory, such as `/shared`. 
+
+One example is shown below:
 
 ```sh
-sudo systemctl enable --now rpcbind
+/nfsdata *(rw,no_root_squash)
 ```
 
-Afterwards add a line in `/etc/exports` to give access to a directory such as `/shared`.
+Below is another example where we give access to the /shared directory to servers in a specific subnet.
 
 ```sh
-$ sudo cat /etc/exports
-/shared 192.168.1.0/24(rw)
+/shared 192.168.1.0/24(rw,no_root_squash)
 ```
 
 If unsure of the syntax, see the manpage for exports.
 
-To export this directory, use `exportfs`.
+If you change the contents of /etc/exports, export the directories again by using `exportfs`.
 
 ```sh
-$ sudo exportfs -av
-exporting 192.168.1.0/24:/shared
+$ sudo exportfs -rv
+exporting *:/nfsdata
 ```
 
-You might also want to set permissions on /shared.
-
-You can also use the `-r` option to re-export the NFS directory.
-```
-
-On the client, we should enable and start the rpcbind service.
+Configure firewalld to open the services.
 
 ```sh
-sudo systemctl enable --now rpcbind
-```
-
-Next, we can use `showmount` to see what directories are shared by the NFS server.
-
-```sh
-sudo showmount -e 192.168.1.40
-Export list for 192.168.1.40:
-/shared 192.168.1.0/24
-```
-
-Afterwards, we can mount the NFS directory from another machine.
-
-```sh
-$ sudo mkdir /shared
-$ sudo mount -t nfs 192.168.1.40:/shared /shared
-```
-
-You can add the entry to /etc/fstab:
-
-```sh
-192.168.1.40:/shared   /shared nfs     defaults 0
-```
-
-If you are running NFS behind a firewall, then you need to fix some ports in /etc/nfs.conf.
-
-In the [lockd] section, set a fixed port number for the nlockmgr RPC service, for example:
-
-```sh
-[lockd]
-port=5555
-```
-
-With this setting, the service automatically uses this port number for both the UDP and TCP protocol.
-
-In the [statd] section, set a fixed port number for the rpc.statd service, for example:
-
-```sh
-[statd]
-port=6666
-```
-
-With this setting, the service automatically uses this port number for both the UDP and TCP protocol. 
-
-Afterwards configure firewalld to open the relevent ports.
-
-```sh
-firewall-cmd --permanent --add-service={nfs,rpc-bind,mountd}
-firewall-cmd --permanent --add-port={5555/tcp,5555/udp,6666/tcp,6666/udp}
+firewall-cmd --add-service={nfs,rpc-bind,mountd} --permanent 
 firewall-cmd --reload
 ```
+
+You have to memorize this list. The man page for nfs has some hints about what services to enable, but it is not clear.
+
+Hard to memorize? The systemctl has a way to show dependiences of the nfs-server service.
+
+```sh
+[root@atlantic nfs-utils]# systemctl list-dependencies nfs-server
+nfs-server.service
+● ├─-.mount
+○ ├─auth-rpcgss-module.service
+● ├─nfs-idmapd.service
+● ├─nfs-mountd.service
+● ├─nfsdcld.service
+● ├─proc-fs-nfsd.mount
+● ├─rpc-statd-notify.service
+● ├─rpc-statd.service
+● ├─rpcbind.socket
+● ├─system.slice
+● ├─network-online.target
+● │ └─NetworkManager-wait-online.service
+● └─network.target
+```
+
+Another thing you can try is look at the man page and search for `service`. It will mention rpcbind and mountd. 
+
+There are 3 things you need to do on the client to mount NFS shares.
+
+- Install nfs-utils
+- Run showmount to list the NFS mounts
+- Mount the filesystems
+
+From the client, install `nfs-utils`.
+
+Next, use `showmount` to see what directories are shared by the NFS server.
+
+```sh
+sudo showmount -e 192.168.1.30
+Export list for 192.168.1.30:
+/nfsdata *
+```
+
+Afterwards, we can mount the NFS directory.
+
+```sh
+$ sudo mkdir /nfsdata
+$ sudo mount -t nfs 192.168.1.30:/nfsdata /nfsdata
+```
+
+We can add an entry to /etc/fstab:
+
+```sh
+192.168.1.30:/nfsdata   /nfsdata nfs     defaults 0 2
+```
+
+NFS is often used in conjunction with automount. If you use automount, you do not need to create an entry in /etc/fstab.
+
+On the NFS client, install autofs and start/enable the autofs service.
+
+Next, configure /etc/auto.master. For example:
+
+```sh
+/nfsdsata	/etc/nfsdata.misc
+```
+
+Next, create nfsdata.misc:
+
+```sh
+files	-rw	nfsserver:/nfsdata
+```
+
+Restart the autofs service.
+
+We should now be able to navigate to /nfsdata/files.
+
+Another scenario is to configure autofs so that the mount point does not require that a user cd to a subdirectory. The syntax is:
+
+```sh 
+/- /etc/nfsdata.misc
+```
+
+and in nfsdata.misc:
+
+```sh
+nfsdata -rw nfsserver:/nfsdata
+```
+
+It can be difficult to troubleshoot autofs issues. To start autofs in debug mode, modify /etc/sysconfig/autofs and set OPTIONS="--debug". Restart autofs and look at journald logs while attempting to mount the remote directory. 
+
+For example, autofs can fail because the hostname in used in nfsdata.misc doesn't resolve to the correct server in /etc/hosts.
+
+```sh
+Dec 14 16:29:12 pacific automount[38410]: mount(nfs): root=/nfs name=files what=atlantics:/shared, fstype=nfs, options=rw
+Dec 14 16:29:12 pacific automount[38410]: mount(nfs): nfs options="rw", nobind=0, nosymlink=0, ro=0
+Dec 14 16:29:12 pacific automount[38410]: add_host_addrs: hostname lookup for atlantics failed: Name or service not known
+Dec 14 16:29:12 pacific automount[38410]: mount(nfs): no hosts available
+Dec 14 16:29:12 pacific automount[38410]: dev_ioctl_send_fail: token = 32
+Dec 14 16:29:12 pacific automount[38410]: failed to mount /nfs/files
+Dec 14 16:29:12 pacific automount[38410]: handle_packet: type = 3
+Dec 14 16:29:12 pacific automount[38410]: handle_packet_missing_indirect: token 33, name files, request pid 37942
+Dec 14 16:29:12 pacific automount[38410]: dev_ioctl_send_fail: token = 33
+Dec 14 16:29:12 pacific automount[38410]: handle_packet: type = 3
+Dec 14 16:29:12 pacific automount[38410]: handle_packet_missing_indirect: token 34, name files, request pid 37942
+Dec 14 16:29:12 pacific automount[38410]: dev_ioctl_send_fail: token = 34
+Dec 14 16:29:50 pacific systemd[1]: Stopping Automounts filesystems on demand...
+```
+
+This particular problem was fixed by setting the correct IP in /etc/hosts.
+
 ## Boot Targets
 
 Besides the commands `/sbin/shutdown`, you can use `systemctl` to reboot or shutdown your server.
