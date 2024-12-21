@@ -93,19 +93,40 @@ To change the timezone, run `timedatectl list-timezones` to get a list of timezo
 
 ## NTP 
 
+RedHat uses chronyd for NTP. 
+
 Make sure timedatectl says that NTP synchronization is enabled.
 
 ```sh
-timedatectl set-ntp true
+$ timedatectl 
+  Local time: Fri 2024-12-20 13:47:51 PST
+  Universal time: Fri 2024-12-20 21:47:51 UTC
+  RTC time: Fri 2024-12-20 21:47:51
+  Time zone: America/Los_Angeles (PST, -0800)
+  System clock synchronized: yes
+  NTP service: active
+  RTC in local TZ: no
 ```
 
-The restart chrony, the NTP client used on Redhat.
+If not, then set NTP to true and restart chrony.
 
 ```sh
+timedatectl set-ntp true
 systemctl restart chronyd
 ```
 
 To configure chrony, edit /etc/chrony.conf. You can change the pool to pool.ntp.org. Afterwards, restart chronyd and run `chronyc sources`. 
+
+To set up a server as an NTP server:
+
+1. Disable the line in /etc/chrony.conf that says pool 2.rhel.pool.ntp.org.
+2. Include the line allow 192.168.1.0/24 to allow access from all clients in the same network.
+3. Include the line `local stratum 8`. 
+4. Restart chrony: `systemctl restart chronyd`.
+5. Enable ntp as a service in the firewall.
+6. On the client, disable the line in /etc/chrony.conf that says `pool 2.rhel.pool.ntp.org`.
+7. Add the line `server atlantic`.
+8. Restart chronyd
 
 ## Networking
 
@@ -1602,13 +1623,93 @@ To run a container:
 sudo podman run -d -p 8080:80 --name httpd docker.io/library/httpd
 ```
 
-To host a local directory with podman running httpd, simply add `:Z` at the end.
-'
+There are times when you need to pass in environment variables in order to run a container. In this case, we can inspect the image using skopeo.
+
 ```sh
-sudo podman run --rm -tv /httproot:/usr/local/apache2/htdocs:Z -p 80:80 httpd
+ skopeo inspect docker://registry.access.redhat.com/rhscl/mariadb-101-rhel7 | less
 ```
 
-If unlear what directory to host, login to the container and search for files with httpd. Eventually you'll find the configuration file.
+A few lines down we can see usage information:
+
+```sh
+"usage": "docker run -d -e MYSQL_USER=user -e MYSQL_PASSWORD=pass -e MYSQL_DATABASE=db -p 3306:3306 rhscl/mariadb-101-rhel7",
+```
+
+What if we want to run nginx instead of Apache? We can use hte nginx:alpine image:
+
+```sh
+podman run --rm -p 8080:80 nginx:alpine
+```
+
+If your run a container as a root user, then UIDs are mapped to the container without issues. 
+
+If you run rootless containers then you need to do some more work. Below are the steps, followed by just the description:
+
+```sh
+# Run the container with no options. This will result in an error message saying credentials are missing.
+podman run --name mydb  --rm  -p 3309:3309 mariadb:lts-ubi9
+2024-12-20 01:47:23+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 11.4.4 started.
+2024-12-20 01:47:23+00:00 [ERROR] [Entrypoint]: Database is uninitialized and password option is not specified
+	You need to specify one of MARIADB_ROOT_PASSWORD, MARIADB_ROOT_PASSWORD_HASH, MARIADB_ALLOW_EMPTY_ROOT_PASSWORD and MARIADB_RANDOM_ROOT_PASSWORD
+
+# Run the container with a password
+podman run --name mydb  -e MARIADB_ROOT_PASSWORD=pasword --rm -p 3309:3309 mariadb:lts-ubi9
+
+# Find the UID/GID of the user running mariadb
+[rocky@atlantic ~]$ podman exec mydb cat /etc/passwd |grep mysql
+mysql:x:999:999::/var/lib/mysql:/bin/bash
+
+# Create a local directory called mydb
+mkdir mydb
+
+# Run podman unshare to map the UID and GID
+podman unshare chown 999:999 mydb
+
+# Stop the container
+podman stop <container id>
+
+# Run the container again with a bindmount
+podman run --name mydb -v /home/rocky/mydb:/var/lib/mysql:Z -e MARIADB_ROOT_PASSWORD=pasword --rm -p 3309:3309 mariadb:lts-ubi9
+```
+
+First, get the UID mapping, use `podman unshare cat /proc/self/uid_map`. You may be able to find the UID of the user that runs the main application by running `podman inspect imagename`. Otherwise, use `podman exec <container name> cat /etc/passwd`. Afterwards, use `podman unshare chown nn:nn directoryname` to set the container UID as the owner of the directory on the host. Make sure the directory is in the user's home directory. Verify the mapped user is owned on the host by running `ls -ld <path>`.
+
+For nginx, we could do the following:
+
+```sh
+# Run the latest nginx image, NOT alpine
+podman run --rm --name nginx docker.io/library/nginx:latest
+
+# Get into the container
+podman exec -ti nginx sh
+
+# Find the UID/GIDs we need
+cat /etc/passwd | grep nginx
+nginx:x:101:101:nginx user:/nonexistent:/bin/false
+
+# Find out where the files are served
+find / -name "*.html"
+find: '/proc/tty/driver': Permission denied
+find: '/proc/24/map_files': Permission denied
+find: '/proc/25/map_files': Permission denied
+/usr/share/nginx/html/50x.html
+/usr/share/nginx/html/index.html
+
+# Stop the container
+podman stop nginx
+
+# Make a local directory
+mkdir html
+
+# Create an HTML file in it
+touch html/index.html
+
+# Map the UID/GID with podman unshare
+podman unshare chown -R 101:101 html
+
+# Finally run the container
+podman run --rm --name nginx -p 8080:80 -v /home/rocky/html:/usr/share/nginx/html:Z docker.io/library/nginx:latest 
+```
 
 To manage containers through systemd, generate a unit file. In the previous step, you should give a proper name to the container because it will be used for the name of the service and CANNOT be changed later.
 
