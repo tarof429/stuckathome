@@ -1,8 +1,8 @@
-# Linux Tips
+# RHCSA Study Guide
 
 ## Introduction
 
-This section covers a variety of topics related to Linux administration and was preparation for the RHCSA exam. 
+This section covers a variety of topics related to Linux administration and was used as preparation for the RHCSA exam. 
 
 ## Pre-requisites
 
