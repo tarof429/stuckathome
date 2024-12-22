@@ -1,0 +1,14 @@
+---
+- name: Update packages
+  package:
+    name:
+      - java-17-openjdk-devel
+      - git
+    state: latest
+- name: Create directory
+  file:
+    path: /jenkins
+    state: directory
+    mode: '0755'
+    owner: jenkins
+    group: jenkins

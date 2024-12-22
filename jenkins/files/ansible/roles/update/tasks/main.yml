@@ -1,0 +1,27 @@
+---
+- name: Update all packages
+  package:
+    name: 
+      - "*"
+      - yum-utils
+      - wget
+    state: latest
+
+- name: Sleep 5 seconds
+  wait_for:
+    timeout: 5
+  delegate_to: localhost
+
+- name: Check if a reboot is needed
+  command: needs-restarting -r
+  register: reboot_required
+  ignore_errors: true
+
+- name: Get reboot status
+  debug:
+    msg: Reboot required {{ reboot_required.rc }}
+  when: reboot_required.rc == 1
+
+- name: Reboot
+  reboot:
+  when: reboot_required.rc == 1

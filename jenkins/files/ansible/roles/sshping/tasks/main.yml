@@ -1,0 +1,4 @@
+---
+- name: Print hello
+  debug:
+    msg: "Hello from {{ inventory_hostname }}!"

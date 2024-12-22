@@ -1,0 +1,9 @@
+---
+infra:
+  hosts:
+    server:
+      ansible_host: 192.168.1.50
+      ansible_user: jenkins
+    node:
+      ansible_host: 192.168.1.55
+      ansible_user: jenkins

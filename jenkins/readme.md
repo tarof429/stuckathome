@@ -2,32 +2,38 @@
 
 ## Installation
 
-This section is roughly based on the Udemy course listed in the references. Instead of a docker image, we use a KVM running AlmaLinux 9 (which we renamed `jenkins` and follow the official steps to run Jenkins on AlmaLinux.
+This project is roughly based on the Udemy course listed in the references. We use KVMs running AlmaLinux 9.
 
-Note: install wget first.
-
-To simplify remote access, the firewall was stopped and disabled on the VM.
+Use the install script.
 
 ```sh
-sudo systemctl stop firewalld
-sudo systemctl disable firewalld
+sh ./install.sh  -n jenkins-server -i 192.168.1.50
+sh ./install.sh  -n jenkins-node -i 192.168.1.55
 ```
 
-AlmaLinux 9 seems to have issues with console login by default. You can use virt-viewer to login through the console, which can be handy if you don't know the IP of the VM.
+You can SSH to each server as user `jenkins`.
+
+To verify connectivity, run the sshping playbook.
 
 ```sh
-sudo virt-viewer --connect qemu:///system --wait jenkins
+ansible-playbook sshping.yml
 ```
 
 ## Post-install Setup
 
-Once Jenkins is running, you'll want to install some additional programs in the VM.
+Once the servers are running, run the following:
 
-- Install tar, git, java-17-opendjk-devel packages
+```sh
+ansible-playbook update.yml
+ansible-playbook setup_server.yml
+ansible-playbook setup_node.yml
+```
+
+You also need to do the following on both servers:
 
 - Download Apache Maven from https://maven.apache.org/download.cgi and untar it under /usr/local
 
-- configure Jenkins tools to point to Maven, Java (set JAVA_HOME to `/usr/lib/jvm/java`)
+- configure Jenkins tools to point to Maven, Java (set JAVA_HOME to `/usr/lib/jvm/jre-17-openjdk`)
 
 ## Creating Pipelines
 

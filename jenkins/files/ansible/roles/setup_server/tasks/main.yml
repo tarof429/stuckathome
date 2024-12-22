@@ -1,0 +1,38 @@
+---
+
+- name: Install repository
+  yum_repository:
+    name: jenkins
+    description: "Jenkins stable repository"
+    baseurl: https://pkg.jenkins.io/redhat-stable
+    gpgcheck: 1
+    enabled: 1
+
+- name: Install gpg key
+  command: rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+
+- name: Update repo
+  yum:
+    update_cache: true
+
+- name: Update packages
+  package:
+    name:
+      - fontconfig
+      - java-17-openjdk
+      - jenkins
+    state: latest
+
+- name: Enable and start Jenkins
+  service:
+    name: jenkins
+    state: started
+    enabled: true
+
+- name: Tweak firewall
+  firewalld:
+    port: 8080/tcp
+    permanent: true
+    state: enabled
+    immediate: true
+
