@@ -20,6 +20,7 @@
     * [Part 11: Odds and Ends](python/part11_odds_and_ends.md)
     * [Part 12: Best Practices](python/part12_best_practices.md)
 * [Golang](golang/README.md)
+* [Rust] (rust/README.md)
 * [KVM](kvm/README.md)
     * [Part 1: Setting up KVM](kvm/part1_setting_up_kvm.md)
     * [Part 2: Installing Linux on KVM](kvm/part2_installing_linux_on_kvm)
