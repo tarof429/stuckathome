@@ -4,6 +4,9 @@
 
 This section covers setting up a CI/CD pipeline with Jenkins, Ansible, and Kubernetes. It is based on the Udemy course: https://www.udemy.com/course/valaxy-devops. 
 
+> This section is deprecated.
+
+
 # Part 1: Setup
 
 ## Setting up AWS

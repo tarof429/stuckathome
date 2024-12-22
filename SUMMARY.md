@@ -77,3 +77,9 @@
     * [Part 1: Netbooting Ubuntu](ubuntu/netbooting_ubuntu.md)
     * [Part 2: Kernel Crash Debugging](ubuntu/kernel_crash_debugging.md)
 * [Jenkins](jenkins/readme.md)
+* [DevOps with Nana](devops_with_nana/README.md)
+
+# Deprecated
+Below are some sections that are deprecated but retained as a reference.
+
+* [Valaxy DevOps](valaxy_devops/part_1_setup.md)
