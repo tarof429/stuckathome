@@ -29,3 +29,6 @@ There are a few DevOps fundamentals that you also need to know:
 3. A configuration management tool such as Ansible.
 4. Monitoring & observability tools such as Prometheus. 
 5. Security
+
+# References
+https://mailchi.mp/techworld-with-nana/devops-roadmap?utm_source=youtube.com&utm_medium=video&utm_campaign=yt-devops-roadmap-2024
