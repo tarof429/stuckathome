@@ -68,6 +68,10 @@ If you make a change to the file and run terraform apply again, the file content
 
 However, rather than running terraform apply every time, it is best to run terraform refresh. This allows terraform to reconcile changes made remotely (in this case, in the file) with the .tfstate file. 
 
+## My IP
+
+The **my_ip** example is a variation of the **hello_local** example and prints your public IP.
+
 ## Deploying a single web server
 
 The **single_web_server** example deploys a web server on an EC2 instance. The *user_data_replace_on_change* flag is set to true so that if the user data changes in the terraform file, Terraform will terminate the original instance and launch an new one.
