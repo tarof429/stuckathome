@@ -8,7 +8,7 @@ variable "server_port" {
   default     = 8080
 }
 
-resource "aws_instance" "single_web_server" {
+resource "aws_instance" "web_server" {
   ami                    = "ami-0aff18ec83b712f05"
   instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.mysg.id]
@@ -23,12 +23,12 @@ resource "aws_instance" "single_web_server" {
 
 
   tags = {
-    Name = "single_web_server"
+    Name = "web_server"
   }
 }
 
 resource "aws_security_group" "mysg" {
-  name = "single_web_server_sg"
+  name = "web_server_sg"
 
   ingress {
     from_port   = var.server_port
