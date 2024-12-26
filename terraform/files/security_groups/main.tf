@@ -8,8 +8,6 @@ data "aws_vpc" "default" {
 
 data "http" "myip" {
   url = "https://ifconfig.me"
-  //url = "https://ipv4.icanhazip.com"
-  //url = "https://ifcofig.co/json"
 }
 
 

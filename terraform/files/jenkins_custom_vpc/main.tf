@@ -2,6 +2,10 @@ provider "aws" {
   region = "us-west-2"
 }
 
+data "http" "myip" {
+  url = "https://ifconfig.me"
+}
+
 resource "aws_instance" "jenkins" {
   ami           = var.ami
   instance_type = var.instance_type
@@ -73,7 +77,7 @@ resource "aws_security_group" "cicd" {
             protocol = "tcp"
             from_port = port.value
             to_port = port.value
-            cidr_blocks = ["0.0.0.0/0"]   
+            cidr_blocks = ["${chomp(data.http.myip.response_body)}/32"]
         }
     }
 
@@ -85,11 +89,11 @@ resource "aws_security_group" "cicd" {
             protocol = "tcp"
             from_port = port.value
             to_port = port.value
-            cidr_blocks = ["0.0.0.0/0"]   
+            cidr_blocks = ["${chomp(data.http.myip.response_body)}/32"]
         }
     }
 }
 
 output "jenkins_public_ip" {
-    value = aws_instance.jenkins.public_ip
+    value = aws_eip.jenkins_eip.public_ip
 }
