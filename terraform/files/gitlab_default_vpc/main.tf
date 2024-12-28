@@ -2,26 +2,19 @@ provider "aws" {
   region = "us-west-2"
 }
 
-terraform {
-  backend "s3" {
-    bucket = "terraform-state-bucket-taro937184"
-    key    = "global/s3/gitlab.tfstate"
-    region = "us-west-2"
-
-    dynamodb_table = "gitlab-locks"
-    encrypt        = true
-  }
+data "http" "myip" {
+  url = "https://ifconfig.me"
 }
 
-resource "aws_instance" "gitlab_test_server" {
+resource "aws_instance" "gitlab" {
   ami           = var.ami
   instance_type = var.instance_type
   key_name = "latest"
-  security_groups = [aws_security_group.gitlab.name]
-  # user_data = file("./install_gitlab.sh")
+  vpc_security_group_ids = [aws_security_group.gitlab_sg.id]
+  //user_data = file("./install_gitlab.sh")
 
   tags = {
-    Name = "Gitlab Test Server"
+    Name = "Gitlab"
   }
 }
 
@@ -29,9 +22,8 @@ data "aws_vpc" "default" {
   default = true
 }
 
-resource "aws_security_group" "gitlab" {
-  name   = "Gitlab Test Security Group"
-  vpc_id = data.aws_vpc.default.id
+resource "aws_security_group" "gitlab_sg" {
+  name   = "Gitlab SG"
 
   dynamic "ingress" {
     iterator = port
@@ -41,19 +33,15 @@ resource "aws_security_group" "gitlab" {
       protocol    = "tcp"
       from_port   = port.value
       to_port     = port.value
-      cidr_blocks = ["0.0.0.0/0"]
+      cidr_blocks = ["${chomp(data.http.myip.response_body)}/32"]
     }
   }
+}
 
-  dynamic "egress" {
-    iterator = port
-    for_each = var.egressrules
-
-    content {
-      protocol    = "tcp"
-      from_port   = port.value
-      to_port     = port.value
-      cidr_blocks = ["0.0.0.0/0"]
-    }
-  }
+resource "aws_vpc_security_group_egress_rule" "gitlab_sg" {
+  security_group_id = aws_security_group.gitlab_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 0
+  to_port           = 0
+  ip_protocol       = -1
 }

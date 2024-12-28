@@ -12,13 +12,12 @@ resource "aws_instance" "jenkins" {
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.public_subnet.id
   key_name               = "latest"
-  vpc_security_group_ids = [aws_security_group.jenkins_sg.id] // Note that we need to use 'vpc_security_group_ids' instead of 'security_groups' for a custom VPC
-
+  vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
   tags = {
     Name = "jenkins"
   }
 
-  // user_data = file("./install_jenkins.sh")
+  user_data = file("./install_jenkins.sh")
 }
 
 resource "aws_eip" "jenkins_eip" {
@@ -93,7 +92,6 @@ resource "aws_vpc_security_group_egress_rule" "jenkins_sg" {
   from_port         = 0
   to_port           = 0
   ip_protocol       = -1
-
 }
 
 output "jenkins_public_ip" {

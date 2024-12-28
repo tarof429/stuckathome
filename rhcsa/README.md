@@ -875,6 +875,12 @@ Next we can create logical volumes. One thing to remember, logical volumes are A
   swap    rl_rocky-server -wi-ao----   2.00g                                                    
 ```
 
+To create the logical volume with the entire disk space available, use `-l`.
+
+```sh
+lvcreate -l +100%FREE --name data_lv data_vg
+```
+
 Finally, we must remember to create a filesystem on the logical volume.
 
 ```sh
@@ -1242,7 +1248,7 @@ systemctl restart remote-fs.target
 - To mount an ISO automatically, you can use the `auto` file system type in /etc/fstab.
 - You can run `mount -a` to mount all partitions (except swap) that aren't mounted currently.
 - The reason why `systemd daemon-reload` needs to be run after changing /etc/fstab is because in RedHat Linux, /etc/fstab is used to generate services in /run/systemd/generator that are used to mount filesystems.
-- You can use `findmnt -s` to verify the contents of /etc/fstab. Check that the columns have the correct information.
+- You can use `findmnt -s` to validate the contents of /etc/fstab. Check that the columns have the correct information.
 
 ## Web Servers
 

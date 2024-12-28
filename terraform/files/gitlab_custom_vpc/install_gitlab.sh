@@ -19,7 +19,7 @@
 
 # Configure gitlab. 
 # See https://docs.gitlab.com/omnibus/settings/configuration.html#configure-the-external-url-for-gitlab
-# sudo EXTERNAL_URL="https://gitlab.example.com" dnf install -y gitlab-ee
+# sudo EXTERNAL_URL="https://gitlab.example.com" dnf install -y gitlab-ce
 
 # Browse to the hostname and login. 
 # Look for the password in /etc/gitlab/initial_root_password

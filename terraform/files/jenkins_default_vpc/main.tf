@@ -2,10 +2,14 @@ provider "aws" {
   region = "us-west-2"
 }
 
+data "http" "myip" {
+  url = "https://ifconfig.me"
+}
+
 resource "aws_instance" "jenkins" {
   ami           = var.ami
   instance_type = var.instance_type
-  security_groups = [aws_security_group.cicd.name]
+  vpc_security_group_ids = [aws_security_group.jenkins_sg.id]
   tags = {
     Name = "jenkins"
   }
@@ -13,8 +17,8 @@ resource "aws_instance" "jenkins" {
   key_name = "latest"
 }
 
-resource "aws_security_group" "cicd" {
-    name = "CI/CD"
+resource "aws_security_group" "jenkins_sg" {
+    name = "Jenkins SG"
 
     dynamic "ingress" {
         iterator = port 
@@ -24,21 +28,18 @@ resource "aws_security_group" "cicd" {
             protocol = "tcp"
             from_port = port.value
             to_port = port.value
-            cidr_blocks = ["0.0.0.0/0"]   
+            //cidr_blocks = ["0.0.0.0/0"]
+            cidr_blocks = ["${chomp(data.http.myip.response_body)}/32"]
         }
     }
+}
 
-    dynamic "egress" {
-        iterator = port 
-        for_each = var.egressrules
-    
-        content {
-            protocol = "tcp"
-            from_port = port.value
-            to_port = port.value
-            cidr_blocks = ["0.0.0.0/0"]   
-        }
-    }
+resource "aws_vpc_security_group_egress_rule" "jenkins_sg" {
+  security_group_id = aws_security_group.jenkins_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 0
+  to_port           = 0
+  ip_protocol       = -1
 }
 
 output "jenkins_public_ip" {

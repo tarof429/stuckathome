@@ -20,10 +20,5 @@ variable public_subnet_cidr {
 
 variable ingressrules {
     type = list(number)
-    default = [22, 80, 8080, 8443]
-}
-
-variable egressrules {
-    type = list(number)
-    default = [22, 80, 8080, 8443]
+    default = [22, 8080]
 }
