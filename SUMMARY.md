@@ -2,6 +2,12 @@
 
 * [About](README.md)
 * [License](LICENSE)
+* [ArchLinux](archlinux/README.md)
+    * [Part 1: The Manifesto](archlinux/manifesto.md)
+    * [Part 2: Partitioning](archlinux/partitioning.md)
+    * [Part 3: Storage](archlinux/storage.md)
+    * [Part 4: Post Install](archlinux/post_install.md)
+    * [Part 5 RAID](archlinux/raid.md)
 * [DevOps with Nana](devops_with_nana/README.md)
 * Linux
     * [RHCSA](rhcsa/README.md)
@@ -41,10 +47,6 @@
     * [AWS Certified Cloud Practitioner](aws_certified_cloud_practioner/README.md)
         * [Part 1: Intro](aws_certified_cloud_practitioner/intro.md)
         * [Part 2: Questions](aws_certified_cloud_practioner/questions.md)
-* [My Short Guide to building a PC in 2022](building_a_pc_2022/README.md)
-    * [Part 1: The Manifesto](building_a_pc_2022/manifesto.md)
-    * [Part 2: Partitioning](building_a_pc_2022/partitioning.md)
-    * [Part 3: Storage](building_a_pc_2022/storage.md)
 * Kubernetes
     * [k3s](k3s/part1_setup.md)
     * [Rancher](rancher/part1_setup.md)
