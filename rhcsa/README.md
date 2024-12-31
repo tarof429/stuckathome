@@ -6,17 +6,17 @@ This section covers a variety of topics related to Linux administration and was 
 
 ## Pre-requisites
 
-A VM running Rocky 9 was used as the training environment.
+A VM running Rocky 9 can be used as the training environment.
 
 ## Users
 
 Use `chage` to change the password expirary per user. Although technically `passwd` can do all of the same things, it's preferable to just use `chage`. If you need to expire a user's password, run `chage -E 1 <user>`. By default, it is set to -1 so it will never expire.
 
-Defaults password policies are stored in /etc/login.defs. For example, there are a few login-related variables related to passwords here. If the exam asks you to set default values for new users like password expirary and the first UUID, set it in /etc/login.defs.
+Defaults password policies are stored in `/etc/login.defs`. For example, there are a few login-related variables related to passwords here. If the exam asks you to set default values for new users like password expirary and the first UUID, set it in `/etc/login.defs`.
 
-Minimum password lengths are managed in /etc/security/pwquality.conf NOT /etc/login.defs.
+Minimum password lengths are managed in `/etc/security/pwquality.conf` NOT /etc/login.defs.
 
-If you need to require at least one digit, set dcredit to -1 in /etc/security/pwquality.conf. 
+If you need to require at least one digit, set dcredit to -1 in `/etc/security/pwquality.conf`. 
 
 ## History
 
@@ -30,9 +30,9 @@ It can be handy to find out the filesystem when running df. To do this, run `df 
 
 The `free` command is not very human-friendly by default, but you can change the units easily buy using `m` or simply `-h` for human-readable.
 
-The `lsof` command can be used to list open files (lsof stands for `list open files`). With no arguments, it's not very helpful. If you know a user is logged into a system, you can find what files he has opened by running `lsof -u <user>`. Or what if you find a process from top and you want to find what files it has opened. For example, if top lists a process called `Isolated Web Co` with PID 16068, then run `lsof -p 16068` will give you a list of files that process has opeened. See https://www.redhat.com/en/blog/analyze-processes-lsof. 
+The `lsof` command can be used to list open files (lsof stands for `list open files`). With no arguments, it's not very helpful. If you know that a user is logged into a system, you can find what files he has opened by running `lsof -u <user>`. Or what if you find a process from top and you want to find what files it has opened. For example, if top lists a process called `Isolated Web Co` with PID 16068, then run `lsof -p 16068` will give you a list of files that process has opeened. See https://www.redhat.com/en/blog/analyze-processes-lsof. 
 
-The `tcpdump` command can be used to troubleshoot networking issues. For example, on host A, run tcpdump -i <interface> host <source IP>. Then from the source IP machine, run ping <ip.of.host.A>. You should see some output on host A indicating that the ping was successful. See https://hackertarget.com/tcpdump-examples/. Note that if you want to monitor port 22, you should login to the server from the console and not from an SSH session.
+The `tcpdump` command can be used to troubleshoot networking issues. For example, on host A, run `tcpdump -i <interface> host <source IP>`. Then from the source IP machine, run ping <ip.of.host.A>. You should see some output on host A indicating that the ping was successful. See https://hackertarget.com/tcpdump-examples/. Note that if you want to monitor port 22, you should login to the server from the console and not from an SSH session.
 
 A command that shows what gateway traffic is flowing through is netstat. For example, `netstat -nrv`. If you run `netstat -t` you can see the list of outgoing TCP connections.
 
@@ -46,7 +46,7 @@ There are two options when using find with permissions.
 
 The use of `-` option means "at least this permission level is set, and any higher permissions.
 
-The use of `/` mans "any of the permissions listed are set.
+The use of `/` means "any of the permissions listed are set.
 
 Special permissions are configured using a fourth bit (leftmost):
 
@@ -54,6 +54,12 @@ Special permissions are configured using a fourth bit (leftmost):
 - SGID = 2
 - Sticky Bit = 1
 
+For example:
+
+```sh
+# Finds files under / with SGID bit at least set to 000
+find / -type f -perm -2000
+```
 
 ## Devices
 
@@ -77,7 +83,7 @@ To unload a kernel module, run `modprobe -r <module>`.
 
 - To reload configurations of services without restarting it, run `systemctl reload <service name>`. This is useful for services such as httpd or sshd for example. For example, by default sshd does not let the root user SSH into the OS. To enable this behavior, edit /etc/ssh/sshd_config and set the property `PermitRootLogin` to true. Then instead of restarting the service you could just reload the service.
 
-- You can enable/disable services by using mask/unmask. In the case of mask, then the service will be started whether or not it is dependent on another service. If you unmask it, then the service will nto be started as a dependency. 
+- You can enable/disable services by using mask/unmask. In the case of mask, then the service will be started whether or not it is dependent on another service. If you unmask it, then the service will not be started as a dependency. 
 
 ## SSH
 
@@ -85,15 +91,15 @@ To make SSH more secure, it is good to set the `ClientAliveInterval` to a value 
 
 A hidden property is `AllowUsers`. This lets you restrict who can SSH to the server.
 
-The SSH service listener port can be customized. SSH service configuration is in /etc/ssh/sshd_config. If you want to change the listener port, find the line that specifies a port, uncomment and change it to a different port (such as 22), and run `semanage port -m -t ssh_port_t -p tcp 2022`. If you want to ADD a port, then uncomment `PORT 22` and add another line with `PORT 2022` (for example). Then run `semanage port -a -t ssh_port_t -p tcp 2022`. Afterwards restart the SSH service. You may also need to update the firewall rules.
+The SSH service listener port can be customized. SSH service configuration is in `/etc/ssh/sshd_config`. If you want to change the listener port, find the line that specifies a port, uncomment and change it to a different port (such as 2022), and run `semanage port -m -t ssh_port_t -p tcp 2022` (this is mentioned in /etc/ssh/sshd_config). If you want to add a port, then uncomment `PORT 22` and add another line with `PORT 2022` (for example). Then run `semanage port -a -t ssh_port_t -p tcp <port>`. Afterwards restart the SSH service. You may also need to update the firewall rules. If port 2022 is used, then run `firewall-cmd --add-port 2022 --permanent; firewall-cmd --reload`.
 
 ## Timezone
 
-To change the timezone, run `timedatectl list-timezones` to get a list of timezones and then run `timedatectl set-timezone=<timezone>`. 
+To list timezones run `timedatectl list-timezones`. To set the timezone, run `timedatectl set-timezone=<timezone>`. 
 
 ## NTP 
 
-RedHat uses chronyd for NTP. 
+RedHat uses `chronyd` for NTP. 
 
 Make sure timedatectl says that NTP synchronization is enabled.
 
@@ -115,7 +121,7 @@ timedatectl set-ntp true
 systemctl restart chronyd
 ```
 
-To configure chrony, edit /etc/chrony.conf. You can change the pool to pool.ntp.org. Afterwards, restart chronyd and run `chronyc sources`. 
+To configure chrony, edit `/etc/chrony.conf`. You can change the pool to pool.ntp.org. Afterwards, restart chronyd and run `chronyc sources`. 
 
 To set up a server as an NTP server:
 
@@ -125,7 +131,7 @@ To set up a server as an NTP server:
 4. Restart chrony: `systemctl restart chronyd`.
 5. Enable ntp as a service in the firewall.
 6. On the client, disable the line in /etc/chrony.conf that says `pool 2.rhel.pool.ntp.org`.
-7. Add the line `server atlantic`.
+7. Add the line `server <server.name>`.
 8. Restart chronyd
 
 ## Networking
@@ -134,7 +140,7 @@ The CLI tool for configuring networking in RedHat Linux is `nmcli`.
 
 To get a list of network interfaces, run `nmcli connection`. A shorthand is `nmcli con` or `nmcli con show`.
 
-In the exam, you need to modify some parameters. to see all of the parameters for an IPv4 address, run:
+In the exam, you may need to modify some parameters. To see all of the parameters for an IPv4 address, run:
 
 ```sh
 nmcli con show enp1s0 | grep ipv4
@@ -168,9 +174,11 @@ nmcli con up enp1s0
 
 You should validate the network settings by running `ip a`, `ip route` and checking the contents of /etc/resolv.conf.
 
+It is preferrable to use `nmtui` during the exam.
+
 ## Packages
 
-To find what package provides a binary, use `dns provides **/<package name>`.
+To find what package provides a binary, run `dnf provides **/<package name>`.
 
 To see the list of configuration files for a package, use `rpm -qp <package name>`.
 
@@ -183,11 +191,11 @@ $ sudo rpm -qf /usr/bin/ssh
 openssh-clients-8.7p1-38.el9_4.4.x86_64
 ```
 
-To create a local YUM repo, follow these steps (for AlmaLinux 9):
+On the exam, you may need to create a local YUM repo fromm an ISO. Below are the steps:
 
-- Install createrepo package
 - Create a directory called /iso
-- Mount the AlmaLinux 9 ISO to /iso
+- Mount the AlmaLinux 9 ISO to /iso. For example: `mount /dev/sr1 /iso`.
+- Install the createrepo package. It is in AppStream/c. For example: `dnf install createrepo_c-0.20.1-2.el9.x86_64.rpm createrepo_c-libs-0.20.1-2.el9.x86_64.rpm`
 - Create a directory called /localrepo
 - Create a directory called /localrepo/BaseOS
 - Copy /iso/BaseOS/Packages to /localrepo/BaseOS/Packages
@@ -196,13 +204,14 @@ To create a local YUM repo, follow these steps (for AlmaLinux 9):
 - Copy /iso/AppStream/Packages to /localrepo/AppStream/Packages
 - Run `createrepo Packages -o .`
 - Go to /etc/yum.repos.d
-- Create a directory called old
-- Move all the *.repo files to old
-- Copy old/rocky.repo to the parent directory
-- Edit this file and point baseurl for the BaseOS and AppStream repositories
+- Run `dnf config-manager --add-repo file:///localrepo/BaseOS` and `dnf config-manager --add-repo file:///localrepo/AppStream`
 - Finally verify the repostories by running `dnf repolist -v`
 
-A handy CLI command to know is `dnf config-manager`. For example, to enable a yum repo, run `dnf config-manager --set-enabled baseos`.
+> A 10GiB disk is barely enough for both repos!
+
+To enable a yum repo, run `dnf config-manager --enable baseos`.
+
+> You can use dnf config-manager --set-enabled or --enable to enable a repository. To disable a repository, you can use --set-disabled or --disable. If needed, it can be helpful on the exam to use the shorter syntax: --enable and --disable.
 
 To remove an old kernel, you can use `dnf remove kernel-core-<version.of.kernel.to.remove>`. Then use `dnf autoremove` to delete anything you don't need. The `erase` option is deprecated. Since we only need to explictly remove one package, it is not very helpful to create a variable for the kernel version to remove.
 
@@ -933,7 +942,7 @@ $ sudo lvextend --extents +100%FREE /dev/data_vg/data_lv /dev/vdc1
   Logical volume data_vg/data_lv successfully resized.
 ```
 
-At this point, lvdisplay should show the expanded storage but `df -Th` will not. What we need to do next is run `xfs_growfs` on the root partition. If this was a ext4 partition, them we should use `resize2fs`.
+At this point, lvdisplay should show the expanded storage but `df -Th` will not. What we need to do next is run `xfs_growfs` on the root partition. If this was an ext3 or ext4 partition, use `resize2fs` instead.
 
 ```sh
 $ sudo xfs_growfs /dev/mapper/data_vg-data_lv 
@@ -973,13 +982,13 @@ How are the two tools different? With XFS, filesystems can only be expanded; wit
 
 ### Removing LV
 
-You can remove a logical volume to create a new filesystem on it. First you shoudl deactivate the volume.
+You can remove a logical volume to create a new filesystem on it. First you should deactivate the volume.
 
 ```sh
 lvchange -an /dev/data_vg/data_lv
 ```
 
-Next use `lvremove` to remove the logical volume.
+Next, use `lvremove` to remove the logical volume.
 
 ```sh
 lvremove /dev/data_vg/data_lv
@@ -999,7 +1008,7 @@ vgreduce data_vg /dev/vdb2
 
 ### Creating RAID with LVM
 
-LVM can create RAID devices. Below is an example where we create a RAID 1 (mirroring) device from 2 virtual disks:
+LVM can also create RAID devices. Below is an example where we create a RAID 1 (mirroring) device from 2 virtual disks:
 
 ```sh
 [root@rocky-server ~]# lvcreate -m 1 --type raid1 --name home_raid   -l +100%FREE home_vg
@@ -1031,7 +1040,7 @@ LVM can create RAID devices. Below is an example where we create a RAID 1 (mirro
 
 ### Labeling partitions
 
-Partition labels can be used to identify partitions instead of UUIDs. There are a few command-line tools to set the label. The `e2label` command can be used to set the label for ext3 and ext4 partitions while `fatlabel` can be used to set the label for MS-DOS partitions. These are mentioned in the man page for fstab. For XFS filesystems, use `xfs_admin`. 
+Partition labels can be used to identify partitions instead of UUIDs. You can use these labels in /etc/fstab.  There are a few command-line tools to set the label. The `e2label` command can be used to set the label for ext3 and ext4 partitions while `fatlabel` can be used to set the label for MS-DOS partitions. These are mentioned in the man page for fstab. For XFS filesystems, use `xfs_admin`.
 
 ### Changing the UUID
 
@@ -1130,39 +1139,31 @@ UUID=a07a51eb-f1ec-46dc-98cd-37633fd4ecfa /data	xfs	defaults,x-systemd.requires=
 
 ### Creating swap partitions
 
-First check the current swap space by running `free -m`.
+First, check the current swap space by running `free -m`.
 
-You use fdisk to create a swap partition. The partition type has to be set to `swap`, which is hex code 82.
+Use fdisk to create a swap partition. The partition type should be set to `swap`.
 
 Afterwards, use `mkswap` to partition the swap space. 
 
-Afterwards, enable the swap space by running `swapon`. Run `free -m` to verify the swap space. 
+Enable the swap space by running `swapon`. Run `free -m` again to verify the swap space. 
 
-To make the change permanent, add an entry in /etc/fstab like 
+To make the change permanent, add an entry in /etc/fstab like:
 
 ```sh
 UUID=543debbb-cfe0-48c0-b6a4-8d389df760d0 none	swap defaults 0 0
 ```
 
-For a partition, you can enable the swap byeither specifying the partition /dev/vdb1 or the UUID. For example,
-
-```sh
-sudo swapon UUID="543debbb-cfe0-48c0-b6a4-8d389df760d0"
-```
-
-Run `systemctl daemon-reload` after making a change to /etc/fstab.
+Remember to run `systemctl daemon-reload` after making any changes to /etc/fstab.
 
 ### Creating swap files
 
-First create the swap file as mentioned in the man page for `mkswap`. For example, 
+First, create the swap file as mentioned in the man page for `mkswap`. For example, 
 
 ```sh
 dd if=/dev/zero of=/swapfile bs=GiB count=2
 ```
 
-Will create a 2GiB swap file.
-
-You can create the swap file by copying and pasting the instructions from the man page for `mkswap`.
+This will create a 2GiB swap file.
 
 Next, we need to enable the swap file by using mkswap.
 
@@ -1186,7 +1187,7 @@ Use `free -m` to verify before and after swap space.
 
 The autofs service mounts filesystems on demand. This can be useful if you are mounting a filesytem through NFS and don't want a persistent connection.
 
-First you do need to have an NFS server running and exporting a directory over the network.
+First, you need to have an NFS server running and exporting a directory over the network.
 
 On the client, install the autofs package.
 
@@ -1206,7 +1207,7 @@ files -rw localhost:/nfsdata
 
 Restart autofs service. Then type `cd /data/files/ to access the NFS mount.
 
-autofs can also handle wildcards in case we don't want to specify multiple directories. For example, let's say linda and anna have their home directories set to /home/users/linda and /home/users/anna. We want to make sure that while these users access their home directory, autofs is used to mount the NFS shares /users/linda and /users/anna from the same server.
+The autofs service can also handle wildcards in case we don't want to specify multiple directories. For example, let's say linda and anna have their home directories set to /home/users/linda and /home/users/anna. We want to make sure that while these users access their home directory, autofs is used to mount the NFS shares /users/linda and /users/anna from the same server.
 
 ```sh
 $cat /etc/exports
@@ -1221,7 +1222,7 @@ Next, we create /etc/auto.master. This is taken from the client-side point of vi
 /home/users /etc/users.msic
 ```
 
-The content of /etc/users.misc
+The content of /etc/users.misc should be:
 
 ```sh
 * -rw localhost:/users/&
@@ -1252,7 +1253,7 @@ systemctl restart remote-fs.target
 
 ## Web Servers
 
-What you have to remember about configuring web servers for the exam is that they may want you to configure the system so that a web site can be accessed on a non-standard port AND with SELinux enabled.
+What you have to remember about configuring web servers for the exam is that they may want you to configure the system so that a web site can be accessed from a non-standard port AND with SELinux enabled.
 
 To do this:
 
@@ -1309,9 +1310,9 @@ firewall-cmd --add-service={nfs,rpc-bind,mountd} --permanent
 firewall-cmd --reload
 ```
 
-You have to memorize this list. The man page for nfs has some hints about what services to enable, but it is not clear.
+You have to memorize the list of services. The man page for nfs has some hints about what services to enable, but it is not clear.
 
-Hard to memorize? The systemctl has a way to show dependiences of the nfs-server service.
+Hard to memorize? The systemctl has a way to show dependencies of the nfs-server service.
 
 ```sh
 [root@atlantic nfs-utils]# systemctl list-dependencies nfs-server
@@ -1331,7 +1332,7 @@ nfs-server.service
 ● └─network.target
 ```
 
-Another thing you can try is look at the man page and search for `service`. It will mention rpcbind and mountd. 
+Another thing you can try is look at the man page for nfs-server and search for `service`. It will mention rpcbind and mountd. 
 
 There are 3 things you need to do on the client to mount NFS shares.
 
@@ -1444,7 +1445,7 @@ You can get the run level by using `who`.
 
 ```sh
 $ who -r
-         run-level 3  2024-11-06 09:19
+run-level 3  2024-11-06 09:19
 ```
 
 You can list the dependencies of each target using systemctl.
@@ -1617,11 +1618,13 @@ success
 
 ## Containers
 
-In RedHat, containers are managed using podman. It needs to be installed on the system.
+In RedHat, containers are managed using podman. The podman packages needs to be installed on the system.
 
 ```sh
 dnf install podman
 ```
+
+On the RHCSA exam, containers are used to run services that would normally be run on the server itself. However, this requires additional configuration.
 
 To run a container:
 
@@ -1641,7 +1644,7 @@ A few lines down we can see usage information:
 "usage": "docker run -d -e MYSQL_USER=user -e MYSQL_PASSWORD=pass -e MYSQL_DATABASE=db -p 3306:3306 rhscl/mariadb-101-rhel7",
 ```
 
-What if we want to run nginx instead of Apache? We can use hte nginx:alpine image:
+What if we want to run nginx instead of Apache? We can use the nginx:alpine image:
 
 ```sh
 podman run --rm -p 8080:80 nginx:alpine
@@ -1649,7 +1652,7 @@ podman run --rm -p 8080:80 nginx:alpine
 
 If your run a container as a root user, then UIDs are mapped to the container without issues. 
 
-If you run rootless containers then you need to do some more work. Below are the steps, followed by just the description:
+If you want to run rootless containers then you need to do some more work. Below are the steps, followed by just the description:
 
 ```sh
 # Run the container with no options. This will result in an error message saying credentials are missing.
