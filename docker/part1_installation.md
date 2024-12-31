@@ -40,6 +40,16 @@ The AWS Marketplace has AMIs with docker pre-installed. but we'll forgot that an
     docker run hello-world
     ```
 
+## Relocating docker storage
+
+Create a file at /etc/daemon.json with the location of data-root. For example:
+
+```json
+{
+  "data-root": "/data/docker"
+}
+```
+
 ## References
 
 https://aws.amazon.com/marketplace/pp/prodview-cuiyfwsltafu4,
