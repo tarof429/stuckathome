@@ -1,18 +1,18 @@
-# RHCSA Study Guide
+# RedHat Linux Administration
 
 ## Introduction
 
-This section covers a variety of topics related to Linux administration and was used as preparation for the RHCSA exam. 
+This section covers a variety of topics related to RedHat Linux administration.
 
 ## Pre-requisites
 
-A VM running Rocky 9 can be used as the training environment.
+A VM running Rocky Linux can be used to simulate a RedHat Linux environment
 
 ## Users
 
 Use `chage` to change the password expirary per user. Although technically `passwd` can do all of the same things, it's preferable to just use `chage`. If you need to expire a user's password, run `chage -E 1 <user>`. By default, it is set to -1 so it will never expire.
 
-Defaults password policies are stored in `/etc/login.defs`. For example, there are a few login-related variables related to passwords here. If the exam asks you to set default values for new users like password expirary and the first UUID, set it in `/etc/login.defs`.
+Defaults password policies are stored in `/etc/login.defs`. For example, there are a few login-related variables related to passwords here. If you need to set default values for new users like password expirary and the first UUID, set it in `/etc/login.defs`.
 
 Minimum password lengths are managed in `/etc/security/pwquality.conf` NOT /etc/login.defs.
 
@@ -1265,7 +1265,7 @@ To do this:
 
 ## NFS Service
 
-For the RHCSA exam, NFS is often combined with autofs so both will be discussed below.
+On a RedHat Linux system, NFS is often combined with autofs so both will be discussed below.
 
 On the NFS server, install the `nfs-utils` package. 
 
@@ -1624,7 +1624,7 @@ In RedHat, containers are managed using podman. The podman packages needs to be 
 dnf install podman
 ```
 
-On the RHCSA exam, containers are used to run services that would normally be run on the server itself. However, this requires additional configuration.
+In Redhat, containers are used to run services that would normally be run on the server itself. However, this requires additional configuration.
 
 To run a container:
 

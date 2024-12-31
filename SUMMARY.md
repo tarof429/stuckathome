@@ -10,7 +10,7 @@
     * [Part 5 RAID](archlinux/raid.md)
 * [DevOps with Nana](devops_with_nana/README.md)
 * Linux
-    * [RHCSA](rhcsa/README.md)
+    * [RedHat](redhat/README.md)
     * [FreeBSD](freebsd/README.md)
     * [Ubuntu](ubuntu/netbooting_ubuntu.md)
         * [Part 1: Netbooting Ubuntu](ubuntu/netbooting_ubuntu.md)
