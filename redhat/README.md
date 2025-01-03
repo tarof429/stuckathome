@@ -101,28 +101,6 @@ To list timezones run `timedatectl list-timezones`. To set the timezone, run `ti
 
 RedHat uses `chronyd` for NTP. 
 
-Make sure timedatectl says that NTP synchronization is enabled.
-
-```sh
-$ timedatectl 
-  Local time: Fri 2024-12-20 13:47:51 PST
-  Universal time: Fri 2024-12-20 21:47:51 UTC
-  RTC time: Fri 2024-12-20 21:47:51
-  Time zone: America/Los_Angeles (PST, -0800)
-  System clock synchronized: yes
-  NTP service: active
-  RTC in local TZ: no
-```
-
-If not, then set NTP to true and restart chrony.
-
-```sh
-timedatectl set-ntp true
-systemctl restart chronyd
-```
-
-To configure chrony, edit `/etc/chrony.conf`. You can change the pool to pool.ntp.org. Afterwards, restart chronyd and run `chronyc sources`. 
-
 To set up a server as an NTP server:
 
 1. Disable the line in /etc/chrony.conf that says pool 2.rhel.pool.ntp.org.
@@ -130,9 +108,15 @@ To set up a server as an NTP server:
 3. Include the line `local stratum 8`. 
 4. Restart chrony: `systemctl restart chronyd`.
 5. Enable ntp as a service in the firewall.
-6. On the client, disable the line in /etc/chrony.conf that says `pool 2.rhel.pool.ntp.org`.
-7. Add the line `server <server.name>`.
-8. Restart chronyd
+
+On the client:
+
+1. Disable the line in /etc/chrony.conf that says `pool 2.rhel.pool.ntp.org`.
+2. Add the line `server <server.name>`. This is mentioned in the man page for chrony.conf.
+3. Restart chronyd
+4. Wait one minute and run `chronyc sources` and confirm that the Reach column is not 0. Otherwise there is a configuration issue.
+
+To manually sync with an NTP server, stop chronyd and run `chronyd -q 'server <ip> iburst'`. This can help troubleshoot chrony configuration issues.
 
 ## Networking
 
