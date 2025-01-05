@@ -1,5 +1,8 @@
 # Golang Notes
 
+## Timer
+9:01
+
 ## Table of Contents
 
 1. [Introduction](#introduction)
@@ -60,7 +63,7 @@ Go:
 
 - Promotes rapid development
 
-- Supports modern computing environments, including concurrency and memory management
+- Supports modern computing environments, including concurrency and memory management (Nana says that concurrency is the main reason why Go was invented)
 
 - Easy to learn and use, and unlike C++, does not have classes
 
@@ -135,7 +138,7 @@ func main() {
 }
 ```
 
-To create our own package, create a file under GOPATH (for example, /home/taro/go/src/github.com/tarof429/go_crash_course/03_packages/strutil/reverse.go) and add our code. The function needs to be capitalized.
+To create our own package, just create a directory and add our code. The function needs to be capitalized.
 
 ```go
 package strutil
@@ -152,10 +155,11 @@ func Reverse(s string) string {
 Then to use it within our code:
 
 ```go
+package main
+
 import (
 	"fmt"
-
-	"github.com/tarof429/go_crash_course/03_packages/strutil"
+	"reverse/strutil"
 )
 
 func main() {
@@ -164,7 +168,7 @@ func main() {
 }
 ```
 
-Importing a package which is not used results in a build error.
+Importing a package which is not used will result in a build error.
 
 ### [Variables](#variables)
 
@@ -312,6 +316,14 @@ To fix this, use math.Round().
 ```go
 fmt.Println("Float sum: ", math.Round(floatSum)) // Prints 19
 // 	fmt.Println("Float sum: ", math.Round(floatSum*10)/10) will give you one digit of precision
+```
+
+If you declare a variable but don't assign a value to it right away, the Go compiler will complain that the variable does not have a type. To fix this, simply give the variable a type after declaration.
+
+```go
+var userName string
+
+userName = "tom"
 ```
 
 #### Short variable declaration
@@ -2431,7 +2443,7 @@ It seems that:
 
 ### [Goroutines](#goroutines)
 
-A goroutine is a lightweight thread.
+One of Go's strengths is its built-in concurrency support thorugh goroutines. Below is a simple example:
 
 ```go
 func hello() {
@@ -4124,7 +4136,7 @@ func main() {
 }
 ```
 
-Alternatively, `fmt.Scanf` and `fmt.Scanln` can be used to read input into variables.
+Alternatively, `fmt.Scanf` and `fmt.Scanln` can be used to read input into variables. To use the Scanf functions, pass in the address of the variable you want to be populated with a value.
 
 ```go
 var (
@@ -4237,3 +4249,5 @@ func main() {
 - https://www.educative.io/courses/the-way-to-go
 
 - https://medium.com/backend-habit/setting-golang-plugin-on-vscode-for-autocomplete-and-auto-import-30bf5c58138a
+
+- [Golang Tutorial for Beginners | Full Go Course](https://www.youtube.com/watch?v=yyUHQIec83I) 
