@@ -8,7 +8,6 @@
     * [Part 3: Storage](archlinux/storage.md)
     * [Part 4: Post Install](archlinux/post_install.md)
     * [Part 5 RAID](archlinux/raid.md)
-* [DevOps with Nana](devops_with_nana/README.md)
 * Linux
     * [RedHat](redhat/README.md)
     * [FreeBSD](freebsd/README.md)
