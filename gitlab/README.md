@@ -16,6 +16,82 @@
 - If you make any changes to gitlab configuration, run `sudo gitlab-ctl reconfigure`. 
 - You can use pwgen to generate passwords
 
+## GitLab Fundamentals
+In GitLab, projects can be organized into subgroups to organizer yoru codebase. A subgroup can be nested.
+
+Projects can be assigned an owner. 
+
+## Working with Git
+To use git from gitlab, add your public key by clicking your profile | SSH Keys.
+
+You can test the connection by running `ssh -T git@gitlab.com`.
+
+Once you have cloned a git repository, there are two ways to create a branch.
+
+```sh
+git branch <branch>
+git checkout <branch>
+
+# or
+
+git checkout -b <branch>
+```
+
+You can list all branches by running:
+
+```sh
+git branch -a
+```
+
+This command will show both remote branches (in red) and local branches (in green).
+
+To push changes to a branch, use `git push`. If unsure of the syntax (for example, you have a local branch) run `git push`.
+
+Once you have pushed a local branch to an upstream branch, simply type `git push`.
+
+```sh
+git push
+```
+
+When you're collaborating with others on a branch, chances are someone has pushed changes to the branch and you are behind. To find out how far behind you are, first retrieve metadta about branches.
+
+```sh
+git fetch
+```
+
+Next, run `git status`.
+
+```sh
+git status
+```
+
+For example:
+
+```sh
+$ git status
+On branch temporary_branch
+Your branch is behind 'origin/temporary_branch' by 1 commit, and can be fast-forwarded.
+  (use "git pull" to update your local branch)
+
+nothing to commit, working tree clean
+```
+
+To merge changes from a branch to the main branch, first checkout the main branch.
+
+```sh
+git checkout main
+```
+
+Then merge the branch.
+
+```sh
+git merge temporary_branch
+```
+
+## Using Gitlab to merge code
+
+GitLab supports issues and merge requests. Merge requests basically means merging branches. You can also create an issue and merge branches. 
+
 
 ## References
 - https://about.gitlab.com/install/#amazonlinux-2023
