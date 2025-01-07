@@ -489,7 +489,7 @@ Breaking down the for statement, we have three parts: init, condition, and post.
     }
 ```
 
-Without the conditional statement, we will end up with an infinite loop. It is up to the programmer to break out of the loop.
+Without the conditional statement, we can create an infinite loop. It is up to the programmer to break out of the loop.
 
 ```go
 	i := 0
@@ -688,7 +688,21 @@ func main() {
 // was <= 7
 // was <= 8
 // default case
+```
 
+Now let's say a conference is held in multiple cities. We are writing a booking application that needs to handle situations where the booking process is the same for a few cities. Switch statements can handle multiple cases as seen below:
+
+```go
+		city := "London"
+
+		switch city {
+		case "New York":
+		case "Singapore", "Hong Kong":
+		case "London", "Berlin":
+		case "Mexico City":
+		default:
+			fmt.Println("No valid city selected")
+		}
 ```
 
 #### [Defer Statements](#defer-statement)
@@ -1188,7 +1202,7 @@ func main() {
 	}
 }
 ```
-We can use the range function to iterate through an array without computing its length.
+We can use the range function to iterate through an array without computing its length. The syntax is:
 
 ```go
 	...
@@ -1197,7 +1211,7 @@ We can use the range function to iterate through an array without computing its 
 	}
 ```
 
-or more succinctly, if we only care about the value:
+If we only care about the value, we can use a blank identifier identified as `_`:
 
 ```go
 	for _, element := range colors {
@@ -1248,9 +1262,15 @@ func fibs() [10] int64 {
 }
 ```
 
-#### [Slices](#slices)
+### [Slices](#slices)
 
 A slice is an array without a predefined size and is easier to use. A slice is a reference to an array that is anonymous. 
+
+To declare a slice is easy: simply specify an array without the size.
+
+```go
+var names[] string
+```
 
 ```go
 func main() {
@@ -1505,7 +1525,7 @@ func main() {
 }
 ```
 
-Instead of using make, use append to dynamically grow a slice.
+In the example above, we had to specify the index of the slice explictly. A better way is to use the `append` function. The `append` function will dynamically grow a slice.
 
 ```go
 func main() {
@@ -1650,6 +1670,25 @@ If the slice values are the same, the length is 0.
 ```go
 s[1:1] -> 0
 ```
+
+A slice of type string may have spaces. For example, the slice may contain first name and last name.
+
+```go
+users := []string{}
+for {
+	user := firstName + " " + lastName
+	users = append(users, user)
+
+	for index, user := range users {
+		var names = strings.Fields(user)
+		var firstName = names[0]
+		var lastName = names[1]
+		fmt.Println(firstName)
+	}
+}
+```
+
+How do we print only the first names? For this requirement, we can split each element by whitespace. 
 
 ### [Maps](#maps)
 
@@ -1958,7 +1997,7 @@ func main() {
 // 7
 ```
 
-Functions can return multiple results. Note that the return types need to be specified within parenthesis
+Functions can return multiple results. If you need to return multiple values from a function, they need to be enclosed within parentheses.
 
 ```go
 
