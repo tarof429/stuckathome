@@ -58,6 +58,11 @@
 
     See https://docs.freebsd.org/en/books/handbook/cutting-edge/. 
 
+## Notes
+
+- To check battery life, use `apm`.
+
+
 ## References
 
 https://www.netbsd.org/docs/guide/en/index.html
