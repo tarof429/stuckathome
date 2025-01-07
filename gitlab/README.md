@@ -89,9 +89,40 @@ git merge temporary_branch
 ```
 
 ## Using Gitlab to merge code
-
 GitLab supports issues and merge requests. Merge requests basically means merging branches. You can also create an issue and merge branches. 
 
+## Creating build pipelines
+To create a build pipeline, create a file called `.gitlab-ci.yml` at the top level of the project. You can do this using the Gitlab UI. 
+
+While creating this file, Gitlab will display a dropdown list with a choice of templates. We can use one of these to create a pipeline that just involves invoking Bash commands (for example). We need to define the stage block with the list of stages we want to invoke.
+
+```yml
+stages:
+    - build
+    - test
+
+build1:
+  stage: build
+  script:
+    - echo "Do your build here"
+
+test1:
+  stage: test
+  script:
+    - echo "Do a test here"
+    - echo "For example run a test suite"
+```
+
+## Auto DevOps
+Auto DevOps is a feature that basically tells GitLab to create the pipeline for us. This is configured per project. 
+
+## SAST
+SAST stands for static application security test. To enable SAST, simply add the following to `.gitlab-ci.yml`
+
+```yml
+include:
+  - template: Jobs/SAST.gitlab-ci.yml
+```
 
 ## References
 - https://about.gitlab.com/install/#amazonlinux-2023
