@@ -170,6 +170,30 @@ func main() {
 
 Importing a package which is not used will result in a build error.
 
+Besides creating our own packages, we can also add files to the main package. If we add files to the main package, we need to specify all the files in the main package at runtime. For example:
+
+```sh
+go run main.go helper.go
+```
+
+Alternatively, you can specify the current directory.
+
+```sh
+go run .
+```
+
+However it is more common to create a package other than main and put our code in that package. To do this, we create a folder and add files with code in there. 
+
+If we add code in a package, we need to import it in our main function. To do this, we need to specify the module name. For example:
+
+```go
+import (
+	"booking-app/helper"
+)
+```
+
+As we mentioned before, any package that we want to export to another package (like main) needs to be captitalized.
+
 ### [Variables](#variables)
 
 The var statement is used to declare variables. The type follows the variable name.
@@ -1692,7 +1716,7 @@ How do we print only the first names? For this requirement, we can split each el
 
 ### [Maps](#maps)
 
-Maps are key value pairs. In Go, we use the *make* function to create a map. Below is an example where we do a few operations on maps: adding, finding the size, iterating, and deleting an element.
+Maps are key value pairs. Maps are strongly typed and we cannot mix different types in a map. In Go, we use the *make* function to create a map. Below is an example where we do a few operations on maps: adding, finding the size, iterating, and deleting an element.
 
 ```go
 func main() {
@@ -1718,7 +1742,18 @@ func main() {
 }
 ```
 
-Use delete to remove an element from a map.
+Since maps are strongly typed, if we need to store a number, we need to convert it to a string.
+
+```go
+var userData = make(map[string]string)
+userData["firstName"] = firstName
+userData["lastName"] = lastName
+userData["email"] = email
+userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+
+```
+
+Use `delete` to remove an element from a map.
 
 Below is a example where the value is data type struct. Note that we have made a map as a global variable and this requires the var keyword.
 
@@ -1969,6 +2004,19 @@ func main() {
 
 }
 ```
+
+Let's say we were storing a list of strings in a slice. These strings can represent first name and last name separated by a space. We can improve this data model by instead storing a slice of maps so that we capture other fields of interest such as email and number of tickets. Because this is a slice, we need to pass in the size to the make function. Now to add elements to the slice, we create a map and append it to the slice.
+
+```go
+var bookings = make([]map[string]string, 0)
+	var userData = make(map[string]string)
+	userData["firstName"] = firstName
+	userData["lastName"] = lastName
+	userData["email"] = email
+	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+bookings = append(bookings, userData)
+```
+
 
 ### [Functions](#functions)
 
