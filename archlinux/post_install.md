@@ -70,6 +70,8 @@ You also need to install a configuration file for abcde. For example, see http:/
 
 - To configure ufw, see https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu
 
+- Amberol is a nice music player.
+
 # References
 
 https://github.com/korvahannu/arch-nvidia-drivers-installation-guide
