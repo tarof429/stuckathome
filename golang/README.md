@@ -28,6 +28,7 @@
 	11. [Interfaces](#interfaces)
 	11. [Files](#files)
 3. [Advanced](#advanced)
+	1. [Arguments](#arguments)
     1. [Goroutines](#goroutines)
 	2. [Channels](#channels)
     3. [Closures](#closures)
@@ -2527,6 +2528,21 @@ It seems that:
 
 
 ## [Advanced](#advanced)
+
+### [Arguments](#arguments)
+Use os.Args to parse command-line arguments.
+
+```go
+func main() {
+	args := os.Args[1:]
+
+	for index, arg := range args {
+		fmt.Printf("Arg %v: %v\n", index, arg)
+	}
+}
+```
+
+See https://gobyexample.com/command-line-arguments for advanced usage. 
 
 ### [Goroutines](#goroutines)
 
