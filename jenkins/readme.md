@@ -4,7 +4,7 @@
 
 This project is roughly based on the Udemy course listed in the references. We use KVMs running AlmaLinux 9.
 
-Use the install script.
+Use the install script under the kvm directory.
 
 ```sh
 sh ./install.sh  -n jenkins-server -i 192.168.1.50
@@ -29,11 +29,20 @@ ansible-playbook setup_server.yml
 ansible-playbook setup_node.yml
 ```
 
-You also need to do the following on both servers:
+## Accessing Jenkins
 
-- Download Apache Maven from https://maven.apache.org/download.cgi and untar it under /usr/local
+Jenkins will be running at `http://192.168.1.50:8080`. If you cannot reach Jenkins from a browser, check that you are using the http protocol and not the https protocol.
 
-- configure Jenkins tools to point to Maven, Java (set JAVA_HOME to `/usr/lib/jvm/jre-17-openjdk`)
+The firewall should have already been configured by Ansible. To confirm, SSH to the server and run `sudo firewall-cmd --list-all`. 
+
+## Maven
+
+To use Maven, follow these steps on both servers:
+
+1. Download Apache Maven from https://maven.apache.org/download.cgi and untar it under /usr/local
+
+2. configure Jenkins tools to point to Maven, Java (set JAVA_HOME to `/usr/lib/jvm/jre-17-openjdk`)
+
 
 ## Creating Pipelines
 

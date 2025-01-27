@@ -2,6 +2,7 @@
 - name: Update packages
   package:
     name:
+      - java-17-openjdk
       - java-17-openjdk-devel
       - git
     state: latest

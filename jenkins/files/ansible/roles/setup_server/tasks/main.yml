@@ -20,7 +20,9 @@
     name:
       - fontconfig
       - java-17-openjdk
+      - java-17-openjdk-devel
       - jenkins
+      - git
     state: latest
 
 - name: Enable and start Jenkins

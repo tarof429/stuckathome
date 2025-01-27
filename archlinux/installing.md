@@ -1,6 +1,6 @@
 # Installing
 
-Since all the partitioning was done in the previous step, we should now proceed to intall ArchLinux.
+Since all the partitioning was done in the previous step, we should now proceed to install ArchLinux.
 
 - The ISO was burned to a USB using Balena Etcher. 
 

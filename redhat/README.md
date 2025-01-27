@@ -445,6 +445,29 @@ From the cockpit GUI, you can change the profile by going to Overview | Configur
 
 Use `renice` to change the nice value of proceses.
 
+Below is a custom profile baed on virtual-host that includes desktop CPU settings.
+
+```sh
+$ cat tuned.conf 
+#
+# tuned configuration
+#
+
+[main]
+summary=zaxman settings
+include=throughput-performance
+
+[sysctl]
+# Start background writeback (via writeback threads) at this percentage (system
+# default is 10%)
+vm.dirty_background_ratio = 5
+
+[cpu]
+# Setting C3 state sleep mode/power savings
+force_latency=cstate.id_no_zero:3|70
+include=desktop
+```
+
 ## Access Control lists
 
 Use `setfacl` to set access control lists for a file, and `getfacl` to get the ACL for a file. For example:
@@ -1347,7 +1370,7 @@ We can add an entry to /etc/fstab:
 192.168.1.30:/nfsdata   /nfsdata nfs     defaults 0 2
 ```
 
-NFS is often used in conjunction with automount. If you use automount, you do not need to create an entry in /etc/fstab.
+NFS is often used in conjunction with **automount**. If you use automount, you do not need to create an entry in /etc/fstab.
 
 On the NFS client, install autofs and start/enable the autofs service.
 
@@ -1400,6 +1423,23 @@ Dec 14 16:29:50 pacific systemd[1]: Stopping Automounts filesystems on demand...
 ```
 
 This particular problem was fixed by setting the correct IP in /etc/hosts.
+
+In addition to mounting fixed directory names, autofs can handle wildcards. 
+
+In /etc/auto.master, make sure it has the following line:
+
+```sh
+/users  /etc/auto.users
+```
+
+Create a file called /etc/auto.users and add the following line to it:
+
+```sh
+* -rw server2:/users/&
+```
+
+Afterwards, restart `autofs`. You should be able to type `cd /users/user1` to get access to the NfS export /users/user1 on the server2 server.
+
 
 ## Boot Targets
 

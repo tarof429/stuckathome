@@ -47,3 +47,5 @@ Note that in this Dockerfile we have two COPY statements. This can vastly improv
 ## References
 
 https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide
+
+https://github.com/tarof429/spring-boot-demo
